@@ -11,10 +11,10 @@ import os
 from django.conf import settings
 from django.http import FileResponse
 from .models import Balance 
-
+from .spectacular_serializers import LoginSpectacular
 @extend_schema(
     request=AuthTokenSerializer,
-    responses={200: AuthTokenSerializer},
+    responses={200:LoginSpectacular , 400:None}
 )
 @api_view(['POST'])
 def login_api(request):
@@ -40,32 +40,32 @@ def login_api(request):
         'token': {token}
     })
 
-@parser_classes([parsers.MultiPartParser])
-@api_view(['GET'])
-def user_info(request):
-    user = request.user
-    if user.is_authenticated:
-        return Response({
-            'user_info': {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'first_name':user.first_name,
-                'last_name':user.last_name,
-                'mode':user.mode,
-                'photo':user.photo.url,
-                'birth_date':user.birth_date,
-                'join_date' : user.join_date,
-                'gender':user.gender,
-                'bio':user.normal_user.bio,
+# @parser_classes([parsers.MultiPartParser])
+# @api_view(['GET'])
+# def user_info(request):
+#     user = request.user
+#     if user.is_authenticated:
+#         return Response({
+#             'user_info': {
+#                 'id': user.id,
+#                 'username': user.username,
+#                 'email': user.email,
+#                 'first_name':user.first_name,
+#                 'last_name':user.last_name,
+#                 'mode':user.mode,
+#                 'photo':user.photo.url,
+#                 'birth_date':user.birth_date,
+#                 'join_date' : user.join_date,
+#                 'gender':user.gender,
+#                 'bio':user.normal_user.bio,
 
-            },
-        })
+#             },
+#         })
 
 
 @extend_schema(
     request=RegisterSerializer,
-    responses=RegisterSerializer,
+    responses={200:None},
 )
 @api_view(['POST'])
 def register_api(request):
