@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'knox',
-    'services'
+    'services',
+    'drf_spectacular',
 
 ]
 
