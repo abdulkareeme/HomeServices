@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.validators import ValidationError
+from services.serializers import CategorySerializer
 
 gender_choices = [('Male', 'M'), ('Female', 'F')]
 mode_choices = [('buyer', 'buyer'), ('seller_buyer', 'seller_buyer')]
@@ -96,3 +97,15 @@ class NormalUserSerializer(serializers.ModelSerializer):
     class Meta :
         model = NormalUser
         fields = ['bio']
+
+class ListUsersSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True)
+    class Meta :
+        model = User
+        fields = ['username','first_name','last_name','photo' ,'categories']
+
+class  RetrieveUserSerializer(serializers.ModelSerializer):
+    bio = serializers.CharField(max_length = 1000)
+    class Meta :
+        model = User
+        fields = ['id','username','email','first_name','last_name','mode','photo','birth_date','date_joined','gender','bio']

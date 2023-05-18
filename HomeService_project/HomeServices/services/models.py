@@ -17,10 +17,10 @@ class Area(models.Model):
 
 class HomeService(models.Model):
     title = models.CharField(max_length=500)
-    categories = models.ManyToManyField("Category" , related_name='categories')
+    categories = models.ManyToManyField("Category" , related_name='home_services_categories')
     minimum_price = models.PositiveIntegerField()
-    seller = models.ForeignKey(User , on_delete=models.CASCADE)
-    service_area = models.ManyToManyField("Area" , related_name='area_set')
+    seller = models.ForeignKey(User , on_delete=models.CASCADE, related_name='home_services_seller')
+    service_area = models.ManyToManyField("Area" , related_name='home_services_area_set')
     number_of_served_clients = models.PositiveIntegerField(default=0)
 
     def __str__(self) :
