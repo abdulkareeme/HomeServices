@@ -25,9 +25,6 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
   Widget build(BuildContext context) {
     return Form(
       child: (Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-          height: widget.height / 3,
-        ),
         // username field
         MyFild(
           errorText: widget.usernameError,
@@ -80,13 +77,6 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
             style: LogInStyle.logInButtonTextStyle(),
           ),
         ),
-        SizedBox(height: widget.height-20,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("")
-          ],
-        )
       ])),
     );
   }
