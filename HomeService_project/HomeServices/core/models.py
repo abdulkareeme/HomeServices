@@ -10,10 +10,12 @@ class User(AbstractUser):
     gender = models.CharField(choices=gender_choices , max_length=10 )
     photo = models.ImageField( upload_to='profile', max_length=100 , blank=True  , null=True)
     mode = models.CharField(choices=mode_choices , max_length=50 )
+    area = models.ForeignKey("services.Area" ,on_delete=models.SET_NULL , null = True)
 
 class NormalUser(models.Model):
-    bio = models.CharField( max_length=10000)
+    bio = models.CharField( max_length=10000,default="")
     user= models.OneToOneField("User", on_delete=models.CASCADE , related_name='normal_user')
+    average_fast_answer = models.DurationField(blank=True , null= True)
 
     def __str__(self):
         return self.user.username
@@ -23,7 +25,5 @@ class Balance(models.Model):
     total_balance = models.PositiveIntegerField(default=0)
     pending_balance = models.PositiveIntegerField(default=0)
     withdrawable_balance = models.PositiveIntegerField(default=0)
-    earnings = models.PositiveIntegerField(default=0)
-
     def __str__(self):
         return self.user.user.username

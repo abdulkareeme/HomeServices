@@ -28,16 +28,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     gender = serializers.ChoiceField(choices=gender_choices, required=True)
     photo = serializers.ImageField(max_length=100, use_url=True, required=False)
     mode = serializers.ChoiceField(choices=mode_choices, required=True)
-
+    
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name','birth_date' , 'gender','photo','mode')
+        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name','birth_date' , 'gender','photo','mode' , 'area')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
-            
+            'area' :{'required': True}
         }
-
+        
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
@@ -54,6 +54,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             gender=validated_data['gender'],
             photo=validated_data.get('photo', None),
             mode=validated_data['mode'],
+            area=validated_data['area']
         )
         user.set_password(validated_data['password'])
         user.is_active = False

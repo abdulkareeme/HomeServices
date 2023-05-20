@@ -10,6 +10,7 @@ from rest_framework import status , generics
 from .models import Balance 
 from .spectacular_serializers import LoginSpectacular
 from .models import NormalUser ,User
+from services.serializers import Area,AreaSerializer
 @extend_schema(
     request=AuthTokenSerializer,
     responses={200:LoginSpectacular , 400:None}
@@ -38,46 +39,32 @@ def login_api(request):
         'token': {token}
     })
 
-# @parser_classes([parsers.MultiPartParser])
-# @api_view(['GET'])
-# def user_info(request):
-#     user = request.user
-#     if user.is_authenticated:
-#         return Response({
-#             'user_info': {
-#                 'id': user.id,
-#                 'username': user.username,
-#                 'email': user.email,
-#                 'first_name':user.first_name,
-#                 'last_name':user.last_name,
-#                 'mode':user.mode,
-#                 'photo':user.photo.url,
-#                 'birth_date':user.birth_date,
-#                 'join_date' : user.join_date,
-#                 'gender':user.gender,
-#                 'bio':user.normal_user.bio,
 
-#             },
-#         })
+class RegisterUser(APIView):
 
-
-@extend_schema(
+    @extend_schema(
+        responses={200:AreaSerializer(many=True) },
+        description="list of area",
+        
+    )
+    def get(self , request):
+        serializer = AreaSerializer(Area.objects.all() , many=True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+    @extend_schema(
     request=RegisterSerializer,
-    responses={200:None},
-)
-@api_view(['POST'])
-def register_api(request):
-    serializer = RegisterSerializer(
+    responses={201:None},
+    )
+    def post(self , request):
+        serializer = RegisterSerializer(
         data=request.data, context={'request': request})
-    serializer.is_valid(raise_exception=True)
-    normal_user = NormalUserSerializer(data = request.data)
-    normal_user.is_valid(raise_exception=True)
-    user = serializer.save()
-    normal_user = normal_user.save(user=user)
-    Balance.objects.create(user=normal_user)
-    # _, token = AuthToken.objects.create(user)
-    return Response({'detail': 'account registered please confirm your email.'})
-
+        serializer.is_valid(raise_exception=True)
+        normal_user = NormalUserSerializer(data = request.data)
+        normal_user.is_valid(raise_exception=True)
+        user = serializer.save()
+        normal_user = normal_user.save(user=user)
+        Balance.objects.create(user=normal_user)
+        # _, token = AuthToken.objects.create(user)
+        return Response({'detail': 'account registered please confirm your email.'} , status=status.HTTP_201_CREATED)
 
 class UserConfirmEmailView(APIView):
     serializer_class = UserConfirmEmailSerializer
@@ -88,13 +75,6 @@ class UserConfirmEmailView(APIView):
             return render(request, 'core/error_confirming.html')
         return render(request, 'core/confirmed.html')
     
-# class PhotoView(APIView):
-#     def get(self, request, filename):
-#         photo_path = os.path.join(settings.MEDIA_ROOT+'profile', filename)
-#         if os.path.exists(photo_path):
-#             return FileResponse(open(photo_path, 'rb'), content_type='image/jpeg')
-#         else:
-#             return Response({'detail':'The requested photo was not found.'})
 
 class ListUsers(APIView):
     @extend_schema(
@@ -121,7 +101,7 @@ class ListUsers(APIView):
 class RetrieveUser(APIView):
     @extend_schema(
     responses={200:LoginSpectacular , 404:None}
-)
+    )
     def get(self ,request , username):
         try :
             user = User.objects.get(username=username)
@@ -147,6 +127,8 @@ class RetrieveUser(APIView):
             'join_date' : user.date_joined,
             'gender':user.gender,
             'bio':user.normal_user.bio,
-        }
-        )
+        } , status=status.HTTP_200_OK
+    )
+
+
         

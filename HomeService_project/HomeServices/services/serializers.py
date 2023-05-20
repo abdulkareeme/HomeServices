@@ -6,6 +6,10 @@ class AreaSerializer(serializers.ModelSerializer):
     class Meta :
         model = Area
         fields = '__all__'
+class AreaBYIdSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = Area
+        field = 'id'
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta :
@@ -17,12 +21,12 @@ class HomeServiceSerializer(serializers.ModelSerializer):
     service_aria = AreaSerializer(many=True)
     class Meta :
         model = HomeService
-        fields = ['title','categories','minimum_price','seller','service_area','number_of_served_clients']
+        fields = ['title','categories','minimum_price','service_area']
 
 class OrderServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderService
-        fields = ['description_message','home_service']
+        fields = ['description_message']
 
 class RatingSerializer(serializers.ModelSerializer):
     client_comment = serializers.CharField(required = False)
