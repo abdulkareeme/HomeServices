@@ -48,8 +48,18 @@ class LogInStyle {
         fontWeight: FontWeight.w800,
         decoration: TextDecoration.underline,
         decorationThickness: 1.6,
-
       )
+    );
+  }
+
+  static TextStyle errorStyle (){
+    return(
+    const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontStyle: FontStyle.italic,
+      fontSize: 18,
+      color: Colors.red,
+    )
     );
   }
 
