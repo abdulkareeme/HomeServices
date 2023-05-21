@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../Sign up/Widget/first_page_of_signup.dart';
 import 'Log_In_button_and_field.dart';
 import 'package:home_services/style/log_in_style.dart';
 
@@ -44,7 +45,8 @@ class _LogInState extends State<LogIn> {
                     ),
                     InkWell(
                       onTap:(){
-
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context)=> FirstPageOfSignUp()));
                       },
                       child:Text("Sign up",style: LogInStyle.signUpStyle(),) ,)
                   ],

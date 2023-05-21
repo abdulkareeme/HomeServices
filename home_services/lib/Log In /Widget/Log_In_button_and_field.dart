@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:home_services/my_field.dart';
-import 'package:home_services/Log In /Api/log_in_api.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../style/log_in_style.dart';
 
 // ignore: must_be_immutable
@@ -22,10 +26,40 @@ class LogInButtonAndField extends StatefulWidget {
 class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
   @override
   Widget build(BuildContext context) {
+    Future logIn() async {
+      String url = "http://abdulkareemedres.pythonanywhere.com/api/login/";
+      Response response = await http.post(Uri.parse(url), body: {
+        'username': widget.usernameController.text,
+        'password': widget.passwordController.text,
+      });
+      var info = jsonDecode(response.body);
+      if(response.statusCode == 200){
+        print("done");
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setString('username', info['user_info']['username']);
+        pref.setString('username', info['user_info']['email']);
+        pref.setString('username', info['user_info']['first_name']);
+        pref.setString('username', info['user_info']['last_name']);
+        pref.setString('username', info['user_info']['mode']);
+        pref.setString('username', info['token'][0]);
+        /*Navigator.of(context).push(MaterialPageRoute(
+            builder: (context)=>));*/
+      } else {
+        setState(() {
+          widget.error = "invalid username of password";
+        });
+      }
+    }
+
     return Form(
       child: (Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(widget.error.toString(), style: LogInStyle.errorStyle(),),
-        const SizedBox(height: 4,),
+        Text(
+          widget.error.toString(),
+          style: LogInStyle.errorStyle(),
+        ),
+        const SizedBox(
+          height: 4,
+        ),
         // username field
         MyFild(
           contorller: widget.usernameController,
@@ -49,46 +83,14 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
           color: Colors.white,
           sidesColor: Colors.black,
         ),
-        Center(
-          child: FutureBuilder(
-              future: LogInApi.logIn(
-                  widget.usernameController, widget.passwordController),
-              builder: (context, AsyncSnapshot<List?> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.connectionState == ConnectionState.done) {
-                  // ignore: unrelated_type_equality_checks
-                  if (snapshot.connectionState == 200) {
-                    LogInApi.setSharedPreferences(
-                        snapshot.data![0]['user_info']['username'],
-                        snapshot.data![0]['user_info']['email'],
-                        snapshot.data![0]['token'][0],
-                        snapshot.data![0]['user_info']['first_name'],
-                        snapshot.data![0]['user_info']['last_name']);
-                    print(snapshot.data![0]['user_info']['username']);
-                    print(snapshot.data![0]['user_info']['first_name']);
-                    print(snapshot.data![0]['user_info']['last_name']);
-                  } else {
-                    setState(() {
-                      widget.error = "invalid username or password";
-                    });
-                  }
-                  return Container();
-                } else {
-                  return Container();
-                }
-              }),
-        ),
         Padding(
-          padding: const EdgeInsets.only(right: 30),
+          padding: const EdgeInsets.only(right: 30,top: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               InkWell(
                 splashColor: Colors.black,
-                onTap: () {
-
-                },
+                onTap: () {},
                 child: Text(
                   "Forget password",
                   style: LogInStyle.forgetPasswordStyle(),
@@ -98,12 +100,11 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
           ),
         ),
         const SizedBox(
-          height: 15,
+          height: 55,
         ),
         ElevatedButton(
           onPressed: () {
-            LogInApi.logIn(
-                widget.usernameController, widget.passwordController);
+            logIn();
           },
           style: LogInStyle.buttonStyle(),
           child: Text(
