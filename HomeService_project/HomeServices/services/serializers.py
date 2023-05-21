@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HomeService , Area , Category ,OrderService , Rating 
+from .models import HomeService , Area , Category ,OrderService , Rating , PendingBalance
 from rest_framework.validators import ValidationError
 
 class AreaSerializer(serializers.ModelSerializer):
@@ -42,3 +42,8 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['quality_of_service','commitment_to_deadline','work_ethics','order_service','client_comment']
+
+class PendingBalanceSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = PendingBalance
+        fields = ['beneficiary','price']

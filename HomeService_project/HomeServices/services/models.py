@@ -47,17 +47,31 @@ class Rating(models.Model):
 
     def __str__(self) :
         return self.order_service+' , Rating'
+
+class Beneficiary(models.Model):
+    beneficiary_name = models.CharField( max_length=100)
+
+    def __str__(self):
+        return self.beneficiary_name
     
 class PendingBalance(models.Model):
     price = models.PositiveIntegerField()
-    order = models.ForeignKey("OrderService", on_delete=models.CASCADE)
-
+    order = models.ForeignKey("OrderService", on_delete=models.CASCADE , related_name='pending_balance_order')
+    beneficiary = models.ForeignKey("Beneficiary", on_delete=models.SET_NULL  , null=True , related_name='pending_balance_beneficiary')
     def __str__(self):
-        return "pending price : "+str(self.price)+" , "+str(self.order)
+        return "pending price : "+str(self.price)+" , "+str(self.order)+' from '+str(self.order.home_service.seller)
     
 class GeneralServicesPrice(models.Model):
-    beneficiary_name = models.CharField(max_length=100)
-    price = models.IntegerField()
+    beneficiary = models.OneToOneField("Beneficiary", on_delete=models.SET_NULL  , null=True)
+    price = models.PositiveIntegerField()
 
     def __str__(self) :
-        return self.beneficiary_name
+        return str(self.beneficiary)
+    
+class Earnings(models.Model):
+    order = models.ForeignKey("OrderService", on_delete=models.SET_NULL , related_name='earnings_order'  , null=True)
+    beneficiary= models.ForeignKey("Beneficiary", on_delete=models.SET_NULL  , null=True)
+    earnings = models.IntegerField()
+
+    def __str__(self) :
+        return str(self.beneficiary)+' '+str(self.earnings)

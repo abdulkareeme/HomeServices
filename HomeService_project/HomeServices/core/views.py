@@ -21,6 +21,14 @@ def login_api(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
     _, token = AuthToken.objects.create(user)
+    if user.photo :
+        photo = user.photo.url
+    else :
+        photo = None
+    if user.normal_user.average_fast_answer :
+        average_fast_answer = user.normal_user.average_fast_answer
+    else :
+        average_fast_answer = None
     return Response({
         'user_info': {
             'id': user.id,
@@ -29,12 +37,12 @@ def login_api(request):
             'first_name':user.first_name,
             'last_name':user.last_name,
             'mode':user.mode,
-            'photo':user.photo.url,
+            'photo':photo,
             'birth_date':user.birth_date,
             'join_date' : user.date_joined,
             'gender':user.gender,
             'bio':user.normal_user.bio,
-
+            'average_fast_answer' : average_fast_answer
         },
         'token': {token}
     })

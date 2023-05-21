@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,OrderService ,Rating ,PendingBalance ,GeneralServicesPrice
-from .serializers import AreaSerializer ,CategorySerializer ,HomeServiceSerializer ,OrderServiceSerializer , RatingSerializer 
+from .serializers import AreaSerializer ,CategorySerializer ,HomeServiceSerializer ,OrderServiceSerializer , RatingSerializer  , PendingBalanceSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
@@ -22,7 +22,9 @@ def make_pending_balance(request , pending_balance , order):
     request.user.normal_user.balance.withdrawable_balance -= pending_balance
     request.user.normal_user.balance.pending_balance += pending_balance
     request.user.normal_user.balance.save()
-    PendingBalance.objects.create(price = pending_balance , order = order).save()
+    query = GeneralServicesPrice.objects.all()
+    for thing in query :
+        PendingBalance.objects.create(order = order , beneficiary = thing.beneficiary , price = thing.price).save()
     return True
 
 class ListCategories(APIView):
@@ -43,8 +45,8 @@ class CreateOrderService(APIView):
             home_service = HomeService.objects.get(pk=pk)
         except HomeService.DoesNotExist :
             return Response({"detail":"Error 404 Not Found"} , status=status.HTTP_404_NOT_FOUND)
-        if request.user.normal_user == home_service.seller:
-            return Response({"detail":"You can't ask service from yourself."} , status=status.HTTP_400_BAD_REQUEST)
+        # if request.user.normal_user == home_service.seller:
+        #     return Response({"detail":"You can't ask service from yourself."} , status=status.HTTP_400_BAD_REQUEST)
         pending_balance = get_pending_price()
         if request.user.normal_user.balance.withdrawable_balance <pending_balance :
             return Response ({"detail":"You don't have enough money to order , please charge your account" }, status=status.HTTP_400_BAD_REQUEST)
