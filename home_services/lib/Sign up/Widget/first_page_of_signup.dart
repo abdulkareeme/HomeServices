@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Animation/animation.dart';
 import 'package:home_services/Sign%20up/Widget/second_page_of_signup.dart';
 import 'package:home_services/my_field.dart';
 import 'package:home_services/style/first_signup_page_style.dart';
@@ -77,10 +78,9 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                         ElevatedButton(
                             style: FirstSignupPageStyle.nextButtonStyle(),
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context)=> SecondPageOfSignUp()));
+                              Navigator.of(context).push(SlideRight(page: SecondPageOfSignUp()) );
                             },
-                            child: Text("Next", style: FirstSignupPageStyle
+                            child: Text("التالي", style: FirstSignupPageStyle
                                 .nextTextStyle(),))
                       ],
                     ),

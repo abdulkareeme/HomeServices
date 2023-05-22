@@ -3,6 +3,8 @@ import 'package:home_services/Sign%20up/Widget/third_page_of_singup.dart';
 import 'package:home_services/my_field.dart';
 import 'package:home_services/style/first_signup_page_style.dart';
 
+import '../../Animation/animation.dart';
+
 // ignore: must_be_immutable
 class SecondPageOfSignUp extends StatefulWidget {
   SecondPageOfSignUp({Key? key}) : super(key: key);
@@ -83,8 +85,7 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                         , ElevatedButton(
                             style: FirstSignupPageStyle.nextButtonStyle(),
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>ThirdPageOfSignUp()));
+                              Navigator.of(context).push(SlideRight(page: ThirdPageOfSignUp()));
                             },
                             child: Text("Next", style: FirstSignupPageStyle
                                 .nextTextStyle(),))
