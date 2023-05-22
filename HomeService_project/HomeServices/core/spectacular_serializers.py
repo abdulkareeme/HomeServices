@@ -5,4 +5,4 @@ class  LoginSpectacular(serializers.ModelSerializer):
     average_fast_answer = serializers.DurationField()
     class Meta :
         model = User
-        fields = ['id','username','email','first_name','last_name','mode','photo','birth_date','date_joined','gender','bio']
+        fields = ['id','username','email','first_name','last_name','mode','photo','birth_date','date_joined','gender','bio','average_fast_answer']

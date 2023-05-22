@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import HomeService , Area , Category ,OrderService , Rating , PendingBalance
 from rest_framework.validators import ValidationError
+from core.models import NormalUser , User
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta :
@@ -16,12 +17,22 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class UsernameSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = User
+        fields = ['username']
+class NormalUsernameSerializer(serializers.ModelSerializer):
+    user = UsernameSerializer()
+    class Meta:
+        model = User
+        fields = ['user']
+
 class HomeServiceSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True)
-    service_aria = AreaSerializer(many=True)
+    service_area = AreaSerializer(many=True)
     class Meta :
         model = HomeService
-        fields = ['title','categories','minimum_price','service_area']
+        fields = ['title','categories','minimum_price','service_area' ]
 
 class OrderServiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +58,10 @@ class PendingBalanceSerializer(serializers.ModelSerializer):
     class Meta :
         model = PendingBalance
         fields = ['beneficiary','price']
+
+class ListOrdersSerializer(serializers.ModelSerializer):
+    home_service = HomeServiceSerializer()
+    class Meta : 
+        model = OrderService
+        fields = ['create_date','description_message','status','answer_time','end_service','home_service']
+
