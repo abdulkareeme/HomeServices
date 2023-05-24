@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Sign%20up/Widget/sign_up_page.dart';
 import 'package:home_services/my_field.dart';
 import 'package:home_services/style/first_signup_page_style.dart';
 
@@ -31,27 +32,6 @@ class _ThirdPageOfSignUpState extends State<ThirdPageOfSignUp> {
                   const SizedBox(
                     height: 40,
                   ),
-                  // email field
-                  MyFild(
-                    errorText: widget.emailError,
-                    contorller: widget.emailController,
-                    hintText: "Birth Date",
-                    obscure: false,
-                    lable: const Text("Birth Date"),
-                    color: Colors.white,
-                    sidesColor: Colors.black,
-                  ),
-
-                  // password field
-                  MyFild(
-                    errorText: widget.passwordError,
-                    contorller: widget.passwordController,
-                    hintText: "Area",
-                    obscure: false,
-                    lable: const Text("Area"),
-                    color: Colors.white,
-                    sidesColor: Colors.black,
-                  ),
 
                   // confirm password field
                   Padding(
@@ -65,7 +45,7 @@ class _ThirdPageOfSignUpState extends State<ThirdPageOfSignUp> {
                           ],
                         ),
                         const SizedBox(width: 10,),
-                        Column(
+                        Row(
                           children: [
                             Row(
                               children: [
@@ -110,8 +90,8 @@ class _ThirdPageOfSignUpState extends State<ThirdPageOfSignUp> {
                       , ElevatedButton(
                           style: FirstSignupPageStyle.nextButtonStyle(),
                           onPressed: () {
-                            /*Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>))*/
+                            Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>SignUpPage()));
                           },
                           child: Text("Sign up", style: FirstSignupPageStyle
                               .nextTextStyle(),))
