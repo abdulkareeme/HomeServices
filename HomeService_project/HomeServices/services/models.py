@@ -17,7 +17,7 @@ class Area(models.Model):
 
 class HomeService(models.Model):
     title = models.CharField(max_length=500)
-    categories = models.ManyToManyField("Category" , related_name='home_services_categories')
+    categories = models.ForeignKey("Category" , related_name='home_services_categories' , on_delete=models.SET_NULL , null=True) #TODO set default
     minimum_price = models.PositiveIntegerField()
     seller = models.ForeignKey(User , on_delete=models.CASCADE, related_name='home_services_seller')
     service_area = models.ManyToManyField("Area" , related_name='home_services_area_set')

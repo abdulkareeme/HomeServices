@@ -169,9 +169,11 @@ class MyOrders(APIView):
         queryset= OrderService.objects.filter(client = request.user.normal_user)
         serializer = ListOrdersSerializer(data = queryset , many=True)
         serializer.is_valid()
+        i = 0
         for order in queryset :
-            serializer.data[0]['client']=order.client.user.username
-            serializer.data[0]['home_service']['seller']=order.home_service.seller.user.username
+            serializer.data[i]['client']=order.client.user.username
+            serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
+            i+=1
         return Response(serializer.data )
     
 class ReceivedOrders(APIView):
@@ -185,8 +187,9 @@ class ReceivedOrders(APIView):
         queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user)
         serializer = ListOrdersSerializer(data = queryset , many=True)
         serializer.is_valid()
+        i = 0
         for order in queryset :
-            serializer.data[0]['client']=order.client.user.username
-            serializer.data[0]['home_service']['seller']=order.home_service.seller.user.username
-        print(serializer.data)
+            serializer.data[i]['client']=order.client.user.username
+            serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
+            i+=1
         return Response(serializer.data )

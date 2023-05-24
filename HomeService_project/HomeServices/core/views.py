@@ -17,6 +17,13 @@ from services.serializers import Area,AreaSerializer
 )
 @api_view(['POST'])
 def login_api(request):
+    if request.data['email']:
+        try :   
+            username = User.objects.get(email = request.data['email'])
+        except User.DoesNotExist :
+            return Response({"email":["Email does not exits"]} , status=status.HTTP_400_BAD_REQUEST)
+        request.data['username']=username.username
+
     serializer = AuthTokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
