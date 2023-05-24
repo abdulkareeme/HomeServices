@@ -1,13 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Almarai', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+section {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+section>h1 {
+  margin-bottom: 40px;
+}
+
+hr {
+  color: #444444;
+  margin: 5px !important;
+}
+
+.w-max {
+  width: max-content;
+}
+
+.w-fit {
+  width: fit-content;
+}
+
+.my-btn {
+  color: white;
+  border: 1px solid #efefef;
+  padding: 5px 10px;
+  transition: 0.4s;
+  background-color: transparent;
+}
+
+.my-btn ion-icon {
+  font-size: 20px;
+}
+
+.my-btn:hover {
+  background-color: #efefef86;
+}
+
+.accordion-item {
+  border: none;
+  outline: none;
+}
+
+.accordion-item .accordion-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+}
+
+.accordion-item .accordion-button::after {
+  margin: 0;
+}
+
+.accordion-item .accordion-button,
+.accordion-item .accordion-button:active {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  color: black !important;
+}
+
+/* .accordion-item .accordion-button:not(.collapsed)::after {
+  background-image: black !important;
+} */
+
+.accordion-item .accordion-header {
+  border: none !important;
+  outline: none !important;
+  color: black !important;
 }

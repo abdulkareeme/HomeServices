@@ -1,0 +1,20 @@
+.box {
+    background-color: #f1f1f1;
+    border: 7px solid white;
+}
+
+.box p {
+    font-size: 15px;
+}
+
+.image-holder {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-holder img {
+    width: 100%;
+}

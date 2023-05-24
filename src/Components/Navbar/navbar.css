@@ -1,0 +1,72 @@
+/* Navbar Section  */
+.navbar {
+  position: relative !important;
+  padding: 10px 0;
+  background-color: #444444;
+  box-shadow: 0px 10px 10px 0px rgba(9, 5, 29, 0.171);
+}
+
+.navbar.fixed {
+  position: fixed !important;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  z-index: 999;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between !important;
+}
+
+.navbar-brand>ion-icon {
+  font-size: 30px;
+  cursor: pointer;
+  color: white;
+}
+
+.offcanvas {
+  margin-top: 60px !important;
+  width: 280px !important;
+}
+
+.offcanvas-backdrop {
+  z-index: 888 !important;
+}
+
+.offcanvas-body {
+  padding: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .navbar {
+    font-size: 1.4rem !important;
+  }
+
+  .navbar-nav .nav-item::after {
+    display: none !important;
+  }
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.navbar-link {
+  display: flex !important;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px !important;
+  padding: 0.8rem 0.5rem 0.2rem !important;
+}
+
+@media (max-width: 767px) {
+  .nav-link {
+    padding: 0.7rem 1rem !important;
+  }
+}
