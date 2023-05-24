@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'knox',
     'services',
     'drf_spectacular',
+    'corsheaders',
 
 ]
 
@@ -55,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'HomeServices.urls'
@@ -76,7 +76,8 @@ TEMPLATES = [
     },
 ]
 
-CORS_ALLOWED_ORIGINS = ['*']
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+CORS_ALLOW_ALL_ORIGINS = True
 
 WSGI_APPLICATION = 'HomeServices.wsgi.application'
 

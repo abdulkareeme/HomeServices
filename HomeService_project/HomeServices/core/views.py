@@ -106,8 +106,11 @@ class ListUsers(APIView):
             result['last_name']=user.user.last_name
             result['photo']=user.user.photo
             result['categories']= []
-            for home_service in user.home_services_seller.all() :
-                result['categories'].append(home_service.categories)
+            if user.home_services_seller.all():
+                for home_service in user.home_services_seller.all() :
+                    if home_service.categories :
+                        result['categories'].append(home_service.categories)
+            
             data.append(result)
         print(data)
         serializer = ListUsersSerializer(data=data , many=True)
