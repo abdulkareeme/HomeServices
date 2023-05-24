@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Log%20In%20/Widget/Log_In.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import '../../style/on_boarding_screen_style.dart';
@@ -6,44 +7,44 @@ import '../../style/on_boarding_screen_style.dart';
 class OnBoardingScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _OnBoardingScreenState();
-
+  String error = "";
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen>{
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child:IntroductionScreen(
-          pages: [
-            PageViewModel(
-              title: "Welcome to our app ",
-              body: "our feature are the best",
-            ),
-            PageViewModel(
-              title: "Welcome to our app ",
-              body: "our feature are the best",
-            ),
-            PageViewModel(
-              title: "Welcome to our app ",
-              body: "our feature are the best",
-            ),
-            PageViewModel(
-              title: "Welcome to our app ",
-              body: "our feature are the best",
-            ),
-          ],
-          done: Text("Done",style: OnBoardingScreenStyle.doneButtonStyle(),),
-          onDone: () {
-              Navigator.of(context).pushReplacementNamed("log in");
-          },
-          skip: Text("Skip",style: OnBoardingScreenStyle.doneButtonStyle(),),
-          onSkip: (){
-              Navigator.of(context).pushReplacementNamed("log in");
-          },
-          next: const Icon(Icons.arrow_forward,size: 35,),
-          showSkipButton: true,
-          showNextButton: true,
-        ) ,
+      child:IntroductionScreen(
+        pages: [
+          PageViewModel(
+            title: "Welcome to our app ",
+            body: "our feature are the best",
+          ),
+          PageViewModel(
+            title: "Welcome to our app ",
+            body: "our feature are the best",
+          ),
+          PageViewModel(
+            title: "Welcome to our app ",
+            body: "our feature are the best",
+          ),
+          PageViewModel(
+            title: "Welcome to our app ",
+            body: "our feature are the best",
+          ),
+        ],
+        done: Text("Done",style: OnBoardingScreenStyle.doneButtonStyle(),),
+        onDone: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LogIn(error:widget.error)));
+        },
+        skip: Text("Skip",style: OnBoardingScreenStyle.doneButtonStyle(),),
+        onSkip: (){
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LogIn(error:widget.error)));
+        },
+        next: const Icon(Icons.arrow_forward,size: 35,),
+        showSkipButton: true,
+        showNextButton: true,
+      ) ,
     );
   }
 

@@ -4,19 +4,19 @@ import 'Log In /Widget/Log_In.dart';
 import 'On Boarding Screen/Widget/on_boarding_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget{
-  const MyApp({Key? key}) : super(key: key);
-
+   MyApp({Key? key}) : super(key: key);
+  String error= "";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home:OnBoardingScreen(),
       routes: {
-        "log in" : (context)=> LogIn(),
+        "log in" : (context)=> LogIn(error: error,),
       },
     );
   }
