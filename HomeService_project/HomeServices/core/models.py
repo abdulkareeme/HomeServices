@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 gender_choices = [('Male','M') , ('Female','F') ]
-mode_choices = [('buyer','buyer') , ('seller_buyer' , 'seller_buyer')]
+mode_choices = [('client','buyer') , ('seller' , 'seller_buyer')]
 
 class User(AbstractUser):
     birth_date = models.DateField(blank=True , null=True)

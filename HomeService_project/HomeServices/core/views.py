@@ -17,6 +17,7 @@ from services.serializers import Area,AreaSerializer
 )
 @api_view(['POST'])
 def login_api(request):
+    print(request.user.mode)
     if request.data['email']:
         try :   
             username = User.objects.get(email = request.data['email'])
@@ -106,7 +107,7 @@ class ListUsers(APIView):
             result['photo']=user.user.photo
             result['categories']= []
             for home_service in user.home_services_seller.all() :
-                result['categories'].extend([category for category in home_service.categories.all()])
+                result['categories'].append(home_service.categories)
             data.append(result)
         print(data)
         serializer = ListUsersSerializer(data=data , many=True)

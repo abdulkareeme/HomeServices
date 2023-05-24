@@ -13,7 +13,7 @@ from rest_framework.validators import ValidationError
 from services.serializers import CategorySerializer
 
 gender_choices = [('Male', 'M'), ('Female', 'F')]
-mode_choices = [('buyer', 'buyer'), ('seller_buyer', 'seller_buyer')]
+mode_choices = [('client', 'buyer'), ('seller', 'seller_buyer')]
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
