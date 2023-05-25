@@ -10,10 +10,10 @@ class User(AbstractUser):
     gender = models.CharField(choices=gender_choices , max_length=10 )
     photo = models.ImageField( upload_to='profile', max_length=100 , blank=True  , null=True)
     mode = models.CharField(choices=mode_choices , max_length=50 )
-    area = models.ForeignKey("services.Area" ,on_delete=models.SET_NULL , null = True)
+    area = models.ForeignKey("services.Area" ,on_delete=models.SET_DEFAULT , default=1)
 
 class NormalUser(models.Model):
-    bio = models.CharField( max_length=10000,default="")
+    bio = models.CharField( max_length=1000,default="")
     user= models.OneToOneField("User", on_delete=models.CASCADE , related_name='normal_user')
     average_fast_answer = models.DurationField(blank=True , null= True)
 

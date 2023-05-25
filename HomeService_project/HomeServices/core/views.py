@@ -17,18 +17,27 @@ from services.serializers import Area,AreaSerializer
 )
 @api_view(['POST'])
 def login_api(request):
-    print(request.user.mode)
-    if request.data['email']:
+    if not 'username' in request.data and  'email' in request.data:
         try :   
             username = User.objects.get(email = request.data['email'])
         except User.DoesNotExist :
-            return Response({"email":["Email does not exits"]} , status=status.HTTP_400_BAD_REQUEST)
+            return Response({"email":["Email does not exist"]} , status=status.HTTP_400_BAD_REQUEST)
         request.data['username']=username.username
+        if not username.is_active :
+            return Response({"email":"Email must be confirmed"})
+    elif 'username' in request.data :
+        try :
+            current_user= User.objects.get(username = request.data['username'])
+        except User.DoesNotExist :
+            return Response({"username":"Username does not exist"})
+        if not current_user.is_active :
+            return Response({"email":"Email must be confirmed"})
 
     serializer = AuthTokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
     _, token = AuthToken.objects.create(user)
+    
     if user.photo :
         photo = user.photo.url
     else :
@@ -106,7 +115,7 @@ class ListUsers(APIView):
             result['last_name']=user.user.last_name
             result['photo']=user.user.photo
             result['categories']= []
-            if user.home_services_seller.all():
+            if user.home_services_seller:
                 for home_service in user.home_services_seller.all() :
                     if home_service.categories :
                         result['categories'].append(home_service.categories)
