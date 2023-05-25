@@ -11,6 +11,4 @@ class _SignUpPageState extends State<SignUpPage>{
   Widget build(BuildContext context) {
     return Scaffold(body: Center(child: Text("jjjjj"),),);
   }
-
-
 }

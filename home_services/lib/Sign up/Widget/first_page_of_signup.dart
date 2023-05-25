@@ -6,7 +6,9 @@ import 'package:home_services/style/first_signup_page_style.dart';
 
 // ignore: must_be_immutable
 class FirstPageOfSignUp extends StatefulWidget {
-  FirstPageOfSignUp({Key? key}) : super(key: key);
+  List areaList;
+
+  FirstPageOfSignUp({required this.areaList, super.key});
 
   @override
   State<StatefulWidget> createState() => _FirstPageOfSignUpState();
@@ -14,14 +16,23 @@ class FirstPageOfSignUp extends StatefulWidget {
   TextEditingController lastnameController = TextEditingController();
   TextEditingController birthdateController = TextEditingController();
   TextEditingController areaController = TextEditingController();
+  String areaError = "", genderError = "", modeError = "";
 }
 
 class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  String? gender;
+  String? mode;
+  String area = "Area";
+
+  bool formState() {
+    var ok = formKey.currentState;
+    return ok!.validate();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height1 = MediaQuery.of(context).size.height;
-    String? gender;
-    String? mode;
     return SafeArea(
         child: Scaffold(
       body: Stack(children: [
@@ -29,6 +40,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
           color: Colors.yellow,
         ),
         Form(
+          key: formKey,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -45,6 +57,17 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   lable: const Text("First Name"),
                   color: Colors.white,
                   sidesColor: Colors.black,
+                  val: (_) {
+                    if (widget.firstnameController.text.isEmpty) {
+                      return "required";
+                    } else {
+                      return null;
+                    }
+                  },
+                  //autoValidateMode: true,
+                ),
+                const SizedBox(
+                  height: 5,
                 ),
 
                 // last name field
@@ -56,8 +79,18 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   lable: const Text("Last Name"),
                   color: Colors.white,
                   sidesColor: Colors.black,
+                  val: (_) {
+                    if (widget.lastnameController.text.isEmpty) {
+                      return "required";
+                    } else {
+                      return null;
+                    }
+                  },
+                  //autoValidateMode: true,
                 ),
-
+                const SizedBox(
+                  height: 5,
+                ),
                 // birth date field
                 MyFild(
                   errorText: "",
@@ -68,20 +101,33 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   color: Colors.white,
                   sidesColor: Colors.black,
                 ),
-
-                // area field
-                MyFild(
-                  errorText: "",
-                  contorller: widget.areaController,
-                  hintText: "Area",
-                  obscure: false,
-                  lable: const Text("Area"),
-                  color: Colors.white,
-                  sidesColor: Colors.black,
-                ),
-
                 const SizedBox(
-                  height: 10,
+                  height: 5,
+                ),
+                // area selection
+                Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30),
+                    child: DropdownButtonFormField(
+                      items: widget.areaList
+                          .map((e) =>
+                              DropdownMenuItem(value: e, child: Text("$e")))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          area = val.toString();
+                        });
+                      },
+                      hint: Text(area),
+                    )),
+                const SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  widget.areaError,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(
+                  height: 16,
                 ),
 
                 Padding(
@@ -116,6 +162,16 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  widget.modeError,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(
+                  height: 9,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 30),
                   child: Row(
@@ -149,6 +205,14 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   ),
                 ),
                 const SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  widget.modeError,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                //const SizedBox(height: 9,),
+                const SizedBox(
                   height: 40,
                 ),
 
@@ -160,8 +224,35 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       ElevatedButton(
                           style: FirstSignupPageStyle.nextButtonStyle(),
                           onPressed: () {
-                            Navigator.of(context)
-                                .push(SlideRight(page: SecondPageOfSignUp()));
+                            if (formState() &&
+                                gender != null &&
+                                mode != null &&
+                                area != "Area") {
+                              Navigator.of(context).push(SlideRight(
+                                  page: SecondPageOfSignUp(
+                                area: area,
+                                firstnameController: widget.firstnameController,
+                                lastnameController: widget.lastnameController,
+                                gender: gender,
+                                mode: mode,
+                              )));
+                            } else {
+                              if (gender == null) {
+                                setState(() {
+                                  widget.genderError = "required";
+                                });
+                              }
+                              if (mode == null) {
+                                setState(() {
+                                  widget.modeError = "required";
+                                });
+                              }
+                              if (area == "Area") {
+                                setState(() {
+                                  widget.areaError = "required";
+                                });
+                              }
+                            }
                           },
                           child: Text(
                             "التالي",

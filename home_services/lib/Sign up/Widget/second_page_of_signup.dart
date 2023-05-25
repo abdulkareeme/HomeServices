@@ -7,7 +7,15 @@ import '../../Animation/animation.dart';
 
 // ignore: must_be_immutable
 class SecondPageOfSignUp extends StatefulWidget {
-  SecondPageOfSignUp({Key? key}) : super(key: key);
+  var firstnameController,lastnameController,area,birthdatecontroller,gender,mode;
+  SecondPageOfSignUp({
+    required this.firstnameController,
+    required this.lastnameController,
+    required this.area,
+    required this.gender,
+    required this.mode,
+    super.key,
+});
 
   @override
   State<StatefulWidget> createState() => _SecondPageOfSignUpState();
@@ -17,18 +25,26 @@ class SecondPageOfSignUp extends StatefulWidget {
   String passwordError = "";
   String confirmPasswordError = "";
   String emailError = "";
+  String username = "";
 }
 
 class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  bool formState(){
+    var ok = formKey.currentState;
+    return ok!.validate();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
           body: Stack(children: [
             Container(
-              color: Colors.red,
+              color: Colors.deepPurple,
             ),
             Form(
+              key: formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -44,8 +60,20 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                     lable: const Text("Email"),
                     color: Colors.white,
                     sidesColor: Colors.black,
+                    val: (_){
+                      if(widget.emailController.text.isEmpty){
+                        return "required";
+                      } else {
+                        for(int i=0;i<widget.emailController.text.length;i++){
+                          if(widget.emailController.text[i] != '@'){
+                            widget.username+=widget.emailController.text[i];
+                          }
+                        }
+                        return null;
+                      }
+                    },
                   ),
-
+                  const SizedBox(height: 6,),
                   // password field
                   MyFild(
                     errorText: widget.passwordError,
@@ -55,8 +83,15 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                     lable: const Text("Password"),
                     color: Colors.white,
                     sidesColor: Colors.black,
+                    val: (_){
+                      if(widget.passwordController.text.length < 8){
+                        return "password should be as least 8 characters";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
-
+                  const SizedBox(height: 6,),
                   // confirm password field
                   MyFild(
                     errorText: widget.confirmPasswordError,
@@ -66,6 +101,13 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                     lable: const Text("Confirm Password"),
                     color: Colors.white,
                     sidesColor: Colors.black,
+                    val: (_){
+                      if(widget.confirmPasswordController.text != widget.passwordController.text){
+                        return "password not matching";
+                      } else {
+                        return null;
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 40,
@@ -85,7 +127,9 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                         , ElevatedButton(
                             style: FirstSignupPageStyle.nextButtonStyle(),
                             onPressed: () {
+                              if(formState()){
                               Navigator.of(context).push(SlideRight(page: ThirdPageOfSignUp()));
+                              }
                             },
                             child: Text("Next", style: FirstSignupPageStyle
                                 .nextTextStyle(),))

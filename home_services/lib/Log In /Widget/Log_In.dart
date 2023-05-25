@@ -12,6 +12,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  List op = ['Lattakia','Damascus','aleppo','Hama','tartous','raqa','hasaka','Homes'];
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -46,9 +47,10 @@ class _LogInState extends State<LogIn> {
                         ),
                         InkWell(
                           onTap:(){
+
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context)=> FirstPageOfSignUp()));
-                          },
+                                builder: (context)=> FirstPageOfSignUp(areaList: op,)));
+                          },focusColor: Colors.black,
                           child:Text("Sign up",style: LogInStyle.signUpStyle(),) ,)
                       ],
                     ),
