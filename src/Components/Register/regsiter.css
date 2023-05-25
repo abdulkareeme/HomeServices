@@ -83,6 +83,15 @@ form.register-2 .prev {
     margin: 10px 0;
     background-color: #2caae2;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form.register-1 .next.disable {
+    cursor: not-allowed;
+    background-color: #2cabe25d;
+
 }
 
 form.register-1 .next {

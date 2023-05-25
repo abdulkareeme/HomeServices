@@ -50,7 +50,7 @@ form.login div+p {
     margin: 5px 0;
 }
 
-form.login div button {
+form div button.eye {
     outline: none;
     border: none;
     background-color: transparent;
@@ -58,6 +58,13 @@ form.login div button {
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form div button.eye ion-icon {
+    font-size: 25px;
 }
 
 form.login button.submit {
@@ -70,6 +77,9 @@ form.login button.submit {
     color: white;
     margin: 10px 0;
     background-color: #2caae2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 form.login>span {

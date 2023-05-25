@@ -86,3 +86,7 @@ hr {
   outline: none !important;
   color: black !important;
 }
+
+section.confirm-email {
+    height: 100vh;
+}

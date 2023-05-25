@@ -26,6 +26,13 @@ export const accountLinks = [
     link: "/login",
   },
 ];
+export const normalUserLinks = [
+  {
+    label: "المشتريات",
+    icon: <ion-icon name="cart-outline"></ion-icon>,
+    link: "/",
+  },
+];
 
 export const offcanvasAccordion = [
   {

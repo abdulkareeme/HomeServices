@@ -1,12 +1,20 @@
 import { ErrorMessage, Formik } from "formik";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import * as Yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
-import "./register.css";
+import { useNavigate } from "react-router-dom";
+import "./regsiter.css";
 import { Form } from "react-bootstrap";
 import DatePicker from "react-date-picker";
 import { format } from "date-fns";
 import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
+import AreaSelect from "../AreaSelect";
+import { ClipLoader } from "react-spinners";
+import { Toaster, toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import {
+  setIsRegistered,
+  setUserLoginValues,
+} from "../../Store/homeServiceSlice";
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
     .required("لم تدخل اسمك بعد")
@@ -32,55 +40,103 @@ const SignInSchema = Yup.object().shape({
 });
 
 const Register = () => {
-  // const history = useNavigate();
+  const dispatch = useDispatch();
+  const history = useNavigate();
   const [page, setPage] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(0);
   const [dateValue, setDateValue] = useState(new Date());
   const [mode, setMode] = useState(null);
   const [gender, setGender] = useState(null);
   const [listOfAreas, setListOfAreas] = useState(null);
+  const [areaSelected, setAreaSelected] = useState(null);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isPasswordVisible2, setPasswordVisible2] = useState(false);
   const initialValues = {
-    username: "omarhlal",
+    username: "oss",
     first_name: "عمر",
     last_name: "هلال",
-    email: "omarhlal@gmail.com",
-    password: "mo8877%%",
-    password2: "mo8877%%",
-    area: 1,
+    email: "adidas123@gmail.com",
+    password: "mooo87%%",
+    password2: "mooo87%%",
+    area: null,
   };
   const submitHandler = (values) => {
+    let username = values.email.substring(0, values.email.indexOf("@"));
     const userInfo = {
       ...values,
+      username: username,
       birth_date: format(dateValue, "yyyy-MM-dd"),
       gender: gender,
       mode: mode,
+      area: areaSelected,
     };
+    setIsSubmitting(1);
     postToAPI("api/register/", userInfo)
       .then((res) => {
         console.log(res);
+        setIsSubmitting(0);
+        dispatch(setIsRegistered(true));
+        dispatch(
+          setUserLoginValues({ email: values.email, password: values.password })
+        );
+        history("/confirm_email");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        if (err.response.data.email?.length > 0) {
+          toast.error("البريد الالكتروني مدخل سابقا", {
+            duration: 3000,
+            position: "top-center",
+            ariaProps: {
+              role: "status",
+              "aria-live": "polite",
+            },
+          });
+        } else if (err.response.data.mode?.length > 0) {
+          toast.error("الرجاءاختيار انت بائع أم مستخدم", {
+            duration: 3000,
+            position: "top-center",
+            ariaProps: {
+              role: "status",
+              "aria-live": "polite",
+            },
+          });
+        } else if (err.response.data.gender?.length > 0) {
+          toast.error("الرجاءاختيار جنسك", {
+            duration: 3000,
+            position: "top-center",
+            ariaProps: {
+              role: "status",
+              "aria-live": "polite",
+            },
+          });
+        } else if (err.response.data.area?.length > 0) {
+          toast.error("الرجاءاختيار مدينتك", {
+            duration: 3000,
+            position: "top-center",
+            ariaProps: {
+              role: "status",
+              "aria-live": "polite",
+            },
+          });
+        }
+        setIsSubmitting(0);
+      });
     console.log(userInfo);
   };
-  fetchFromAPI("api/register/").then((res) => setListOfAreas(res));
+  useEffect(() => {
+    fetchFromAPI("api/register/").then((res) => setListOfAreas(res));
+  }, []);
   return (
     <section className="d-flex justify-content-center align-items-center">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={SignInSchema}
-        onSubmit={submitHandler}
-      >
-        {({
-          values,
-          handleChange,
-          isSubmitting,
-          handleBlur,
-          errors,
-          touched,
-        }) => (
+      <Toaster />
+      <Formik initialValues={initialValues} validationSchema={SignInSchema}>
+        {({ values, isValid, handleChange, handleBlur, errors, touched }) => (
           <Fragment>
-            <form className={`register-1 ${page === 1 ? "hidden" : ""}`}>
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className={`register-1 ${page === 1 ? "hidden" : ""}`}
+            >
               <h1>منزلي</h1>
               <h3>سجل الآن</h3>
               <div className="d-flex gap-5">
@@ -174,9 +230,9 @@ const Register = () => {
                     onClick={() => setPasswordVisible(!isPasswordVisible)}
                   >
                     {isPasswordVisible ? (
-                      <ion-icon name="eye"></ion-icon>
+                      <ion-icon name="eye-outline"></ion-icon>
                     ) : (
-                      <ion-icon name="eye-off"></ion-icon>
+                      <ion-icon name="eye-off-outline"></ion-icon>
                     )}
                   </button>
                 </div>
@@ -210,9 +266,9 @@ const Register = () => {
                     onClick={() => setPasswordVisible2(!isPasswordVisible2)}
                   >
                     {isPasswordVisible2 ? (
-                      <ion-icon name="eye"></ion-icon>
+                      <ion-icon name="eye-outline"></ion-icon>
                     ) : (
-                      <ion-icon name="eye-off"></ion-icon>
+                      <ion-icon name="eye-off-outline"></ion-icon>
                     )}
                   </button>
                 </div>
@@ -220,7 +276,17 @@ const Register = () => {
                   <ErrorMessage name="password2" />
                 </p>
               </div>
-              <div className="next" onClick={() => setPage(1)}>
+              <div
+                className={
+                  !isValid ||
+                  (!touched.email && !touched.password && !touched.password2)
+                    ? "next disable"
+                    : "next"
+                }
+                onClick={() => {
+                  isValid ? setPage(1) : setPage(0);
+                }}
+              >
                 التالي
               </div>
             </form>
@@ -248,6 +314,10 @@ const Register = () => {
                   مدينتك
                   <span>*</span>
                 </label>
+                <AreaSelect
+                  listOfAreas={listOfAreas}
+                  setAreaSelected={setAreaSelected}
+                />
               </div>
               <div className="gender">
                 <label>
@@ -303,10 +373,22 @@ const Register = () => {
                 <button
                   className="submit"
                   type="submit"
-                  // disabled={isSubmitting}
+                  hidden={isSubmitting}
                   onClick={() => submitHandler(values)}
                 >
                   انضم الى منزلي
+                </button>
+                <button
+                  className="submit"
+                  disabled={isSubmitting}
+                  hidden={!isSubmitting}
+                >
+                  <ClipLoader
+                    color="white"
+                    size={30}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
                 </button>
               </div>
             </form>

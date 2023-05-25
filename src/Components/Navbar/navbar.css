@@ -11,7 +11,7 @@
   width: 100vw;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 666;
 }
 
 .navbar-container {
@@ -31,7 +31,7 @@
 }
 
 .offcanvas-backdrop {
-  z-index: 888 !important;
+  z-index: 333 !important;
 }
 
 .offcanvas-body {
@@ -63,6 +63,12 @@
   gap: 5px;
   font-size: 10px !important;
   padding: 0.8rem 0.5rem 0.2rem !important;
+}
+
+.navbar ul img {
+  width: 40px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 @media (max-width: 767px) {
