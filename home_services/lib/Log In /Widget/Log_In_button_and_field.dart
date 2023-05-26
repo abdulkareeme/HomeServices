@@ -7,6 +7,7 @@ import '../../style/log_in_style.dart';
 class LogInButtonAndField extends StatefulWidget {
   double height;
   String loginError;
+
   LogInButtonAndField({
     required this.height,
     required this.loginError,
@@ -39,6 +40,7 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
           lable: const Text("username"),
           color: Colors.white,
           sidesColor: Colors.black,
+          readOnly: false,
         ),
 
         const SizedBox(
@@ -53,9 +55,10 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
           lable: const Text("password"),
           color: Colors.white,
           sidesColor: Colors.black,
+          readOnly: false,
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 30,top: 5),
+          padding: const EdgeInsets.only(right: 30, top: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -76,7 +79,10 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         ElevatedButton(
           onPressed: () {
             //logIn();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LogInApi(passwordController: widget.passwordController, usernameController: widget.usernameController)));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => LogInApi(
+                    passwordController: widget.passwordController,
+                    usernameController: widget.usernameController)));
           },
           style: LogInStyle.buttonStyle(),
           child: Text(

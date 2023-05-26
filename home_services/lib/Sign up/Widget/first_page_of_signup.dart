@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:home_services/Animation/animation.dart';
 import 'package:home_services/Sign%20up/Widget/second_page_of_signup.dart';
 import 'package:home_services/my_field.dart';
+
 import 'package:home_services/style/first_signup_page_style.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class FirstPageOfSignUp extends StatefulWidget {
@@ -14,7 +18,7 @@ class FirstPageOfSignUp extends StatefulWidget {
   State<StatefulWidget> createState() => _FirstPageOfSignUpState();
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
-  TextEditingController birthdateController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
   TextEditingController areaController = TextEditingController();
   String areaError = "", genderError = "", modeError = "";
 }
@@ -29,7 +33,6 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
     var ok = formKey.currentState;
     return ok!.validate();
   }
-
   @override
   Widget build(BuildContext context) {
     double height1 = MediaQuery.of(context).size.height;
@@ -64,6 +67,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       return null;
                     }
                   },
+                  readOnly: false,
                   //autoValidateMode: true,
                 ),
                 const SizedBox(
@@ -86,20 +90,35 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       return null;
                     }
                   },
+                  readOnly: false,
                   //autoValidateMode: true,
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 0,
                 ),
                 // birth date field
-                MyFild(
-                  errorText: "",
-                  contorller: widget.birthdateController,
-                  hintText: "Birth Date",
-                  obscure: false,
-                  lable: const Text("Birth Date"),
-                  color: Colors.white,
-                  sidesColor: Colors.black,
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: TextFormField(
+                    readOnly: true,
+                    decoration: const InputDecoration(hintText: "Birth date"),
+                    onTap: () {
+                      showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime(2030))
+                          .then((value) {
+                        setState(() {
+                          widget.dateController.text = DateFormat('yyyy-MM-dd')
+                              .format(value!)
+                              .toString();
+                        });
+                      });
+                    },
+                    controller: widget.dateController,
+                  ),
                 ),
                 const SizedBox(
                   height: 5,
@@ -154,9 +173,9 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       Radio(
                           value: "Client",
                           groupValue: mode,
-                          onChanged: (val1) {
+                          onChanged: (val) {
                             setState(() {
-                              mode = val1.toString();
+                              mode = val.toString();
                             });
                           })
                     ],
@@ -184,9 +203,9 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       Radio(
                         value: "Male",
                         groupValue: gender,
-                        onChanged: (val) {
+                        onChanged: (val1) {
                           setState(() {
-                            gender = val.toString();
+                            gender = val1.toString();
                           });
                         },
                       ),
@@ -208,7 +227,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   height: 6,
                 ),
                 Text(
-                  widget.modeError,
+                  widget.genderError,
                   style: const TextStyle(color: Colors.red),
                 ),
                 //const SizedBox(height: 9,),
@@ -224,10 +243,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       ElevatedButton(
                           style: FirstSignupPageStyle.nextButtonStyle(),
                           onPressed: () {
-                            if (formState() &&
-                                gender != null &&
-                                mode != null &&
-                                area != "Area") {
+                            if (formState() && gender != null && mode != null && area != "Area") {
                               Navigator.of(context).push(SlideRight(
                                   page: SecondPageOfSignUp(
                                 area: area,
@@ -241,16 +257,22 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                                 setState(() {
                                   widget.genderError = "required";
                                 });
+                              } else{
+                                widget.genderError="";
                               }
                               if (mode == null) {
                                 setState(() {
                                   widget.modeError = "required";
                                 });
+                              } else {
+                                widget.modeError = "";
                               }
                               if (area == "Area") {
                                 setState(() {
                                   widget.areaError = "required";
                                 });
+                              } else {
+                                widget.areaError = "";
                               }
                             }
                           },

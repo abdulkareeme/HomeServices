@@ -13,21 +13,25 @@ class MyFild extends StatefulWidget {
   final sidesColor;
   final keyboardType;
   final autoValidateMode;
+  final onTap;
+  bool readOnly;
 
-  const MyFild({super.key,
-    required this.contorller,
-    required this.hintText,
-    required this.obscure,
-    required this.lable,
-    this.preffixIcon,
-    this.suffixIcon,
-    this.autoValidateMode,
-    this.errorText,
-    this.val,
-    this.color,
-    this.sidesColor,
-    this.keyboardType
-  });
+  MyFild(
+      {super.key,
+      required this.contorller,
+      required this.hintText,
+      required this.obscure,
+      required this.lable,
+      required this.readOnly,
+      this.onTap,
+      this.preffixIcon,
+      this.suffixIcon,
+      this.autoValidateMode,
+      this.errorText,
+      this.val,
+      this.color,
+      this.sidesColor,
+      this.keyboardType});
 
   @override
   State<MyFild> createState() => _MyFildState();
@@ -42,6 +46,7 @@ class _MyFildState extends State<MyFild> {
           keyboardType: widget.keyboardType,
           controller: widget.contorller,
           obscureText: widget.obscure,
+          readOnly: widget.readOnly,
           autovalidateMode: widget.autoValidateMode,
           validator: widget.val,
           decoration: InputDecoration(
@@ -56,7 +61,7 @@ class _MyFildState extends State<MyFild> {
               fontStyle: FontStyle.italic,
             ),
             contentPadding:
-            const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
             filled: true,
             fillColor: widget.color,
             //enabled: true,
@@ -66,9 +71,7 @@ class _MyFildState extends State<MyFild> {
             ),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide(
-                    color: widget.sidesColor)
-            ),
+                borderSide: BorderSide(color: widget.sidesColor)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide(
@@ -77,15 +80,14 @@ class _MyFildState extends State<MyFild> {
                 )),
             focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide(
-                    color: widget.sidesColor
-                  //width:2,
-                )),
+                borderSide: BorderSide(color: widget.sidesColor
+                    //width:2,
+                    )),
             errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide(color: widget.sidesColor
-                  //width:2,
-                )),
+                    //width:2,
+                    )),
           )),
     );
   }
