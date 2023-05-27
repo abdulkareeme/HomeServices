@@ -57,8 +57,7 @@ class _LogInApiState extends State<LogInApi> {
                     return const CircularProgressIndicator();
                   } else if(snapshot.connectionState == ConnectionState.done) {
                     if(snapshot.data!.length == 0){
-                      return LogIn(error: widget.error,);
-
+                      return LogIn(error: widget.error  ,);
                     } else {
                       return (
                           Column(

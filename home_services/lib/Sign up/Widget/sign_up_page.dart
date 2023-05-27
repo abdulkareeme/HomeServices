@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:home_services/Log%20In%20/Widget/Log_In.dart';
 import 'package:http/http.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -33,57 +36,98 @@ class SignUpPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _SignUpPageState();
+  String errorCase = "";
 }
 
 
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
-    Future signUp() async {
+    Future<List?> signUp() async {
       String url = "http://abdulkareemedres.pythonanywhere.com/api/register/";
+      //print (widget.username+'\n'+widget.passwordController.text+'\n'+widget.confirmaPasswordController.text+'\n'+ widget.emailController.text+'\n'+widget.firstnameController.text+'\n'+widget.lastnameController.text+'\n'+ widget.birthdatecontroller.text+'\n'+widget.gender+'\n'+widget.mode);
       Response response = await post(Uri.parse(url), body: {
-        "username": widget.username,
-        "password": widget.passwordController.text,
-        "password2": widget.confirmaPasswordController.text,
-        "email": widget.emailController.text,
-        "first_name": widget.firstnameController.text,
-        "last_name": widget.lastnameController.text,
-        "birth_date": widget.birthdatecontroller.text,
-        "gender": widget.gender,
-        "photo": "",
-        "mode": widget.mode,
-        "area": widget.area,
+        'username': widget.username,
+        'password': widget.passwordController.text,
+        'password2': widget.confirmaPasswordController.text,
+        'email': widget.emailController.text,
+        'first_name': widget.firstnameController.text,
+        'last_name': widget.lastnameController.text,
+        'birth_date': widget.birthdatecontroller.text,
+        'gender': widget.gender,
+        'mode': widget.mode,
+        'area': '1',
       });
-      String? op ="okkkkkkkkkkkkkkkkkkkkkkkkkkkk";
-      if (response.statusCode == 200) {
+      var op =["done"];
+      if (response.statusCode == 200|| response.statusCode==201) {
+        print (jsonDecode(response.body));
         return op;
       } else {
-        // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
+        var os = [];
+        String ok = "";
+        var info = jsonDecode(response.body);
+        bool oq = false;
+        if(info['email'] != null && info['password'] != null) oq = true;
+        if(info['email'] != null)ok+='email  : '+info['email'][0];
+        if(oq)ok+='\n'+'\n' ;
+        if(info['password'] != null)ok+='password  : '+info['password'][0];
+        os.add(ok);
+        return os;
       }
     }
 
-    return Center(
+    return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
-        body:FutureBuilder(
-          future: signUp(),
-          builder: (context , AsyncSnapshot snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return const CircularProgressIndicator();
-            } else {
-              if(snapshot.connectionState == ConnectionState.done){
-                if(snapshot.hasData){
-                  return Column(children: [Text(snapshot.data)],);
-                } else{
-                  return Column(children:const [Text("no data")],);
+          body:Center(
+            child: FutureBuilder(
+              future: signUp(),
+              builder: (context , AsyncSnapshot<List?> snapshot){
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return const CircularProgressIndicator();
+                } else {
+                  if(snapshot.connectionState == ConnectionState.done&&snapshot.hasData){
+                    if(snapshot.data![0] == "done"){
+                      return Column(children: [Text(snapshot.data![0].toString())],);
+                    } else{
+                      return AlertDialog(
+                        title: const Text('Failed to sign up'),
+                        content: Text(snapshot.data![0]),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('CANCEL'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Perform some action
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    }
+                  } else{
+                    return  AlertDialog(
+                      title: const Text('unable to sign up now'),
+                      content: const Text('please try again later'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            // Perform some action
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LogIn(error: widget.errorCase,)));
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  }
                 }
-              } else{
-                return const Text("error");
-              }
-            }
-          },
-        ),
+              },
+            ),
+          ),
       ),
     );
   }

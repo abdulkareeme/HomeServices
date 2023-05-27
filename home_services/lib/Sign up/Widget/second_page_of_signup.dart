@@ -19,6 +19,7 @@ class SecondPageOfSignUp extends StatefulWidget {
   SecondPageOfSignUp({
     required this.firstnameController,
     required this.lastnameController,
+    required this.birthdatecontroller,
     required this.area,
     required this.gender,
     required this.mode,
@@ -155,21 +156,21 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                       style: FirstSignupPageStyle.nextButtonStyle(),
                       onPressed: () {
                         if (formState()) {
-                          Navigator.of(context).push(SlideRight(
-                              page: SignUpPage(
-                                  firstnameController: widget.firstnameController,
-                                  lastnameController: widget.lastnameController,
-                                  area: widget.area,
-                                  gender: widget.gender,
-                                  mode: widget.mode,
-                                  username: widget.username,
-                                  emailController: widget.emailController,
-                                  passwordController: widget.passwordController,
-                                  confirmPasswordError: widget.confirmPasswordError,
-                                  passwordError: widget.passwordError,
-                                  emailError:widget.emailError,
-                                  birthdatecontroller: widget.birthdatecontroller,
-                                  confirmaPasswordController: widget.confirmPasswordController)));
+                          print(widget.username);
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SignUpPage(
+                              firstnameController: widget.firstnameController,
+                              lastnameController: widget.lastnameController,
+                              area: widget.area,
+                              gender: widget.gender,
+                              mode: widget.mode,
+                              username: widget.username,
+                              emailController: widget.emailController,
+                              passwordController: widget.passwordController,
+                              confirmPasswordError: widget.confirmPasswordError,
+                              passwordError: widget.passwordError,
+                              emailError:widget.emailError,
+                              birthdatecontroller: widget.birthdatecontroller,
+                              confirmaPasswordController: widget.confirmPasswordController)));
                         }
                       },
                       child: Text(

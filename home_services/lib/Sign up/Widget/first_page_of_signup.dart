@@ -171,7 +171,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                       const Text("Client"),
                       //const SizedBox(width: 2,),
                       Radio(
-                          value: "Client",
+                          value: "client",
                           groupValue: mode,
                           onChanged: (val) {
                             setState(() {
@@ -246,6 +246,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                             if (formState() && gender != null && mode != null && area != "Area") {
                               Navigator.of(context).push(SlideRight(
                                   page: SecondPageOfSignUp(
+                                    birthdatecontroller: widget.dateController,
                                 area: area,
                                 firstnameController: widget.firstnameController,
                                 lastnameController: widget.lastnameController,
