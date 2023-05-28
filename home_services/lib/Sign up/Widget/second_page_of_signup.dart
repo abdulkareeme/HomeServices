@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:home_services/Sign%20up/Widget/sign_up_page.dart';
-import 'package:home_services/Sign%20up/Widget/third_page_of_singup.dart';
 import 'package:home_services/my_field.dart';
 import 'package:home_services/style/first_signup_page_style.dart';
 

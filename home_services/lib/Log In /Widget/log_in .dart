@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:home_services/Log%20In%20/Widget/Log_In.dart';
-import 'package:home_services/Log%20In%20/Widget/Log_In_button_and_field.dart';
-import 'package:http/http.dart';
+import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
+import 'package:home_services/Log In /Api/log_in_api.dart';
+
 
 class LogInApi extends StatefulWidget {
   var usernameController, passwordController;
@@ -21,37 +19,15 @@ class LogInApi extends StatefulWidget {
 }
 
 class _LogInApiState extends State<LogInApi> {
+  LogInApis op = LogInApis() ;
   @override
   Widget build(BuildContext context) {
-    Future<List?> login() async {
-      String url = "http://abdulkareemedres.pythonanywhere.com/api/login/";
-      Response response = await post(Uri.parse(url), body: {
-        'username': widget.usernameController.text,
-        'password': widget.passwordController.text,
-      });
-      List info = [];
-      if (response.statusCode == 200) {
-        var op = jsonDecode(response.body);
-        info.clear();
-        info.add(op['user_info']['username']);
-        info.add(op['user_info']['first_name']);
-        info.add(op['user_info']['last_name']);
-        info.add(op['user_info']['email']);
-        info.add(op['user_info']['mode']);
-        info.add(op['token'][0]);
-
-      } else {
-          widget.error = "invalid username or password";
-      }
-      return info;
-    }
-
     return SafeArea(
       child: Scaffold(
         body: (
             Center(
               child: FutureBuilder<List?>(
-                future: login(),
+                future:op.login(widget.usernameController, widget.passwordController, widget.error),
                 builder: (context,AsyncSnapshot<List?> snapshot){
                   if(snapshot.connectionState == ConnectionState.waiting){
                     return const CircularProgressIndicator();

@@ -23,7 +23,7 @@ class LogInStyle {
     return (
         const TextStyle(
             fontWeight: FontWeight.w800,
-            color: Colors.black,
+            color: Colors.white,
             decoration: TextDecoration.underline,
             decorationThickness: 1.7,
             fontSize: 13.3
@@ -63,4 +63,15 @@ class LogInStyle {
     );
   }
 
+
+
+  static TextStyle manzliStyle(){
+    return const TextStyle(
+      fontSize: 60,
+      fontWeight: FontWeight.bold,
+      //fontFamily: String.fromEnvironment(),
+      color: Colors.white,
+      //fontStyle: FontStyle.italic
+    );
+  }
 }

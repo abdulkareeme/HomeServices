@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Log%20In%20/Widget/log_in_test_page.dart';
+import 'package:home_services/Log%20In%20/Widget/log_in .dart';
 import 'package:home_services/my_field.dart';
 import '../../style/log_in_style.dart';
 
@@ -24,7 +24,7 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      child: (Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      child: (Column(children: [
         Text(
           widget.loginError.toString(),
           style: LogInStyle.errorStyle(),
@@ -35,9 +35,9 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         // username field
         MyFild(
           contorller: widget.usernameController,
-          hintText: "username",
+          hintText: "اسم المسيتخدم",
           obscure: false,
-          lable: const Text("username"),
+          lable: const Text("اسم المسيتخدم"),
           color: Colors.white,
           sidesColor: Colors.black,
           readOnly: false,
@@ -50,15 +50,15 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         // password field
         MyFild(
           contorller: widget.passwordController,
-          hintText: "password",
+          hintText: "كلمة المرور",
           obscure: true,
-          lable: const Text("password"),
+          lable: const Text("كلمة المرور"),
           color: Colors.white,
           sidesColor: Colors.black,
           readOnly: false,
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 30, top: 5),
+          padding: const EdgeInsets.only(left: 30, top: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -66,7 +66,7 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
                 splashColor: Colors.black,
                 onTap: () {},
                 child: Text(
-                  "Forget password",
+                  "نسيت كلمة المرور؟",
                   style: LogInStyle.forgetPasswordStyle(),
                 ),
               )
@@ -86,7 +86,7 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
           },
           style: LogInStyle.buttonStyle(),
           child: Text(
-            "Log in",
+            "تسجيل دخول",
             style: LogInStyle.logInButtonTextStyle(),
           ),
         ),
