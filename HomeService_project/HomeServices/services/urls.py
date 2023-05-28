@@ -8,4 +8,6 @@ urlpatterns = [
     path('reject/order/<int:order_id>' , views.RejectOrder.as_view()),
     path('my_orders' , views.MyOrders.as_view()),
     path('received_orders' , views.ReceivedOrders.as_view()),
+    path('create_service' , views.CreateHomeService.as_view()),
+    path('list_home_services' , views.ListHomeServices.as_view()),
 ]

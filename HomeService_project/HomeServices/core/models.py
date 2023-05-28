@@ -14,10 +14,10 @@ class User(AbstractUser):
 
     confirmation_tries = models.IntegerField(default=3 ,blank=True)
     next_confirm_try = models.DateTimeField(blank=True , null=True)
-    confirmation_code = models.CharField(blank=True, max_length=6)
+    confirmation_code = models.CharField(null=True, blank=True, max_length=6)
 
     resend_tries = models.IntegerField(default=3 , blank=True)
-    confirmation_code_sent_at = models.DateTimeField(blank=True , null=True)
+    next_confirmation_code_sent = models.DateTimeField(blank=True , null=True)
     
 
 

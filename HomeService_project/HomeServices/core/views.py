@@ -8,12 +8,15 @@ from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import status , generics ,permissions
 from .models import Balance 
-from .spectacular_serializers import LoginSpectacular
+from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular
 from .models import NormalUser ,User
 from services.serializers import Area,AreaSerializer
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
+from django.core.mail import send_mail
+from django.conf import settings
+import random
 
 def get_user_info(user):
     if not user.photo:
@@ -54,6 +57,56 @@ def get_user_info(user):
         'services_number' : user.normal_user.home_services_seller.count() ,
         'average_fast_answer' : average_fast_answer,
     }
+
+def Confirm_process(request):
+    if request.user.is_active :
+            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
+        
+    if request.user.next_confirm_try is not None and request.user.next_confirm_try <= timezone.now() :
+        request.user.confirmation_tries = 3
+        request.user.save()
+
+    if request.user.confirmation_tries == 0 :
+        return Response({"detail":f"Try again after {request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.user.confirmation_code == request.POST.get('confirmation_code' , None):
+        request.user.is_active = True
+        request.user.confirmation_code  = None
+        request.user.save()
+        return Response({'detail':"Email verified successfully"} , status=status.HTTP_200_OK)
+    else :
+        request.user.confirmation_tries -=1
+        request.user.save()
+        if request.user.confirmation_tries ==0 :
+            request.user.next_confirm_try = timezone.now() + timedelta(hours=24)
+            request.user.save()
+            return Response({"detail":f"Try again after{request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
+        return Response({"detail":"Wrong code please try again"} , status=status.HTTP_400_BAD_REQUEST)
+
+def send_process(request):
+    if request.user.is_active :
+            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
+        
+    if request.user.resend_tries is not None and request.user.next_confirmation_code_sent <= timezone.now() :
+        request.user.resend_tries = 3
+        request.user.save()
+
+    if request.user.resend_tries == 0 :
+        return Response({"detail":f"Can't send , try again after {request.user.next_confirmation_code_sent - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    request.user.resend_tries -=1
+    request.user.confirmation_code = str(random.randint(100000, 999999))
+    request.user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
+    request.user.save()
+    subject = 'Confirm your email'
+    message = f'Please use the following 6-digit code to confirm your email address: {request.user.confirmation_code}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [request.user.email,]
+    send_mail(subject, message, email_from, recipient_list)
+    return Response({"detail":"Code sent successfully , Please check your email inbox"} , status=status.HTTP_200_OK)
+
+
 
 @extend_schema(
     request=AuthTokenSerializer,
@@ -177,46 +230,55 @@ class PasswordResetAPIView(APIView):
         user.password = make_password(serializer.validated_data['new_password'])
         user.save()
         return Response({'message': 'Password updated successfully.'}, status=status.HTTP_200_OK)
-    
+
+@extend_schema(
+    request=ConfirmCodeSpectacular
+)
 class UserConfirmMessage(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     def post(self , request):
-        if request.user.is_active :
-            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
+        if request.POST.get('email' , None) is None :
+            return Response({"email":["This field is required"]})
         
-        if request.user.next_confirm_try is not None and request.user.next_confirm_try <= timedelta.now() :
-            request.user.confirmation_tries = 3
-
-        if request.user.confirmation_tries == 0 :
-            return Response({"detail":f"Try again after{request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
+        if request.POST.get('confirmation_code' , None) is None :
+            return Response({"confirmation_code":["This field is required"]})
         
-        if request.user.confirmation_code != request.POST.get('confirmation_code' , None):
-            request.user.is_active = True
-            return Response({'detail':"Email verified successfully"} , status=status.HTTP_200_OK)
-        else :
-            request.user.confirmation_tries -=1
-            if request.user.confirmation_tries ==0 :
-                request.user.next_confirm_try = timezone.now() + timedelta(hours=24)
-                return Response({"detail":f"Try again after{request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
-            return Response({"detail":"Wrong code please try again"} , status=status.HTTP_400_BAD_REQUEST)
-        #TODO make it serializer
+        try :
+            request.user= User.objects.get(email= request.POST['email'])
+        except User.DoesNotExist :
+            return Response({"detail":"Email does not exist"})
+        return Confirm_process(request=request)
 
+@extend_schema(
+    request=ResendCodeEmailSpectacular
+)
 class ResendEmailMessage(APIView):
-    permission_classes=[permissions.IsAuthenticated]
+    permission_classes=[permissions.AllowAny]
     def post(self , request):
-        if request.user.is_active :
-            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
-        #TODO make it serializer
+        if request.POST.get('email' , None) is None :
+            return Response({"email":["This field is required"]})
+        
+        try :
+            request.user= User.objects.get(email= request.POST['email'])
+        except User.DoesNotExist :
+            return Response({"detail":"Email does not exist"})
+        
+        return send_process(request=request)
 
 
 class UpdateUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
-            responses={200:LoginSpectacular}
+            responses={200:UpdateProfileSpectacular}
     )
     def get (self , request):
         user = request.user
-        return Response(get_user_info(user) , status=status.HTTP_200_OK)
+        context = get_user_info(user)
+        area = Area.objects.all()
+        area = AreaSerializer(data=area ,many = True)
+        area.is_valid()
+        context['area'] = area.data
+        return Response(context , status=status.HTTP_200_OK)
     @extend_schema(
             request=UpdateNormalUser ,
             responses={200:LoginSpectacular , 400: None}
@@ -228,3 +290,4 @@ class UpdateUser(APIView):
         serializer.save()
         return Response(get_user_info(user) , status=status.HTTP_200_OK)
 
+    

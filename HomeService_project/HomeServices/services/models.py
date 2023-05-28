@@ -5,7 +5,7 @@ from core.models import NormalUser as User
 
 class Category(models.Model):
     name = models.CharField( max_length=50)
-
+    photo = models.ImageField( upload_to='categories',max_length=50 , null=True , blank=True)
     def __str__(self) :
         return self.name
 
@@ -18,7 +18,7 @@ class Area(models.Model):
 class HomeService(models.Model):
     title = models.CharField(max_length=500)
     categories = models.ForeignKey("Category" , related_name='home_services_categories' , on_delete=models.SET_NULL , null=True) #TODO set default
-    minimum_price = models.PositiveIntegerField()
+    average_price_per_hour = models.PositiveIntegerField()
     seller = models.ForeignKey(User , on_delete=models.CASCADE, related_name='home_services_seller')
     service_area = models.ManyToManyField("Area" , related_name='home_services_area_set')
     number_of_served_clients = models.PositiveIntegerField(default=0)

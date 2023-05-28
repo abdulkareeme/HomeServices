@@ -9,7 +9,7 @@ class HomeServiceSpectacular(serializers.ModelSerializer):
     seller = serializers.CharField(max_length = 150)
     class Meta :
         model = HomeService
-        fields = ['title','categories','minimum_price','service_area' , 'seller' ]
+        fields = ['title','categories','average_price_per_hour','service_area' , 'seller' ]
 
 class ListOrdersSpectacular(serializers.ModelSerializer):
     home_service = HomeServiceSpectacular()

@@ -32,7 +32,7 @@ class HomeServiceSerializer(serializers.ModelSerializer):
     service_area = AreaSerializer(many=True)
     class Meta :
         model = HomeService
-        fields = ['title','categories','minimum_price','service_area' ]
+        fields = ['title','categories','average_price_per_hour','service_area' ]
 
 class OrderServiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,3 +65,12 @@ class ListOrdersSerializer(serializers.ModelSerializer):
         model = OrderService
         fields = ['create_date','description_message','status','answer_time','end_service','home_service']
 
+class CreateHomeServiceSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = HomeService
+        fields = ['title','categories','average_price_per_hour','service_area']
+
+class ListHomeServicesSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = HomeService
+        fields = '__all__'
