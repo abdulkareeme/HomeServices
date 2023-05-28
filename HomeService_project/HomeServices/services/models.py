@@ -33,7 +33,7 @@ class OrderService(models.Model):
     create_date = models.DateTimeField( auto_now_add=True)
     description_message = models.CharField( max_length=1000)
     home_service = models.ForeignKey("HomeService",on_delete=models.CASCADE , related_name='home_service')
-    status = models.CharField(choices=status_choices, max_length=50 , default='Underway')
+    status = models.CharField(choices=status_choices, max_length=50 , default='Pending')
     answer_time = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
     end_service = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
 

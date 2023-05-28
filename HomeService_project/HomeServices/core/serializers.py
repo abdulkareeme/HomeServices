@@ -11,64 +11,65 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.validators import ValidationError
 from services.serializers import CategorySerializer
+import random
 
 gender_choices = [('Male', 'M'), ('Female', 'F')]
 mode_choices = [('client', 'buyer'), ('seller', 'seller_buyer')]
 
-class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
+# class RegisterSerializer(serializers.ModelSerializer):
+#     email = serializers.EmailField(
+#             required=True,
+#             validators=[UniqueValidator(queryset=User.objects.all())]
+#             )
 
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+#     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+#     password2 = serializers.CharField(write_only=True, required=True)
 
-    birth_date = serializers.DateField(required=False)
-    gender = serializers.ChoiceField(choices=gender_choices, required=True)
-    photo = serializers.ImageField(max_length=100, use_url=True, required=False)
-    mode = serializers.ChoiceField(choices=mode_choices, required=True)
+#     birth_date = serializers.DateField(required=False)
+#     gender = serializers.ChoiceField(choices=gender_choices, required=True)
+#     photo = serializers.ImageField(max_length=100, use_url=True, required=False)
+#     mode = serializers.ChoiceField(choices=mode_choices, required=True)
     
-    class Meta:
-        model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name','birth_date' , 'gender','photo','mode' , 'area')
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-            'area' :{'required': True}
-        }
+#     class Meta:
+#         model = User
+#         fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name','birth_date' , 'gender','photo','mode' , 'area')
+#         extra_kwargs = {
+#             'first_name': {'required': True},
+#             'last_name': {'required': True},
+#             'area' :{'required': True}
+#         }
         
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+#     def validate(self, attrs):
+#         if attrs['password'] != attrs['password2']:
+#             raise serializers.ValidationError({"password": "Password fields didn't match."})
 
-        return attrs
+#         return attrs
 
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            birth_date=validated_data.get('birth_date',None),
-            gender=validated_data['gender'],
-            photo=validated_data.get('photo', None),
-            mode=validated_data['mode'],
-            area=validated_data['area']
-        )
-        user.set_password(validated_data['password'])
-        user.is_active = False
-        user.save()
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        confirm_url = reverse('confirm_email', kwargs={'uidb64': uid, 'token': token})
-        confirm_url = self.context['request'].build_absolute_uri(confirm_url)
-        subject = 'Confirm your email'
-        message = f'Please click the following link to confirm your email address: {confirm_url}'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [user.email,]    
-        send_mail( subject, message, email_from, recipient_list )
-        return user
+#     def create(self, validated_data):
+#         user = User.objects.create(
+#             username=validated_data['username'],
+#             email=validated_data['email'],
+#             first_name=validated_data['first_name'],
+#             last_name=validated_data['last_name'],
+#             birth_date=validated_data.get('birth_date',None),
+#             gender=validated_data['gender'],
+#             photo=validated_data.get('photo', None),
+#             mode=validated_data['mode'],
+#             area=validated_data['area']
+#         )
+#         user.set_password(validated_data['password'])
+#         user.is_active = False
+#         user.save()
+#         token = default_token_generator.make_token(user)
+#         uid = urlsafe_base64_encode(force_bytes(user.pk))
+#         confirm_url = reverse('confirm_email', kwargs={'uidb64': uid, 'token': token})
+#         confirm_url = self.context['request'].build_absolute_uri(confirm_url)
+#         subject = 'Confirm your email'
+#         message = f'Please click the following link to confirm your email address: {confirm_url}'
+#         email_from = settings.EMAIL_HOST_USER
+#         recipient_list = [user.email,]    
+#         send_mail( subject, message, email_from, recipient_list )
+#         return user
 
 class UserConfirmEmailSerializer(serializers.Serializer):
     uidb64 = serializers.CharField()
@@ -110,3 +111,101 @@ class  RetrieveUserSerializer(serializers.ModelSerializer):
     class Meta :
         model = User
         fields = ['id','username','email','first_name','last_name','mode','photo','birth_date','date_joined','gender','bio']
+
+class PasswordResetSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password2= serializers.CharField(required=True)
+    def validate_new_password(self, value):
+        user = self.context['request'].user
+        try:
+            validate_password(password=value, user=user)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
+        return value
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Incorrect password.")
+        return value
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['new_password2'] : 
+            raise serializers.ValidationError({"password": "New password fields didn't match."})
+        return super().validate(attrs)
+    
+
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+            required=True,
+            validators=[UniqueValidator(queryset=User.objects.all())]
+            )
+
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+
+    birth_date = serializers.DateField(required=False)
+    gender = serializers.ChoiceField(choices=gender_choices, required=True)
+    photo = serializers.ImageField(max_length=100, use_url=True, required=False)
+    mode = serializers.ChoiceField(choices=mode_choices, required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name', 'birth_date', 'gender', 'photo', 'mode', 'area')
+        extra_kwargs = {
+            'first_name': {'required': True},
+            'last_name': {'required': True},
+            'area': {'required': True}
+        }
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return attrs
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            birth_date=validated_data.get('birth_date', None),
+            gender=validated_data['gender'],
+            photo=validated_data.get('photo', None),
+            mode=validated_data['mode'],
+            area=validated_data['area']
+        )
+        user.set_password(validated_data['password'])
+        user.is_active = False
+        user.confirmation_tries = 3
+        user.resend_tries = 3
+        user.confirmation_code = str(random.randint(100000, 999999))
+        user.confirmation_code_sent_at = timezone.now()
+        user.save()
+
+        subject = 'Confirm your email'
+        message = f'Please use the following 6-digit code to confirm your email address: {user.confirmation_code}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [user.email,]
+        send_mail(subject, message, email_from, recipient_list)
+        return user
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = User
+        fields = ['first_name','last_name','birth_date','photo','area']
+
+class UpdateNormalUser(serializers.ModelSerializer):
+    user = UpdateUserSerializer()
+    class Meta :
+        model = NormalUser
+        fields = ['bio','user']
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', None)
+        if user_data:
+            user_serializer = UpdateUserSerializer(instance=instance.user, data=user_data)
+            user_serializer.is_valid(raise_exception=True)
+            user_serializer.save()
+        
+        return super().update(instance, validated_data)

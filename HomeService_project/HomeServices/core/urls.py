@@ -11,4 +11,6 @@ urlpatterns = [
     path('users', views.ListUsers.as_view()),
     path('user/<str:username>', views.RetrieveUser.as_view()), 
     path('logout/',LogoutView.as_view() , name='logout'),
+    path('password_reset/', views.PasswordResetAPIView.as_view(), name='password_reset'),
+    path('update_profile', views.UpdateUser.as_view())
 ]

@@ -12,6 +12,15 @@ class User(AbstractUser):
     mode = models.CharField(choices=mode_choices , max_length=50 )
     area = models.ForeignKey("services.Area" ,on_delete=models.SET_DEFAULT , default=1)
 
+    confirmation_tries = models.IntegerField(default=3 ,blank=True)
+    next_confirm_try = models.DateTimeField(blank=True , null=True)
+    confirmation_code = models.CharField(blank=True, max_length=6)
+
+    resend_tries = models.IntegerField(default=3 , blank=True)
+    confirmation_code_sent_at = models.DateTimeField(blank=True , null=True)
+    
+
+
 class NormalUser(models.Model):
     bio = models.CharField( max_length=1000,default="")
     user= models.OneToOneField("User", on_delete=models.CASCADE , related_name='normal_user')
