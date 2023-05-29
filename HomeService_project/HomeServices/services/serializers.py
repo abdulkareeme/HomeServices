@@ -74,3 +74,4 @@ class ListHomeServicesSerializer(serializers.ModelSerializer):
     class Meta :
         model = HomeService
         fields = '__all__'
+        depth = 2

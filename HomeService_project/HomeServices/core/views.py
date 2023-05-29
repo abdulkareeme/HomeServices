@@ -41,12 +41,12 @@ def get_user_info(user):
         days_string = f"{delta.days} days , " if delta.days else ""
         average_fast_answer = f"{days_string}{time_string}"
     
-        average_rating =0
-        if user.home_services_seller.count() >0 :
-            for service in user.home_services_seller.all():
-                average_rating += service.average_ratings
-            if user.home_services_seller.count():
-                average_rating /= user.home_services_seller.count()
+    average_rating =0
+    if user.normal_user.home_services_seller.count() > 0 :
+        for service in user.normal_user.home_services_seller.all():
+            average_rating += service.average_ratings
+        if user.normal_user.home_services_seller.count():
+            average_rating /= user.normal_user.home_services_seller.count()
 
     return {
         'id': user.id,
