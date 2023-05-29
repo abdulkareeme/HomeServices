@@ -16,7 +16,8 @@ class Area(models.Model):
         return self.name
 
 class HomeService(models.Model):
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=100)
+    description = models.CharField( max_length=1000 , default="")
     category = models.ForeignKey("Category" , related_name='home_services_categories' , on_delete=models.SET_NULL , null=True) #TODO set default
     average_price_per_hour = models.PositiveIntegerField()
     seller = models.ForeignKey(User , on_delete=models.CASCADE, related_name='home_services_seller')
