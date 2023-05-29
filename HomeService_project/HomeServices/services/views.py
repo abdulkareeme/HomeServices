@@ -211,7 +211,8 @@ class CreateHomeService(generics.CreateAPIView):
         serializer.is_valid()
         return Response(serializer.data , status=status.HTTP_200_OK)
 @extend_schema(
-    description="NOTE : \nssss"
+    description="NOTE : When you use this api use :<br> 1 - ( services/list_home_services?username=\{username\} ) to filter \
+       the services for this user <br> 2 -  ( services/list_home_services?category=\{category\} ) to filter the services by category"
 )
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
@@ -220,7 +221,7 @@ class ListHomeServices(generics.ListAPIView):
 
     def get_queryset(self):
         if 'username' in self.request.GET:
-            return HomeService.objects.filter(seller = self.request.GET.get('username'))
+            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username'))
         if 'category' in self.request.GET :
-            return HomeService.objects.filter(category = self.request.GET.get('category'))
+            return HomeService.objects.filter(category__name = self.request.GET.get('category'))
         return HomeService.objects.all()
