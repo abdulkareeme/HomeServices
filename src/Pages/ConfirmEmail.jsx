@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import VerificationCodeInput from "../Components/VerificationCodeInput/VerificationCodeInput";
 
 const ConfirmEmail = () => {
   const history = useNavigate();
   const { isRegistered } = useSelector((state) => state.homeService);
   useEffect(() => {
-    isRegistered
-      ? setTimeout(() => {
-          history("/login");
-        }, 4000)
-      : setTimeout(() => {
-          history("/");
-        }, 4000);
+    !isRegistered &&
+      setTimeout(() => {
+        history("/");
+      }, 3000);
   }, []);
   if (isRegistered) {
     return (
@@ -21,9 +19,10 @@ const ConfirmEmail = () => {
         <h3>شكراً لتسجيلك في موقعنا</h3>
         <p className="fs-5">
           {" "}
-          يرجى الدخول إلى بريدك الإلكتروني والبحث عن رسالة تحتوي على رابط
-          التأكيد
+          يرجى التحقق من صندوق البريد الوارد والعثور على بريدنا الإلكتروني الذي
+          يحتوي على رمز التحقق
         </p>
+        <VerificationCodeInput />
       </section>
     );
   } else {

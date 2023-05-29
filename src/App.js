@@ -4,6 +4,8 @@ import NavBar from "./Components/Navbar/Navbar";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import ConfirmEmail from "./Pages/ConfirmEmail";
+import SellerServices from "./Pages/SellerServices/SellerServices";
+import UserProfile from "./Pages/UserProfile/UserProfile";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/confirm_email" element={<ConfirmEmail />} />
+        <Route path="/user/:username" element={<UserProfile />} />
+        <Route path="/user/:username/services" element={<SellerServices />} />
       </Routes>
     </BrowserRouter>
   );

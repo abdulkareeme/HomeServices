@@ -7,11 +7,13 @@ import {
   categories,
   normalUserLinks,
   offcanvasAccordion,
+  sellerUserLinks,
 } from "../../utils/constants";
 import "./navbar.css";
 import { useState } from "react";
 import SearchBar from "../SeachBar/SearchBar";
 import { useSelector } from "react-redux";
+import UserAvatar from "../UserAvatar/UserAvatar";
 
 const NavBar = () => {
   const [show, setShow] = useState(false);
@@ -30,7 +32,7 @@ const NavBar = () => {
         </Navbar.Brand>
         <ul className="m-0 d-flex gap-3 align-items-center pe-3">
           {userTotalInfo ? (
-            <img src={userTotalInfo.gender === "Male" ? Male : Female} alt="" />
+            <UserAvatar />
           ) : (
             accountLinks.map((navItem, index) => (
               <Nav.Item key={index}>
@@ -54,7 +56,18 @@ const NavBar = () => {
           <hr />
           <ul className="mt-2 px-4 d-flex flex-column gap-3">
             {userTotalInfo
-              ? normalUserLinks.map((canvasItem, index) => (
+              ?(userTotalInfo.mode ==="client")? 
+              normalUserLinks.map((canvasItem, index) => (
+                  <Link
+                    className="text-decoration-none text-black d-flex gap-2 align-items-center"
+                    key={index}
+                  >
+                    {canvasItem.icon}
+                    <span>{canvasItem.label}</span>
+                  </Link>
+                ))
+                :
+                sellerUserLinks.map((canvasItem, index) => (
                   <Link
                     className="text-decoration-none text-black d-flex gap-2 align-items-center"
                     key={index}

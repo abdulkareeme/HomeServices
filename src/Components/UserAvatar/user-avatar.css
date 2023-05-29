@@ -1,0 +1,27 @@
+.user {
+    position: relative;
+}
+
+.user img {
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.list-group {
+    position: absolute;
+    left: 10px;
+    top: 105%;
+}
+
+a.list-group-item {
+    width: 100%;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+a.list-group-item ion-icon {
+    font-size: 18px;
+}

@@ -13,6 +13,8 @@ import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
   setIsRegistered,
+  setUserConfirmEmail,
+  setUserInputValue,
   setUserLoginValues,
 } from "../../Store/homeServiceSlice";
 const SignInSchema = Yup.object().shape({
@@ -52,12 +54,12 @@ const Register = () => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isPasswordVisible2, setPasswordVisible2] = useState(false);
   const initialValues = {
-    username: "oss",
-    first_name: "عمر",
-    last_name: "هلال",
-    email: "adidas123@gmail.com",
-    password: "mooo87%%",
-    password2: "mooo87%%",
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    password2: "",
     area: null,
   };
   const submitHandler = (values) => {
@@ -76,9 +78,8 @@ const Register = () => {
         console.log(res);
         setIsSubmitting(0);
         dispatch(setIsRegistered(true));
-        dispatch(
-          setUserLoginValues({ email: values.email, password: values.password })
-        );
+        console.log(values.email);
+        dispatch(setUserInputValue({"email":values.email,"password":values.password}));
         history("/confirm_email");
       })
       .catch((err) => {
@@ -284,7 +285,10 @@ const Register = () => {
                     : "next"
                 }
                 onClick={() => {
-                  isValid ? setPage(1) : setPage(0);
+                  !isValid ||
+                  (!touched.email && !touched.password && !touched.password2)
+                    ? setPage(0)
+                    : setPage(1);
                 }}
               >
                 التالي

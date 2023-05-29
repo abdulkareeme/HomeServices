@@ -6,7 +6,7 @@ import "./login.css";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { ClipLoader } from "react-spinners";
 import { Toaster, toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUserTotalInfo } from "../../Store/homeServiceSlice";
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
@@ -23,11 +23,10 @@ const SignInSchema = Yup.object().shape({
 
 const Login = () => {
   // const history = useNavigate();
-  const { userLoginValues } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();
-  console.log(userLoginValues);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(0);
+  const initialValues = { email: "", password: "" };
   const submitHandler = (values) => {
     setIsSubmitting(1);
     postToAPI("api/login/", values)
@@ -74,7 +73,7 @@ const Login = () => {
   return (
     <section className="d-flex justify-content-center align-items-center">
       <Toaster />
-      <Formik initialValues={userLoginValues} validationSchema={SignInSchema}>
+      <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, handleChange, setSubmitting, errors, touched }) => (
           <form onSubmit={(e) => e.preventDefault()} className="login">
             <h1>منزلي</h1>

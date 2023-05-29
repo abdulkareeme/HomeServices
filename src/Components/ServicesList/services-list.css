@@ -1,0 +1,27 @@
+.services {
+    justify-content: center;
+    gap: 15px;
+}
+
+.services.page {
+    padding-top: 30px;
+    padding-bottom: 50px;
+    background-color: #f1f1f1;
+}
+
+.services>div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.services>div h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.services>div p {
+    font-size: 16px;
+    color: gray;
+}

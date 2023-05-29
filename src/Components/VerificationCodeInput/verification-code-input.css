@@ -1,0 +1,38 @@
+.verification-code-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.verification-code-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.verification-code-input input[type="text"] {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.verification-code-input input[type="text"]:focus {
+    outline: none;
+    border-color: #2caae2;
+}
+
+.verification-code-form button {
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+    margin: 10px 0;
+    background-color: #2caae2;
+}

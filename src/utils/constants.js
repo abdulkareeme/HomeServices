@@ -28,8 +28,39 @@ export const accountLinks = [
 ];
 export const normalUserLinks = [
   {
-    label: "المشتريات",
+    label: "الطلبات المرسلة",
     icon: <ion-icon name="cart-outline"></ion-icon>,
+    link: "/",
+  },
+];
+export const sellerUserLinks = [
+  {
+    label: "أضف خدمة",
+    icon: <ion-icon name="add-circle-outline"></ion-icon>,
+    link: "/",
+  },
+  ...normalUserLinks,
+  {
+    label: "الطلبات الواردة",
+    icon: <ion-icon name="arrow-undo-circle-outline"></ion-icon>,
+    link: "/",
+  },
+];
+
+export const avatarList = [
+  {
+    label: "الرصيد",
+    icon: <ion-icon name="cash-outline"></ion-icon>,
+    link: "/",
+  },
+  {
+    label: "تعديل الحساب",
+    icon: <ion-icon name="create-outline"></ion-icon>,
+    link: "/",
+  },
+  {
+    label: "تسجيل خروج",
+    icon: <ion-icon name="log-out-outline"></ion-icon>,
     link: "/",
   },
 ];
