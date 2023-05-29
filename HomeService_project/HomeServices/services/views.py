@@ -225,3 +225,11 @@ class ListHomeServices(generics.ListAPIView):
         if 'category' in self.request.GET :
             return HomeService.objects.filter(category__name = self.request.GET.get('category'))
         return HomeService.objects.all()
+    
+class HomeServiceDetail(generics.RetrieveAPIView):
+    permission_classes=[permissions.AllowAny]
+    serializer_class = ListHomeServicesSerializer
+    queryset = HomeService.objects.all()
+
+    
+
