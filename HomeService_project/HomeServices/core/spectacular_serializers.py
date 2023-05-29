@@ -6,10 +6,11 @@ class  LoginSpectacular(serializers.ModelSerializer):
     average_fast_answer = serializers.DurationField()
     clients_number  = serializers.IntegerField()
     services_number = serializers.IntegerField()
+    average_rating = serializers.FloatField()
     class Meta :
         model = User
         fields = ['id','username','email','first_name','last_name',
-                  'mode','photo','birth_date','date_joined','gender','bio','average_fast_answer' ,'clients_number','services_number']
+                  'mode','photo','birth_date','date_joined','gender','bio','average_fast_answer' ,'clients_number','services_number','average_rating']
 
 class ListAreaSpectacular(serializers.Serializer):
     id = serializers.IntegerField()

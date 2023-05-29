@@ -48,9 +48,10 @@ class NormalUserSerializer(serializers.ModelSerializer):
 
 class ListUsersSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True)
+    average_rating = serializers.FloatField()
     class Meta :
         model = User
-        fields = ['username','first_name','last_name','photo' ,'categories']
+        fields = ['username','first_name','last_name','photo' ,'categories','average_rating']
 
 class  RetrieveUserSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(max_length = 1000)

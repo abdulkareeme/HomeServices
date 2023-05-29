@@ -68,7 +68,7 @@ class ListOrdersSerializer(serializers.ModelSerializer):
 class CreateHomeServiceSerializer(serializers.ModelSerializer):
     class Meta :
         model = HomeService
-        fields = ['title','categories','average_price_per_hour','service_area']
+        fields = ['title','category','average_price_per_hour','service_area']
 
 class ListHomeServicesSerializer(serializers.ModelSerializer):
     class Meta :

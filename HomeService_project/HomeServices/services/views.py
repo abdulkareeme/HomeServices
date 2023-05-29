@@ -201,8 +201,26 @@ class CreateHomeService(generics.CreateAPIView):
     queryset = HomeService.objects.all()
     def perform_create(self, serializer):
         serializer.save(seller =self.request.user.normal_user)
-
+    @extend_schema(
+            responses={200 : CategorySerializer(many=True)},
+            description="NOTE : The get response is list of categories"
+    )
+    def get(self , request):
+        query= Category.objects.all()
+        serializer = CategorySerializer(query , many=True)
+        serializer.is_valid()
+        return Response(serializer.data , status=status.HTTP_200_OK)
+@extend_schema(
+    description="NOTE : \nssss"
+)
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = ListHomeServicesSerializer
+
+    def get_queryset(self):
+        if 'username' in self.request.GET:
+            return HomeService.objects.filter(seller = self.request.GET.get('username'))
+        if 'category' in self.request.GET :
+            return HomeService.objects.filter(category = self.request.GET.get('category'))
+        return HomeService.objects.all()

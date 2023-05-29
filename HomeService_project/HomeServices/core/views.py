@@ -40,6 +40,13 @@ def get_user_info(user):
 
         days_string = f"{delta.days} days , " if delta.days else ""
         average_fast_answer = f"{days_string}{time_string}"
+    
+        average_rating =0
+        if user.home_services_seller.count() >0 :
+            for service in user.home_services_seller.all():
+                average_rating += service.average_ratings
+            if user.home_services_seller.count():
+                average_rating /= user.home_services_seller.count()
 
     return {
         'id': user.id,
@@ -56,6 +63,7 @@ def get_user_info(user):
         'clients_number' : clients_number ,
         'services_number' : user.normal_user.home_services_seller.count() ,
         'average_fast_answer' : average_fast_answer,
+        'average_rating':average_rating,
     }
 
 def Confirm_process(request):
@@ -178,10 +186,10 @@ class UserConfirmEmailView(APIView):
 
 class ListUsers(APIView):
     @extend_schema(
-            responses={200:ListUsersSerializer}
+            responses={200:ListUsersSerializer(many=True)}
     )
     def get(self, request):
-        queryset = NormalUser.objects.all()
+        queryset = NormalUser.objects.filter(user__mode = 'seller_buyer')
         data= []
         for user in queryset :
             result=dict()
@@ -189,11 +197,16 @@ class ListUsers(APIView):
             result['first_name'] = user.user.first_name
             result['last_name']=user.user.last_name
             result['photo']=user.user.photo
+            result['average_rating'] =0
+            for service in user.home_services_seller.all():
+                result['average_rating'] += service.average_ratings
+            if user.home_services_seller.count():
+                result['average_rating'] /= user.home_services_seller.count()
             result['categories']= []
             if user.home_services_seller:
                 for home_service in user.home_services_seller.all() :
-                    if home_service.categories :
-                        result['categories'].append(home_service.categories)
+                    if home_service.category :
+                        result['categories'].append(home_service.category)
             
             data.append(result)
         print(data)
