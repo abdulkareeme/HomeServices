@@ -68,7 +68,7 @@ def get_user_info(user):
 
 def Confirm_process(request):
     if request.user.is_active :
-            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
+            return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
         
     if request.user.next_confirm_try is not None and request.user.next_confirm_try <= timezone.now() :
         request.user.confirmation_tries = 3
@@ -93,7 +93,7 @@ def Confirm_process(request):
 
 def send_process(request):
     if request.user.is_active :
-            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
+            return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
         
     if request.user.resend_tries is not None and request.user.next_confirmation_code_sent <= timezone.now() :
         request.user.resend_tries = 3
@@ -254,30 +254,31 @@ class UserConfirmMessage(APIView):
     permission_classes = [permissions.AllowAny]
     def post(self , request):
         if request.POST.get('email' , None) is None :
-            return Response({"email":["This field is required"]})
+            return Response({"email":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
         
         if request.POST.get('confirmation_code' , None) is None :
-            return Response({"confirmation_code":["This field is required"]})
+            return Response({"confirmation_code":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
         
         try :
             request.user= User.objects.get(email= request.POST['email'])
         except User.DoesNotExist :
-            return Response({"detail":"Email does not exist"})
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         return Confirm_process(request=request)
 
 @extend_schema(
-    request=ResendCodeEmailSpectacular
+    request=ResendCodeEmailSpectacular,
+    responses={200:None , 400:None}
 )
 class ResendEmailMessage(APIView):
     permission_classes=[permissions.AllowAny]
     def post(self , request):
         if request.POST.get('email' , None) is None :
-            return Response({"email":["This field is required"]})
+            return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
         
         try :
-            request.user= User.objects.get(email= request.POST['email'])
+            request.user= User.objects.get(email= request.POST['email'], status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist :
-            return Response({"detail":"Email does not exist"})
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         
         return send_process(request=request)
 
