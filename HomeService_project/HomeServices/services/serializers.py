@@ -20,7 +20,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class UsernameSerializer(serializers.ModelSerializer):
     class Meta :
         model = User
-        fields = ['username','first_name' , 'last_name']
+        fields = ['username','first_name' , 'last_name' , 'photo']
 class NormalUsernameSerializer(serializers.ModelSerializer):
     user = UsernameSerializer()
     class Meta:
@@ -71,6 +71,14 @@ class CreateHomeServiceSerializer(serializers.ModelSerializer):
         fields = ['title','category','average_price_per_hour','service_area' , 'description']
 
 class ListHomeServicesSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    service_area = AreaSerializer(many=True)
+    seller = NormalUsernameSerializer()
+    class Meta :
+        model = HomeService
+        fields = ['id','title','category','average_price_per_hour','seller','service_area','average_ratings']
+
+class RetrieveHomeServices(serializers.ModelSerializer):
     category = CategorySerializer()
     service_area = AreaSerializer(many=True)
     seller = NormalUsernameSerializer()
