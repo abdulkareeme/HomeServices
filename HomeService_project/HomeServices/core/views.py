@@ -132,14 +132,14 @@ def login_api(request):
             return Response({"email":["Email does not exist"]} , status=status.HTTP_400_BAD_REQUEST)
         data['username']=username.username
         if not username.is_active :
-            return Response({"email":"Email must be confirmed"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"email":["Email must be confirmed"]}, status=status.HTTP_400_BAD_REQUEST)
     elif 'username' in request.data :
         try :
             current_user= User.objects.get(username = request.data['username'])
         except User.DoesNotExist :
-            return Response({"username":"Username does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"username":["Username does not exist"]}, status=status.HTTP_400_BAD_REQUEST)
         if not current_user.is_active :
-            return Response({"email":"Email must be confirmed"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"email":["Email must be confirmed"]}, status=status.HTTP_400_BAD_REQUEST)
     serializer = AuthTokenSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
