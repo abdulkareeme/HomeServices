@@ -122,25 +122,25 @@ def send_process(request):
 )
 @api_view(['POST'])
 def login_api(request):
-    data = request.data.copy()
-    data._mutable = True
-    if  'username' not in data and  'email' in data:
+    request.POST._mutable = True
+    if  'username' not in request.data and  'email' in request.data:
         try :
-            username = User.objects.get(email = data['email'])
+            username = User.objects.get(email = request.data['email'])
         except User.DoesNotExist :
             return Response({"email":["Email does not exist"]} , status=status.HTTP_400_BAD_REQUEST)
-        data['username']=username.username
+        request.data['username']=username.username
+
         if not username.is_active :
             return Response({"email":"Email must be confirmed"})
-    elif 'username' in data :
+    elif 'username' in request.data :
         try :
-            current_user= User.objects.get(username = data['username'])
+            current_user= User.objects.get(username = request.data['username'])
         except User.DoesNotExist :
             return Response({"username":"Username does not exist"})
         if not current_user.is_active :
             return Response({"email":"Email must be confirmed"})
-
-    serializer = AuthTokenSerializer(data=data)
+    request.POST._mutable = False
+    serializer = AuthTokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
     _, token = AuthToken.objects.create(user)
