@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
 import 'package:home_services/Log In /Api/log_in_api.dart';
 
+import '../../Home Page/home_page.dart';
+
 
 class LogInApi extends StatefulWidget {
   var usernameController, passwordController;
@@ -19,24 +21,32 @@ class LogInApi extends StatefulWidget {
 }
 
 class _LogInApiState extends State<LogInApi> {
-  LogInApis op = LogInApis() ;
+  LogInApis op1 = LogInApis() ;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return SafeArea (
       child: Scaffold(
         body: (
             Center(
-              child: FutureBuilder<List?>(
-                future:op.login(widget.usernameController, widget.passwordController, widget.error),
+              child:FutureBuilder<List?>(
+                future:op1.login(widget.usernameController, widget.passwordController, widget.error),
                 builder: (context,AsyncSnapshot<List?> snapshot){
                   if(snapshot.connectionState == ConnectionState.waiting){
+                    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
                     return const CircularProgressIndicator();
                   } else if(snapshot.connectionState == ConnectionState.done) {
-                    if(snapshot.data!.length == 0){
-                      return LogIn(error: widget.error  ,);
+                    print('vbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+                    if(snapshot.hasData &&snapshot.data!.length == 0){
+                      print('ccccccccccccccccccccccccccccccccccccccccccccccccccccccc');
+                      return LogIn(error: widget.error,);
                     } else {
+                      print('ffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+                      for(int i=0;i<snapshot.data!.length;i++){
+                        print(snapshot.data![i]+'hii there');
+                      }
                       return (
-                          Column(
+                          HomePage(userInfo: snapshot.data!,)
+                          /*Column(
                             children: [
                               const Text("log in suc"),
                               const SizedBox(height: 50,),
@@ -47,7 +57,7 @@ class _LogInApiState extends State<LogInApi> {
                               Text(snapshot.data![4].toString()),
                               Text(snapshot.data![5].toString()),
                             ],
-                          )
+                          )*/
                       );
                     }
                   } else {

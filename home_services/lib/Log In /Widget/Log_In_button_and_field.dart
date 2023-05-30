@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20In%20/Widget/log_in .dart';
 import 'package:home_services/my_field.dart';
+import 'package:home_services/Log out/Api/Log_out_Api.dart';
 import '../../style/log_in_style.dart';
 
 // ignore: must_be_immutable
@@ -21,6 +22,7 @@ class LogInButtonAndField extends StatefulWidget {
 }
 
 class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
+  LogOutApi op = LogOutApi();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -35,9 +37,9 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         // username field
         MyFild(
           contorller: widget.usernameController,
-          hintText: "اسم المسيتخدم",
+          hintText: "البريد الالكتروني",
           obscure: false,
-          lable: const Text("اسم المسيتخدم"),
+          lable: const Text("البريد الالكتروني"),
           color: Colors.white,
           sidesColor: Colors.black,
           readOnly: false,
@@ -64,7 +66,9 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
             children: [
               InkWell(
                 splashColor: Colors.black,
-                onTap: () {},
+                onTap: () {
+                  //op.logOut1(context);
+                },
                 child: Text(
                   "نسيت كلمة المرور؟",
                   style: LogInStyle.forgetPasswordStyle(),
@@ -79,7 +83,10 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         ElevatedButton(
           onPressed: () {
             //logIn();
+            print(widget.usernameController.text);
+            print(widget.passwordController.text);
             Navigator.of(context).push(MaterialPageRoute(
+
                 builder: (context) => LogInApi(
                     passwordController: widget.passwordController,
                     usernameController: widget.usernameController)));

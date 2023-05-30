@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
+import 'package:home_services/Sign%20up/Widget/code_verification_page.dart';
+import 'package:home_services/server/api_url.dart';
 import 'package:http/http.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -44,9 +45,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     Future<List?> signUp() async {
-      String url = "http://abdulkareemedres.pythonanywhere.com/api/register/";
-      //print (widget.username+'\n'+widget.passwordController.text+'\n'+widget.confirmaPasswordController.text+'\n'+ widget.emailController.text+'\n'+widget.firstnameController.text+'\n'+widget.lastnameController.text+'\n'+ widget.birthdatecontroller.text+'\n'+widget.gender+'\n'+widget.mode);
-      Response response = await post(Uri.parse(url), body: {
+      //String url = "http://abdulkareemedres.pythonanywhere.com/api/register/";
+      Response response = await post(Uri.parse(Server.host+Server.signupApi), body: {
         'username': widget.username,
         'password': widget.passwordController.text,
         'password2': widget.confirmaPasswordController.text,
@@ -87,7 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 } else {
                   if(snapshot.connectionState == ConnectionState.done&&snapshot.hasData){
                     if(snapshot.data![0] == "done"){
-                      return Column(children: [Text(snapshot.data![0].toString())],);
+                      return CodeVerificationPage(email: widget.emailController.text,);
                     } else{
                       return AlertDialog(
                         title: const Text('Failed to sign up'),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Log In /Widget/Log_In_page.dart';
-import 'On Boarding Screen/Widget/on_boarding_screen.dart';
-
+import 'Log In /Widget/check_if_user_logged_in.dart';
 void main() {
   runApp(MyApp());
 }
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: OnBoardingScreen(),
+      home: CheckIfLoggedIn(),
       routes: {
         "log in": (context) => LogIn(
               error: error,

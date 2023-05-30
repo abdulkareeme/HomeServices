@@ -74,9 +74,7 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                     return "required";
                   } else {
                     if (EmailValidator.validate(widget.emailController.text)) {
-                      for (int i = 0;
-                          i < widget.emailController.text.length;
-                          i++) {
+                      for (int i = 0; i < widget.emailController.text.length; i++) {
                         if (widget.emailController.text[i] != '@') {
                           widget.username += widget.emailController.text[i];
                         }

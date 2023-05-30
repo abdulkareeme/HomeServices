@@ -16,16 +16,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-  List op = [
-    'Lattakia',
-    'Damascus',
-    'aleppo',
-    'Hama',
-    'tartous',
-    'raqa',
-    'hasaka',
-    'Homes'
-  ];
+  List op = ['Lattakia', 'Damascus', 'aleppo', 'Hama', 'tartous', 'raqa', 'hasaka', 'Homes'];
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +53,9 @@ class _LogInState extends State<LogIn> {
                     const SizedBox(height: 160,),
                     // Log in button and field
                     /*Expanded(
-                        child:*/ LogInButtonAndField(
+                        child:*/
+                    //Text(widget.error,style: LogInStyle.errorStyle(),),
+                    LogInButtonAndField(
                       height: height,
                       loginError: widget.error,
                     )/*)*/,
