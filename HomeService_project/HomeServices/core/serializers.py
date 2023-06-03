@@ -139,22 +139,26 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta :
         model = User
-        fields = ['first_name','last_name','birth_date','photo','area']
+        fields = ['first_name','last_name','birth_date','area']
 
 class UpdateNormalUser(serializers.ModelSerializer):
     user = UpdateUserSerializer()
+    photo = serializers.ImageField(max_length = 100 , required=False)
     class Meta :
         model = NormalUser
-        fields = ['bio','user']
+        fields = ['photo','bio','user']
+
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
-        if user_data:
-            # print(user_data['area'].id)
+        photo = validated_data.get('photo',None)
+        if user_data is not None:
             user_data['area']= user_data['area'].id
             user_serializer = UpdateUserSerializer(instance=instance, data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
+        if photo is not None :
+            instance.photo.save(photo.name , photo , save=False)
         
         return super().update(instance, validated_data)
 
