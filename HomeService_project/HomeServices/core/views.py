@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view 
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken
@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import status , generics ,permissions
-from .models import Balance 
+from .models import Balance
 from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular
 from .models import NormalUser ,User
 from services.serializers import Area,AreaSerializer
@@ -21,7 +21,7 @@ import random
 def get_user_info(user):
     if not user.photo:
             photo  =None
-    else : 
+    else :
         photo = user.photo.url
 
     if user.normal_user.average_fast_answer :
@@ -40,7 +40,7 @@ def get_user_info(user):
 
         days_string = f"{delta.days} days , " if delta.days else ""
         average_fast_answer = f"{days_string}{time_string}"
-    
+
     average_rating =0
     if user.normal_user.home_services_seller.count() > 0 :
         for service in user.normal_user.home_services_seller.all():
@@ -64,20 +64,24 @@ def get_user_info(user):
         'services_number' : user.normal_user.home_services_seller.count() ,
         'average_fast_answer' : average_fast_answer,
         'average_rating':average_rating,
+        'area_id':user.area.id,
+        'area_name':user.area.name,
     }
 
 def Confirm_process(request):
     if request.user.is_active :
+
             return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
-        
-    if request.user.next_confirm_try is not None and request.user.next_confirm_try <= timezone.now() :
+
+    if request.user.next_confirm_try is None or request.user.next_confirm_try <= timezone.now() :
         request.user.confirmation_tries = 3
+        request.user.next_confirm_try = timezone.now() + timedelta(hours=24)
         request.user.save()
 
     if request.user.confirmation_tries == 0 :
         return Response({"detail":f"Try again after {request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
-    
-    if request.user.confirmation_code == request.POST.get('confirmation_code' , None):
+
+    if request.user.confirmation_code == request.data.get('confirmation_code' , None):
         request.user.is_active = True
         request.user.confirmation_code  = None
         request.user.save()
@@ -94,15 +98,15 @@ def Confirm_process(request):
 def send_process(request):
     if request.user.is_active :
             return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
-        
-    if request.user.resend_tries is not None and request.user.next_confirmation_code_sent <= timezone.now() :
+    if request.user.next_confirmation_code_sent is None or request.user.next_confirmation_code_sent <= timezone.now() :
         request.user.resend_tries = 3
+        request.user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
         request.user.save()
 
     if request.user.resend_tries == 0 :
         return Response({"detail":f"Can't send , try again after {request.user.next_confirmation_code_sent - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
     request.user.resend_tries -=1
     request.user.confirmation_code = str(random.randint(100000, 999999))
     request.user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
@@ -126,12 +130,11 @@ def login_api(request):
     data ['username'] = request.data.get('username','')
     data ['password'] = request.data.get('password','')
     if  'username' not in request.data and  'email' in request.data:
-        try :   
+        try :
             username = User.objects.get(email = request.data['email'])
         except User.DoesNotExist :
             return Response({"email":["Email does not exist"]} , status=status.HTTP_400_BAD_REQUEST)
         data['username']=username.username
-        
         if not username.is_active :
             return Response({"email":["Email must be confirmed"]}, status=status.HTTP_400_BAD_REQUEST)
     elif 'username' in request.data :
@@ -145,7 +148,7 @@ def login_api(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data['user']
     _, token = AuthToken.objects.create(user)
-    
+
     return Response({
         'user_info': get_user_info(user),
         'token': {token}
@@ -157,7 +160,7 @@ class RegisterUser(APIView):
     @extend_schema(
         responses={200:AreaSerializer(many=True) },
         description="list of area",
-        
+
     )
     def get(self , request):
         serializer = AreaSerializer(Area.objects.all() , many=True)
@@ -210,13 +213,13 @@ class ListUsers(APIView):
                 for home_service in user.home_services_seller.all() :
                     if home_service.category :
                         result['categories'].append(home_service.category)
-            
+
             data.append(result)
         print(data)
         serializer = ListUsersSerializer(data=data , many=True)
         serializer.is_valid(raise_exception=False)
         return Response(serializer.data , status=status.HTTP_200_OK)
-    
+
 class RetrieveUser(APIView):
     @extend_schema(
     responses={200:LoginSpectacular , 404:None}
@@ -226,10 +229,10 @@ class RetrieveUser(APIView):
             user = User.objects.get(username=username)
         except User.DoesNotExist :
             return Response('Error 404 Not Found' , status=status.HTTP_404_NOT_FOUND)
-        
-        if user.is_superuser : 
+
+        if user.is_superuser :
             return Response('Error 404 Not Found' , status=status.HTTP_404_NOT_FOUND)
-        
+
         return Response( get_user_info(user) , status=status.HTTP_200_OK)
 
 @extend_schema(
@@ -253,14 +256,14 @@ class PasswordResetAPIView(APIView):
 class UserConfirmMessage(APIView):
     permission_classes = [permissions.AllowAny]
     def post(self , request):
-        if request.POST.get('email' , None) is None :
+        if 'email' not in request.data :
             return Response({"email":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
-        
-        if request.POST.get('confirmation_code' , None) is None :
+
+        if 'confirmation_code' not in request.data:
             return Response({"confirmation_code":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try :
-            request.user= User.objects.get(email= request.POST['email'])
+            request.user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
             return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         return Confirm_process(request=request)
@@ -272,14 +275,14 @@ class UserConfirmMessage(APIView):
 class ResendEmailMessage(APIView):
     permission_classes=[permissions.AllowAny]
     def post(self , request):
-        if request.POST.get('email' , None) is None :
+        if 'email' not in request.data :
             return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
-        
+
         try :
-            request.user= User.objects.get(email= request.POST['email'], status=status.HTTP_400_BAD_REQUEST)
+            request.user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
             return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         return send_process(request=request)
 
 
@@ -307,4 +310,3 @@ class UpdateUser(APIView):
         serializer.save()
         return Response(get_user_info(user) , status=status.HTTP_200_OK)
 
-    
