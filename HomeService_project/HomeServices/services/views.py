@@ -12,7 +12,6 @@ from django.db import transaction
 from datetime import datetime , timedelta
 from .spectacular import ListOrdersSpectacular
 
-# Create your views here.
 
 def get_pending_price():
     price = GeneralServicesPrice.objects.aggregate(Sum('price'))
@@ -182,7 +181,7 @@ class ReceivedOrders(APIView):
         responses={200:ListOrdersSpectacular , 403:None}
     )
     def get(self , request):
-        if request.user.mode == 'buyer':
+        if request.user.mode == 'client':
             return Response({"detail":"Error 403 Forbidden , you are a buyer you don't receive orders"} , status=status.HTTP_403_FORBIDDEN)
         queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user)
         serializer = ListOrdersSerializer(data = queryset , many=True)

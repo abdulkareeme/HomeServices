@@ -13,7 +13,7 @@ from rest_framework.validators import ValidationError
 from services.serializers import CategorySerializer
 import random
 from datetime import timedelta
-
+from services.serializers import AreaSerializer
 gender_choices = [('Male', 'M'), ('Female', 'F')]
 mode_choices = [('client', 'buyer'), ('seller', 'seller_buyer')]
 
@@ -150,35 +150,11 @@ class UpdateNormalUser(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data:
-            user_serializer = UpdateUserSerializer(instance=instance.user, data=user_data)
+            # print(user_data['area'].id)
+            user_data['area']= user_data['area'].id
+            user_serializer = UpdateUserSerializer(instance=instance, data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
         
         return super().update(instance, validated_data)
 
-# class ConfirmMessageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['confirmation_code']
-    
-#     def validate(self, attrs):
-#         if self.context['request'].user.is_active :
-#             return ValidationError("Email already verified")
-        
-#         if self.context['request'].user.next_confirm_try is not None and self.context['request'].user.next_confirm_try <= timedelta.now() :
-#             self.context['request'].user.confirmation_tries = 3
-#             self.context['request'].user.save()
-
-#         if self.context['request'].user.confirmation_tries == 0 :
-#             return ValidationError(f"Try again after{self.context['request'].user.next_confirm_try - timezone.now()}")
-        
-#         if self.context['request'].user.confirmation_code != self.context['request'].POST.get('confirmation_code' , None):
-#             self.context['request'].user.is_active = True
-
-#         else :
-#             self.context['request'].user.confirmation_tries -=1
-#             if self.context['request'].user.confirmation_tries ==0 :
-#                 self.context['request'].user.next_confirm_try = timezone.now() + timedelta(hours=24)
-#                 return Response({"detail":f"Try again after{self.context['request'].user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
-#             return Response({"detail":"Wrong code please try again"} , status=status.HTTP_400_BAD_REQUEST)
-#         return super().validate(attrs)

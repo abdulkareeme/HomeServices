@@ -195,7 +195,7 @@ class ListUsers(APIView):
             responses={200:ListUsersSerializer(many=True)}
     )
     def get(self, request):
-        queryset = NormalUser.objects.filter(user__mode = 'seller_buyer')
+        queryset = NormalUser.objects.filter(user__mode = 'seller')
         data= []
         for user in queryset :
             result=dict()
@@ -289,7 +289,9 @@ class ResendEmailMessage(APIView):
 class UpdateUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
-            responses={200:UpdateProfileSpectacular}
+            responses={200:UpdateProfileSpectacular},
+            description="Note : The area is all area in the database "
+
     )
     def get (self , request):
         user = request.user
@@ -305,7 +307,7 @@ class UpdateUser(APIView):
     )
     def put(self , request):
         user = request.user
-        serializer = UpdateNormalUser(data=request.data , instance=user.normal_user)
+        serializer = UpdateNormalUser(data=request.data , instance=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(get_user_info(user) , status=status.HTTP_200_OK)
