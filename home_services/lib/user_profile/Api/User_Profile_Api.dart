@@ -1,6 +1,7 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UpdateUserInfoApis {
+class ProfileApi {
   Future<List?> getUserOldData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     List oldData = [];
@@ -12,4 +13,15 @@ class UpdateUserInfoApis {
     oldData.add(pref.get('area'));
     return oldData;
   }
+
+  static Future imagePicker(ImageSource source) async {
+    final ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: source);
+    if(file != null ){
+      return await file.readAsBytes();
+    } else {
+      print("no such image");
+    }
+  }
+
 }

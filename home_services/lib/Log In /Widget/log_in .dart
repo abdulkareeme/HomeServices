@@ -5,6 +5,7 @@ import 'package:home_services/Log In /Api/log_in_api.dart';
 import '../../Home Page/home_page.dart';
 
 
+// ignore: must_be_immutable
 class LogInApi extends StatefulWidget {
   var usernameController, passwordController;
 
@@ -28,40 +29,21 @@ class _LogInApiState extends State<LogInApi> {
       child: Scaffold(
         body: (
             Center(
-              child:FutureBuilder<List?>(
+              child:FutureBuilder(
                 future:op1.login(widget.usernameController, widget.passwordController, widget.error),
                 builder: (context,AsyncSnapshot<List?> snapshot){
                   if(snapshot.connectionState == ConnectionState.waiting){
-                    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
                     return const CircularProgressIndicator();
                   } else if(snapshot.connectionState == ConnectionState.done) {
-                    print('vbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
                     if(snapshot.hasData &&snapshot.data!.length == 0){
-                      print('ccccccccccccccccccccccccccccccccccccccccccccccccccccccc');
                       return LogIn(error: widget.error,);
                     } else {
-                      print('ffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-                      for(int i=0;i<snapshot.data!.length;i++){
-                        print(snapshot.data![i]+'hii there');
-                      }
                       return (
-                          HomePage(userInfo: snapshot.data!,)
-                          /*Column(
-                            children: [
-                              const Text("log in suc"),
-                              const SizedBox(height: 50,),
-                              Text(snapshot.data![0].toString()),
-                              Text(snapshot.data![1].toString()),
-                              Text(snapshot.data![2].toString()),
-                              Text(snapshot.data![3].toString()),
-                              Text(snapshot.data![4].toString()),
-                              Text(snapshot.data![5].toString()),
-                            ],
-                          )*/
+                        HomePage(userInfo: snapshot.data!,)
                       );
                     }
                   } else {
-                    return (Text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+                    return (const Text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
                   }
                 },
               ),

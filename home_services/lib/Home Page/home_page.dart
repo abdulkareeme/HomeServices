@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20out/Api/Log_out_Api.dart';
 import 'package:home_services/user_profile/user_profile.dart';
+import 'package:http/http.dart';
 
 import 'Drawer/Widget/home_page_drawer.dart';
 
@@ -32,7 +35,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Center(
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: ()async{
                     LogOutApi op = LogOutApi();
                     op.logOut1(context);
                   },

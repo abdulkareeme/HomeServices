@@ -23,11 +23,9 @@ class _CheckIfLoggedInState extends State<CheckIfLoggedIn>{
               future: op.checkIfLoggedIn(),
               builder: (context,AsyncSnapshot<List?> snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  //print('11111111kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
                   return const CircularProgressIndicator();
                 } else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    //print('im in');
                     bool ok = true;
                     for(int i=0;i<snapshot.data!.length;i++){
                       //print(snapshot.data![i]);
