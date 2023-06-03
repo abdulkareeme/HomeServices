@@ -68,16 +68,18 @@ def get_user_info(user):
 
 def Confirm_process(request):
     if request.user.is_active :
-            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
 
-    if request.user.next_confirm_try is not None and request.user.next_confirm_try <= timezone.now() :
+            return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.user.next_confirm_try is None or request.user.next_confirm_try <= timezone.now() :
         request.user.confirmation_tries = 3
+        request.user.next_confirm_try = timezone.now() + timedelta(hours=24)
         request.user.save()
 
     if request.user.confirmation_tries == 0 :
         return Response({"detail":f"Try again after {request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
 
-    if request.user.confirmation_code == request.POST.get('confirmation_code' , None):
+    if request.user.confirmation_code == request.data.get('confirmation_code' , None):
         request.user.is_active = True
         request.user.confirmation_code  = None
         request.user.save()
@@ -93,10 +95,10 @@ def Confirm_process(request):
 
 def send_process(request):
     if request.user.is_active :
-            return Response({'detail':"Email already verified"}, status=status.HTTP_200_OK)
-
-    if request.user.resend_tries is not None and request.user.next_confirmation_code_sent <= timezone.now() :
+            return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
+    if request.user.next_confirmation_code_sent is None or request.user.next_confirmation_code_sent <= timezone.now() :
         request.user.resend_tries = 3
+        request.user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
         request.user.save()
 
     if request.user.resend_tries == 0 :
@@ -252,31 +254,32 @@ class PasswordResetAPIView(APIView):
 class UserConfirmMessage(APIView):
     permission_classes = [permissions.AllowAny]
     def post(self , request):
-        if request.POST.get('email' , None) is None :
-            return Response({"email":["This field is required"]})
+        if 'email' not in request.data :
+            return Response({"email":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
 
-        if request.POST.get('confirmation_code' , None) is None :
-            return Response({"confirmation_code":["This field is required"]})
+        if 'confirmation_code' not in request.data:
+            return Response({"confirmation_code":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
 
         try :
-            request.user= User.objects.get(email= request.POST['email'])
+            request.user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
-            return Response({"detail":"Email does not exist"})
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         return Confirm_process(request=request)
 
 @extend_schema(
-    request=ResendCodeEmailSpectacular
+    request=ResendCodeEmailSpectacular,
+    responses={200:None , 400:None}
 )
 class ResendEmailMessage(APIView):
     permission_classes=[permissions.AllowAny]
     def post(self , request):
-        if request.POST.get('email' , None) is None :
-            return Response({"email":["This field is required"]})
+        if 'email' not in request.data :
+            return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
 
         try :
-            request.user= User.objects.get(email= request.POST['email'])
+            request.user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
-            return Response({"detail":"Email does not exist"})
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         return send_process(request=request)
 
