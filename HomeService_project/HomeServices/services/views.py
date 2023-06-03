@@ -70,7 +70,7 @@ class CreateOrderService(APIView):
         request={201:OrderServiceSerializer , 400:None }
     )
     def post(self , request , home_service_id):
-        try : 
+        try :
             home_service = HomeService.objects.get(pk=home_service_id)
         except HomeService.DoesNotExist :
             return Response({"detail":"Error 404 Not Found"} , status=status.HTTP_404_NOT_FOUND)
@@ -79,7 +79,7 @@ class CreateOrderService(APIView):
         pending_balance = get_pending_price()
         if request.user.normal_user.balance.withdrawable_balance < pending_balance :
             return Response ({"detail":"You don't have enough money to order , please charge your account" }, status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer = OrderServiceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save(home_service= home_service , client =request.user.normal_user , status='Pending')
@@ -102,7 +102,7 @@ class AcceptOrderService(APIView):
             return Response("Error 403 Forbidden", status=status.HTTP_403_FORBIDDEN)
         if order.answer_time :
             return Response({'detail':"Order already accepted"} , status=status.HTTP_400_BAD_REQUEST)
-        #TODO open chat 
+        #TODO open chat
         order.answer_time=timezone.now()
         order.status = "Underway"
         order.save()
@@ -129,7 +129,7 @@ class CancelOrderService(APIView):
             return Response("Error 403 Forbidden", status=status.HTTP_403_FORBIDDEN)
         if order.answer_time :
             return Response({'detail':"You can't cancel now ,the order already accepted"} , status=status.HTTP_400_BAD_REQUEST)
-        
+
         pending_balance = int(PendingBalance.objects.filter(order= order).aggregate(Sum('price'))['price__sum'])
         if not retrieve_money_and_delete_order(request=request , order=order , pending_balance=pending_balance):
             return Response({"detail":"Error happened please try again."},status=status.HTTP_400_BAD_REQUEST)
@@ -149,17 +149,17 @@ class RejectOrder(APIView):
             return Response("Error 403 Forbidden", status=status.HTTP_403_FORBIDDEN)
         if order.answer_time :
             return Response({'detail':"Order already accepted"} , status=status.HTTP_400_BAD_REQUEST)
-        
+
         seller  = Beneficiary.objects.get(beneficiary_name = 'seller')
         pending_balance_for_seller = int(PendingBalance.objects.filter(order=order , beneficiary = seller).aggregate(Sum('price'))['price__sum'])
         pending_balance_except_seller = int(PendingBalance.objects.filter(order=order).aggregate(Sum('price'))['price__sum']) - pending_balance_for_seller
         pending_objects_except_seller = PendingBalance.objects.filter(order=order).filter(~Q(beneficiary = seller))
         pending_object_for_seller = PendingBalance.objects.filter(order=order , beneficiary = seller)
-        if not return_money_and_reject_order(request ,pending_balance_except_seller ,pending_balance_for_seller ,order ,pending_objects_except_seller , pending_object_for_seller) : 
+        if not return_money_and_reject_order(request ,pending_balance_except_seller ,pending_balance_for_seller ,order ,pending_objects_except_seller , pending_object_for_seller) :
             return Response({"detail":"Error happened please try again."},status=status.HTTP_400_BAD_REQUEST)
-        
+
         return Response({"detail":"Rejected successfully"} , status=status.HTTP_202_ACCEPTED)
-    
+
 class MyOrders(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
@@ -175,14 +175,14 @@ class MyOrders(APIView):
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
             i+=1
         return Response(serializer.data )
-    
+
 class ReceivedOrders(APIView):
     permission_classes=[permissions.IsAuthenticated]
     @extend_schema(
         responses={200:ListOrdersSpectacular , 403:None}
     )
     def get(self , request):
-        if request.user.mode == 'buyer':
+        if request.user.mode == 'client':
             return Response({"detail":"Error 403 Forbidden , you are a buyer you don't receive orders"} , status=status.HTTP_403_FORBIDDEN)
         queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user)
         serializer = ListOrdersSerializer(data = queryset , many=True)
@@ -225,14 +225,14 @@ class ListHomeServices(generics.ListAPIView):
         if 'category' in self.request.GET :
             return HomeService.objects.filter(category__name = self.request.GET.get('category'))
         return HomeService.objects.all()
-    
+
 @extend_schema(
     responses={200:RetrieveHomeServices}
 )
 class HomeServiceDetail(generics.RetrieveAPIView):
     permission_classes=[permissions.AllowAny]
     serializer_class = RetrieveHomeServices
-    queryset = HomeService.objects.all()    
+    queryset = HomeService.objects.all()
 
-    
+
 

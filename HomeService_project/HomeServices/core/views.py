@@ -193,7 +193,7 @@ class ListUsers(APIView):
             responses={200:ListUsersSerializer(many=True)}
     )
     def get(self, request):
-        queryset = NormalUser.objects.filter(user__mode = 'seller_buyer')
+        queryset = NormalUser.objects.filter(user__mode = 'seller')
         data= []
         for user in queryset :
             result=dict()
