@@ -64,6 +64,9 @@ def get_user_info(user):
         'services_number' : user.normal_user.home_services_seller.count() ,
         'average_fast_answer' : average_fast_answer,
         'average_rating':average_rating,
+        'area_id':user.area.id,
+        'area_name':user.area.name,
+
     }
 
 def Confirm_process(request):
