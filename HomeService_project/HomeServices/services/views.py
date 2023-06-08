@@ -12,7 +12,6 @@ from django.db import transaction
 from datetime import datetime , timedelta
 from .spectacular import ListOrdersSpectacular
 
-# Create your views here.
 
 def get_pending_price():
     price = GeneralServicesPrice.objects.aggregate(Sum('price'))
