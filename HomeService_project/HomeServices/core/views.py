@@ -66,6 +66,7 @@ def get_user_info(user):
         'average_rating':average_rating,
         'area_id':user.area.id,
         'area_name':user.area.name,
+        
     }
 
 def Confirm_process(request):
