@@ -14,7 +14,7 @@ class UpdateUserInfo extends StatefulWidget {
 }
 
 class _UpdateUserInfoState extends State<UpdateUserInfo> {
-  @override
+
   void intiState(){
     super.initState();
     setState(() {
