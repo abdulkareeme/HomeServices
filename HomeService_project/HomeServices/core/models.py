@@ -32,6 +32,5 @@ class NormalUser(models.Model):
 class Balance(models.Model):
     user = models.OneToOneField("NormalUser", on_delete=models.CASCADE , related_name='balance')
     total_balance = models.PositiveIntegerField(default=0)
-    withdrawable_balance = models.PositiveIntegerField(default=0)
     def __str__(self):
         return self.user.user.username
