@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HomeService , Area , Category ,OrderService , Rating , PendingBalance
+from .models import HomeService , Area , Category ,OrderService , Rating 
 from rest_framework.validators import ValidationError
 from core.models import NormalUser , User
 
@@ -28,16 +28,11 @@ class NormalUsernameSerializer(serializers.ModelSerializer):
         fields = ['user']
 
 class HomeServiceSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True)
     service_area = AreaSerializer(many=True)
     class Meta :
         model = HomeService
-        fields = ['title','categories','average_price_per_hour','service_area' ]
-
-class OrderServiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderService
-        fields = ['description_message']
+        fields = ['title','category','average_price_per_hour','service_area' ]
+        depth =2
 
 class RatingSerializer(serializers.ModelSerializer):
     client_comment = serializers.CharField(required = False)
@@ -54,21 +49,11 @@ class RatingSerializer(serializers.ModelSerializer):
         model = Rating
         fields = ['quality_of_service','commitment_to_deadline','work_ethics','order_service','client_comment']
 
-class PendingBalanceSerializer(serializers.ModelSerializer):
-    class Meta :
-        model = PendingBalance
-        fields = ['beneficiary','price']
-
 class ListOrdersSerializer(serializers.ModelSerializer):
     home_service = HomeServiceSerializer()
     class Meta : 
         model = OrderService
         fields = ['create_date','description_message','status','answer_time','end_service','home_service']
-
-class CreateHomeServiceSerializer(serializers.ModelSerializer):
-    class Meta :
-        model = HomeService
-        fields = ['title','category','average_price_per_hour','service_area' , 'description']
 
 class ListHomeServicesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()

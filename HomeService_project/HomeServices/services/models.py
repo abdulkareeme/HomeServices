@@ -24,6 +24,7 @@ class HomeService(models.Model):
     service_area = models.ManyToManyField("Area" , related_name='home_services_area_set')
     number_of_served_clients = models.PositiveIntegerField(default=0)
     average_ratings = models.IntegerField(default=0)
+    form = models.ManyToManyField("InputField" , related_name='home_service_form')
     def __str__(self) :
         return self.title
 
@@ -33,11 +34,11 @@ class OrderService(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE , related_name='client')
     create_date = models.DateTimeField( auto_now_add=True)
     description_message = models.CharField( max_length=1000)
-    home_service = models.ForeignKey("HomeService",on_delete=models.CASCADE , related_name='home_service')
+    home_service = models.ForeignKey("HomeService",on_delete=models.CASCADE , related_name='order_home_service')
     status = models.CharField(choices=status_choices, max_length=50 , default='Pending')
     answer_time = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
     end_service = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
-
+    form_data = models.ManyToManyField("InputData", related_name="order_form_data")
     def __str__(self) :
         return str(self.client)+' ordered '+str(self.home_service)
 
@@ -58,12 +59,6 @@ class Beneficiary(models.Model):
     def __str__(self):
         return self.beneficiary_name
     
-class PendingBalance(models.Model):
-    price = models.PositiveIntegerField()
-    order = models.ForeignKey("OrderService", on_delete=models.CASCADE , related_name='pending_balance_order')
-    beneficiary = models.ForeignKey("Beneficiary", on_delete=models.SET_NULL  , null=True , related_name='pending_balance_beneficiary')
-    def __str__(self):
-        return "pending price : "+str(self.price)+" , "+str(self.order)+' from '+str(self.order.home_service.seller)
     
 class GeneralServicesPrice(models.Model):
     beneficiary = models.OneToOneField("Beneficiary", on_delete=models.SET_NULL  , null=True)
@@ -79,3 +74,18 @@ class Earnings(models.Model):
 
     def __str__(self) :
         return str(self.beneficiary)+' '+str(self.earnings)
+    
+input_choices = [('TEXT','TEXT'),('NUMBER','NUMBER')]
+class InputField(models.Model):
+    title = models.CharField(max_length=500)
+    type  = models.CharField(max_length=50  , choices=input_choices)
+
+    def __str__(self) :
+        return self.title + ' : '+self.type
+
+class InputData(models.Model):
+    field = models.ForeignKey("InputField", on_delete=models.CASCADE)
+    content = models.CharField( max_length=500)
+
+    def __str__(self) :
+        return self.field
