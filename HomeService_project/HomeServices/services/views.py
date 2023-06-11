@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,OrderService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -82,4 +82,10 @@ class HomeServiceDetail(generics.RetrieveAPIView):
     serializer_class = RetrieveHomeServices
     queryset = HomeService.objects.all()
 
+@extend_schema(
+    request= CreateHomeServiceSerializer
+)
+class CreateHomeService(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CreateHomeServiceSerializer
 

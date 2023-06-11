@@ -8,7 +8,7 @@ from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import status , generics ,permissions
 from .models import Balance
-from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular
+from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular
 from .models import NormalUser ,User
 from services.serializers import Area,AreaSerializer
 from django.contrib.auth.hashers import make_password
@@ -311,4 +311,9 @@ class UpdateUser(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(get_user_info(user) , status=status.HTTP_200_OK)
-
+@extend_schema(
+    responses={200:MyBalanceSpectacular}
+)
+class RetrieverMyBalance(APIView):
+    def get(self , request):
+        return Response({"total_balance": request.user.normal_user.balance.total_balance})

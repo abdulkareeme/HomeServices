@@ -10,7 +10,7 @@ class User(AbstractUser):
     gender = models.CharField(choices=gender_choices , max_length=10 )
     photo = models.ImageField( upload_to='profile', max_length=100 , blank=True  , null=True)
     mode = models.CharField(choices=mode_choices , max_length=50 )
-    area = models.ForeignKey("services.Area" ,on_delete=models.SET_DEFAULT , default=1)
+    area = models.ForeignKey("services.Area" ,on_delete=models.SET_NULL, null=True, related_name='user_area')
 
     confirmation_tries = models.IntegerField(default=3 ,blank=True)
     next_confirm_try = models.DateTimeField(blank=True , null=True)
@@ -32,6 +32,5 @@ class NormalUser(models.Model):
 class Balance(models.Model):
     user = models.OneToOneField("NormalUser", on_delete=models.CASCADE , related_name='balance')
     total_balance = models.PositiveIntegerField(default=0)
-    withdrawable_balance = models.PositiveIntegerField(default=0)
     def __str__(self):
         return self.user.user.username
