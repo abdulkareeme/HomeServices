@@ -6,4 +6,5 @@ urlpatterns = [
     path('received_orders' , views.ReceivedOrders.as_view()),
     path('list_home_services' , views.ListHomeServices.as_view()),
     path('home_service/detail/<int:pk>' , views.HomeServiceDetail.as_view()),
+    path('create_service' , views.CreateHomeService.as_view()),
 ]

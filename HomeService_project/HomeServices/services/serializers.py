@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HomeService , Area , Category ,OrderService , Rating 
+from .models import HomeService , Area , Category ,OrderService , Rating , InputField , input_choices
 from rest_framework.validators import ValidationError
 from core.models import NormalUser , User
 
@@ -70,3 +70,39 @@ class RetrieveHomeServices(serializers.ModelSerializer):
     class Meta :
         model = HomeService
         fields = ['id','title','description','category','average_price_per_hour','seller','service_area','number_of_served_clients','average_ratings']
+
+class InputFieldSerializer(serializers.ModelSerializer):
+    field_type = serializers.ChoiceField(choices=input_choices , required = True)
+    class Meta :
+        model = InputField
+        fields = ['title','field_type' , 'note']
+
+class CreateHomeServiceSerializer(serializers.ModelSerializer):
+    form = InputFieldSerializer(many=True, write_only=True)
+    class Meta:
+        model = HomeService
+        fields = ['title', 'description', 'category', 'average_price_per_hour', 'service_area', 'form']
+
+    def validate_form(self, value):
+        if len(value) < 3 or len(value) > 10:
+            raise serializers.ValidationError("Number of fields must be between 3 and 10")
+        return value
+
+    def validate_average_price_per_hour(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Average price per hour must be greater than 0")
+        return value
+
+    def create(self, validated_data):
+        form_data = validated_data.pop('form')
+        service_area_data = validated_data.pop('service_area')
+        home_service = HomeService.objects.create(seller = self.context['request'].user.normal_user , **validated_data)
+        home_service.save()
+        for field_data in form_data:
+            InputField.objects.create(home_service=home_service, **field_data)
+            
+        service_area_data = set(service_area_data)
+
+        for area in service_area_data :
+            home_service.service_area.add(area)
+        return home_service

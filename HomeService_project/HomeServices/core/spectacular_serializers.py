@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User , Balance
 
 class  LoginSpectacular(serializers.ModelSerializer):
     bio = serializers.CharField(max_length = 1000)
@@ -38,3 +38,8 @@ class ConfirmCodeSpectacular(serializers.Serializer):
         required=True,
     )
     confirmation_code = serializers.CharField()
+
+class MyBalanceSpectacular(serializers.ModelSerializer):
+    class Meta :
+        model = Balance
+        fields = ['total_balance']
