@@ -157,8 +157,13 @@ class UpdateNormalUser(serializers.ModelSerializer):
             user_serializer = UpdateUserSerializer(instance=instance, data=user_data)
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
+        
         if photo is not None :
             instance.photo.save(photo.name , photo , save=False)
-        
-        return super().update(instance, validated_data)
+        if validated_data.get('bio' , None) is not None :
+            instance.normal_user.bio = validated_data['bio']
+
+        instance.save()
+        # print(instance.bio)
+        return instance
 
