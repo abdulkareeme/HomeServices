@@ -79,12 +79,12 @@ class InputField(models.Model):
     title = models.CharField(max_length=100)
     field_type  = models.CharField(max_length=50  , choices=input_choices , default='TEXT')
     note = models.CharField( max_length=100 , default='' , blank=True)
-    home_service = models.ForeignKey("HomeService", on_delete=models.CASCADE) 
+    home_service = models.ForeignKey("HomeService", on_delete=models.CASCADE , related_name='field') 
     def __str__(self) :
         return self.title + ' : '+self.field_type
 
 class InputData(models.Model):
-    field = models.ForeignKey("InputField", on_delete=models.CASCADE , related_name='field')
+    field = models.ForeignKey("InputField", on_delete=models.CASCADE , related_name='field_data')
     content = models.CharField( max_length=500)
 
     def __str__(self) :

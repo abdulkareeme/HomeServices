@@ -111,3 +111,5 @@ class RetrieveUpdateHomeServiceSerializer(serializers.ModelSerializer):
     class Meta :
         model = HomeService
         fields =['title','description','average_price_per_hour','service_area']
+
+     
