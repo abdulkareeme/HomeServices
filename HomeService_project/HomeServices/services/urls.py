@@ -10,4 +10,5 @@ urlpatterns = [
     path('create_service' , views.CreateHomeService.as_view()),
     path('retrieve_update_home_service/<int:home_service_id>' , views.RetrieveUpdateHomeService.as_view()),
     path('delete_home_service/<int:home_service_id>' , views.DeleteHomeService.as_view()),
+    path('update_form_home_service/<int:home_service_id>', views.UpdateFormHomeService.as_view()),
 ]

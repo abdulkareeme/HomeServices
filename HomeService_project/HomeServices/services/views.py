@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .models import Category ,Area,HomeService ,OrderService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer
+from .models import Category ,Area,HomeService ,OrderService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -95,7 +95,7 @@ class CreateHomeService(generics.CreateAPIView):
 
 @extend_schema(
     request=RetrieveUpdateHomeServiceSerializer,
-    responses={200 : RetrieveUpdateHomeServiceSerializer , 403 : None}
+    responses={200 : RetrieveUpdateHomeServiceSerializer , 403 : None, 401 : None}
 )
 class RetrieveUpdateHomeService(generics.RetrieveUpdateAPIView):
     permission_classes =[permissions.IsAuthenticated , IsOwner]
@@ -109,11 +109,55 @@ class ListArea(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 @extend_schema(
-    responses= {403 : None , 204:None}
+    responses= {403 : None , 204:None , 401 : None}
 )
 class DeleteHomeService(generics.DestroyAPIView):
     queryset = HomeService
     serializer_class = CreateHomeServiceSerializer
     permission_classes = [permissions.IsAuthenticated , IsOwner]
     lookup_url_kwarg = 'home_service_id'
- #TODO update form
+
+def delete_data(data):
+    data.delete()
+    return True
+
+
+class UpdateFormHomeService(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    @extend_schema(
+            responses={200 : InputFieldSerializer(many=True)}
+    )
+    def get(self , request , home_service_id):
+        try : 
+            home_service = HomeService.objects.get(pk=home_service_id)
+        except HomeService.DoesNotExist :
+            return Response("404 NOT FOUND", status=status.HTTP_404_NOT_FOUND)
+        
+        if home_service.seller != request.user.normal_user :
+            return Response({"detail" : "403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        queryset= InputField.objects.filter(home_service= home_service , home_service__seller = request.user.normal_user)
+        serializer = InputFieldSerializer(data = queryset ,  many=True)
+        serializer.is_valid(raise_exception=False)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+    @extend_schema(
+    request=InputFieldSerializer(many=True),
+    responses={200:InputFieldSerializer(many=True) , 400 : None , 403 : None , 401 : None}
+    )
+    def put(self , request , home_service_id):
+        try : 
+            home_service = HomeService.objects.get(pk=home_service_id)
+        except HomeService.DoesNotExist :
+            return Response("404 NOT FOUND", status=status.HTTP_404_NOT_FOUND)
+        
+        if home_service.seller != request.user.normal_user :
+            return Response({"detail" : "403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        
+        queryset= InputField.objects.filter(home_service = home_service, home_service__seller = request.user.normal_user)
+        serializer  = InputFieldSerializer(data= request.data , many=True)
+        serializer.is_valid(raise_exception=True)
+        if len(serializer.validated_data) < 3 or len(serializer.validated_data) >10 :
+            return Response({'detail':["Number of fields must be between 3 and 10"]}, status=status.HTTP_400_BAD_REQUEST)
+        
+        delete_data(queryset)
+        serializer.save(home_service= home_service)
+        return Response(serializer.data ,status=status.HTTP_200_OK )
