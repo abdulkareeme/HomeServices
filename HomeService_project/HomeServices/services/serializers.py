@@ -100,9 +100,14 @@ class CreateHomeServiceSerializer(serializers.ModelSerializer):
         home_service.save()
         for field_data in form_data:
             InputField.objects.create(home_service=home_service, **field_data)
-            
+
         service_area_data = set(service_area_data)
 
         for area in service_area_data :
             home_service.service_area.add(area)
         return home_service
+    
+class RetrieveUpdateHomeServiceSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = HomeService
+        fields =['title','description','average_price_per_hour','service_area']
