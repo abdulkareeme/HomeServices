@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/my_field.dart';
-
+import 'package:home_services/user_profile/update_profile/set_user_new_info.dart';
+import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
+// ignore: must_be_immutable
 class UpdateUserInfo extends StatefulWidget {
-  UpdateUserInfo({Key? key}) : super(key: key);
+  var userInfo;
+  UpdateUserInfo({
+    required this.userInfo,
+    super.key,
+  }) ;
 
   @override
   State<StatefulWidget> createState() => _UpdateUserInfoState();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  String name  = "عبد الهادي";
-  String lastName = "ابو الشامات";
+  TextEditingController firstNameController = TextEditingController(
+    text: "عبد الهادي"
+  );
+  TextEditingController lastNameController = TextEditingController(
+    text: "ابو الشامات"
+  );
+  TextEditingController dateController = TextEditingController(
+    text: "2001-02-15"
+  );
 }
 
 class _UpdateUserInfoState extends State<UpdateUserInfo> {
 
-  void intiState(){
-    super.initState();
-    setState(() {
-      widget.firstNameController.text = widget.name;
-      widget.lastNameController.text = widget.lastName;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: ui.TextDirection.rtl,
       child: Scaffold(
         body: Center(
           child: Column(
@@ -72,12 +77,10 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                             firstDate: DateTime(1950),
                             lastDate: DateTime(2030))
                         .then((value) {
-                      var op = "";
-                      for (int i = 0; i < 9; i++) {
-                        op += value.toString()[i];
-                      }
                       setState(() {
-                        widget.dateController.text = op.toString();
+                        widget.dateController.text = DateFormat('yyyy-MM-dd')
+                            .format(value!)
+                            .toString();
                       });
                     });
                   },
@@ -94,6 +97,19 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
 
                 ),
               ),
+
+
+              ElevatedButton(onPressed: (){
+                var newList = [
+                  widget.firstNameController,
+                  widget.lastNameController,
+                  widget.dateController,
+                  "aaaa",
+                  1,
+                  widget.userInfo[4],
+                ];
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>SetUserNewData(userNewData: newList)));
+              }, child: const Text("تعديل"))
               // area field editing
             ],
           ),

@@ -40,11 +40,9 @@ class _CheckIfLoggedInState extends State<CheckIfLoggedIn>{
                       //print("heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey");
                       return HomePage(userInfo: snapshot.data);
                     } else {
-                      //print('nooooooooooooooooooooooooooooooooooooooooooooooooo');
                         return OnBoardingScreen();
                     }
                   } else {
-                    print('okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
                     return const CircularProgressIndicator();
                   }
                 }

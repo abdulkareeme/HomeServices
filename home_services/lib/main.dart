@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Sign%20up/Widget/get_area_list.dart';
 import 'Home Page/home_page.dart';
 import 'Log In /Widget/Log_In_page.dart';
 import 'Log In /Widget/check_if_user_logged_in.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     List op = ['lattakia','damascus'];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FirstPageOfSignUp(areaList: op),//CheckIfLoggedIn(),//LogIn(error: error),//HomePage(userInfo: op),
+      home: GetAreaList(), //CheckIfLoggedIn(),//FirstPageOfSignUp(areaList: op),//CheckIfLoggedIn()//LogIn(error: error),//HomePage(userInfo: op),
       routes: {
         "log in": (context) => LogIn(
               error: error,

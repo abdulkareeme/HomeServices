@@ -4,12 +4,10 @@ import 'package:home_services/Home%20Page/Drawer/Widget/drawer_components.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class Drawer_ extends StatefulWidget {
-  String username;
-  String email;
+  var userInfo;
   Drawer_({
     super.key,
-    required this.username,
-    required this.email,
+    required this.userInfo,
 });
   @override
   State<StatefulWidget> createState() => DrawerState();
@@ -23,8 +21,8 @@ class DrawerState extends State<Drawer_> {
     return Column(
       children: [
         UserAccountsDrawerHeader(
-          accountName: Text(widget.username),
-          accountEmail: Text(widget.email),
+          accountName: Text(widget.userInfo[0]),
+          accountEmail: Text(widget.userInfo[1]),
         ),
         const SizedBox(
           height: 15,

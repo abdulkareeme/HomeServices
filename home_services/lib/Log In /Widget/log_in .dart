@@ -39,7 +39,7 @@ class _LogInApiState extends State<LogInApi> {
                       return LogIn(error: widget.error,);
                     } else {
                       return (
-                        HomePage(userInfo: snapshot.data!,)
+                          HomePage(userInfo: snapshot.data!,)
                       );
                     }
                   } else {

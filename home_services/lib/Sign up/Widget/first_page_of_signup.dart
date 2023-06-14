@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:home_services/Animation/animation.dart';
@@ -28,7 +27,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? gender;
   String? mode;
-  String area = "المنطقة";
+  String? area = "المنطقة";
 
   bool formState() {
     var ok = formKey.currentState;
@@ -71,13 +70,12 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: height1 / 18,
                   ),
                   const Padding(
-                    padding:  EdgeInsets.only(right: 25),
+                    padding:  EdgeInsets.only(right: 0),
                     child:  Text("الانضمام لمنزلي",style: TextStyle(
                       color: Colors.white,
                       fontSize: 40,
@@ -88,7 +86,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                     height: height1 / 400,
                   ),
                   const Padding(
-                    padding:  EdgeInsets.only(right: 25),
+                    padding:  EdgeInsets.only(right: 0),
                     child:  Text("إنشاء حساب جديد ",style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
@@ -198,12 +196,14 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                         ),
                         items: widget.areaList
                             .map((e) => DropdownMenuItem(
-                                value: e,
+                                value: e[0],
                                 child: Text(
-                                  "$e"
+                                  "${e[1]}",
+                                  textDirection: ui.TextDirection.rtl,
                                 )))
                             .toList(),
                         onChanged: (val) {
+                          print(val);
                           setState(() {
                             area = val.toString();
                           });

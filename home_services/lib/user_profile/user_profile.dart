@@ -10,39 +10,19 @@ import 'Api/User_Profile_Api.dart';
 import 'package:home_services/user_profile/update_profile/update_user_info.dart';
 // ignore: must_be_immutable
 class UserProfile extends StatefulWidget {
-   UserProfile({Key? key}) : super(key: key);
+  var userInfo;
+  UserProfile({
+    required this.userInfo,
+    super.key,
+});
 
   @override
   State<StatefulWidget> createState() => _UserProfileState();
   String mode = "seller";
   String gender = "female";
 
-  String op1 = "api/update_profile/";
-  String token = "875a1a467def8cc1bac47d29266053b1319acac0e4afde8428f358c9953b54d3";
-   Map <String,dynamic> op = {
-     'first_name' : "Abd Alhadi",
-     'last_name' : "Abu Alshamat",
-     'birt_date' : "2023-05-31",
-     'area' : '1'
-   };
 }
 class _UserProfileState extends State<UserProfile> {
-  Future op()async{
-    try{
-      final os = jsonEncode(widget.op);
-      Response response =await put(Uri.parse("http://abdulkareemedres.pythonanywhere.com/api/update_profile/"),headers: {
-        'Authorization': 'token ${widget.token}',
-      },body: {
-        "bio": 'oppopop',
-        "user": os,
-      }
-      );
-      print('hellllllllllllllo');
-    } catch(e){
-      print(e);
-    }
-
-  }
   Uint8List? myImage;
   void selectImage()async{
     Uint8List image =await ProfileApi.imagePicker(ImageSource.gallery);
@@ -82,7 +62,7 @@ class _UserProfileState extends State<UserProfile> {
                       color: Colors.black,
                       icon: Icons.edit,
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UpdateUserInfo()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UpdateUserInfo(userInfo: widget.userInfo,)));
                       },
                      iconColor: Colors.blueGrey),
                   ),

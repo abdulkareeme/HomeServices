@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
 import 'package:home_services/Sign%20up/Widget/code_verification_page.dart';
-import 'package:home_services/server/api_url.dart';
-import 'package:http/http.dart';
+import 'package:home_services/Sign up/Api/sign_up_api.dart';
 
 class SignUpPage extends StatefulWidget {
   var firstnameController,
@@ -40,47 +38,16 @@ class SignUpPage extends StatefulWidget {
   String errorCase = "";
 }
 
-
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
-    Future<List?> signUp() async {
-      //String url = "http://abdulkareemedres.pythonanywhere.com/api/register/";
-      Response response = await post(Uri.parse(Server.host+Server.signupApi), body: {
-        'username': widget.username,
-        'password': widget.passwordController.text,
-        'password2': widget.confirmaPasswordController.text,
-        'email': widget.emailController.text,
-        'first_name': widget.firstnameController.text,
-        'last_name': widget.lastnameController.text,
-        'birth_date': widget.birthdatecontroller.text,
-        'gender': widget.gender,
-        'mode': widget.mode,
-        'area': '1',
-      });
-      var op =["done"];
-      if (response.statusCode == 200|| response.statusCode==201) {
-        print (jsonDecode(response.body));
-        return op;
-      } else {
-        var os = [];
-        String ok = "";
-        var info = jsonDecode(response.body);
-        bool oq = false;
-        if(info['email'] != null && info['password'] != null) oq = true;
-        if(info['email'] != null)ok+='email  : '+info['email'][0];
-        if(oq)ok+='\n'+'\n' ;
-        if(info['password'] != null)ok+='password  : '+info['password'][0];
-        os.add(ok);
-        return os;
-      }
-    }
-
+    List data = [widget.username,widget.passwordController,widget.confirmaPasswordController,widget.emailController,widget.firstnameController,widget.lastnameController,widget.birthdatecontroller,widget.gender,widget.mode,widget.area];
+    SignUpApi op = SignUpApi();
     return SafeArea(
       child: Scaffold(
           body:Center(
             child: FutureBuilder(
-              future: signUp(),
+              future: op.signUp(data),
               builder: (context , AsyncSnapshot<List?> snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return const CircularProgressIndicator();

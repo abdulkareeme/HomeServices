@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
-class UserOldInfo extends StatefulWidget{
+// ignore: must_be_immutable
+class SetUserNewData extends StatefulWidget{
+  var userNewData;
+  SetUserNewData({
+    required this.userNewData,
+    super.key,
+  });
   @override
-  State<StatefulWidget> createState() => _UserOldInfoState();
+  State<StatefulWidget> createState() => _SetUserNewDataState();
 }
 
-class _UserOldInfoState extends State<UserOldInfo>{
+class _SetUserNewDataState extends State<SetUserNewData>{
   ProfileApi op = ProfileApi();
   @override
   Widget build(BuildContext context) {
@@ -13,13 +19,13 @@ class _UserOldInfoState extends State<UserOldInfo>{
         child: Scaffold(
           body: Center(
             child: FutureBuilder(
-              future: op.getUserOldData(),
+              future: op.setUserNewData(widget.userNewData),
               builder: (context, AsyncSnapshot<List?> snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return const CircularProgressIndicator();
                 } else {
                   if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-                    return Container();
+                    return const Text("niiiceeee");
                   } else {
                     return AlertDialog(
                       title: const Text('unable to update data'),
