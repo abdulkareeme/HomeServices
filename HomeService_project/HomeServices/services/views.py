@@ -30,12 +30,12 @@ class ListCategories(APIView):
 class MyOrders(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
-            responses={200:ListOrdersSpectacular}
+            responses={200:ListOrdersSpectacular , 401:None}
     )
     def get(self, request):
         queryset= OrderService.objects.filter(client = request.user.normal_user)
         serializer = ListOrdersSerializer(data = queryset , many=True)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=False)
         i = 0
         for order in queryset :
             serializer.data[i]['client']=order.client.user.username
@@ -46,12 +46,13 @@ class MyOrders(APIView):
 class ReceivedOrders(APIView):
     permission_classes=[permissions.IsAuthenticated]
     @extend_schema(
-        responses={200:ListOrdersSpectacular , 403:None}
+        responses={200:ListOrdersSpectacular , 403:None , 401:None},
+        description="NOTE : Get pending orders only"
     )
     def get(self , request):
         if request.user.mode == 'client':
             return Response({"detail":"Error 403 Forbidden , you are a buyer you don't receive orders"} , status=status.HTTP_403_FORBIDDEN)
-        queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user)
+        queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user , status = "Pending")
         serializer = ListOrdersSerializer(data = queryset , many=True)
         serializer.is_valid()
         i = 0
@@ -191,8 +192,8 @@ class MakeOrderService(APIView):
         except HomeService.DoesNotExist :
             return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
         
-        # if home_service.seller == request.user.normal_user :
-        #     return Response({"detail":"You can't order service from yourself"})
+        if home_service.seller == request.user.normal_user :
+            return Response({"detail":"You can't order service from yourself"})
         check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
         if check_sended_orders.count()>0:
             return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)
@@ -218,6 +219,37 @@ class MakeOrderService(APIView):
             InputData.objects.create(field = all_fields[index] , content = input_data['content'] , order = new_order).save()
             index+=1
 
-        
         return Response("Success", status=status.HTTP_200_OK)
-            
+
+class CancelOrder(APIView):
+    parser_classes = [permissions.IsAuthenticated]
+    @extend_schema(
+        responses={401:None , 204:None ,404:None , 403:None}
+    )
+    def delete(self , request , order_id):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if request.user.normal_user != order.client :
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        order.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class RejectOrder(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @extend_schema(
+        responses={204:None ,401 :None , 403:None , 404:None }
+    )
+    def post(self , request  , order_id):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if order.home_service.seller != request.user.normal_user:
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        order.status="Rejected"
+        order.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
