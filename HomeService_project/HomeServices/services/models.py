@@ -32,12 +32,10 @@ status_choices =[('Underway','Underway') , ('Expire','Expire') , ('Pending' , 'P
 class OrderService(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE , related_name='client')
     create_date = models.DateTimeField( auto_now_add=True)
-    description_message = models.CharField( max_length=1000)
     home_service = models.ForeignKey("HomeService",on_delete=models.CASCADE , related_name='order_home_service')
     status = models.CharField(choices=status_choices, max_length=50 , default='Pending')
     answer_time = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
     end_service = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
-    form_data = models.ManyToManyField("InputData", related_name="order_form_data")
     def __str__(self) :
         return str(self.client)+' ordered '+str(self.home_service)
 
@@ -85,7 +83,8 @@ class InputField(models.Model):
 
 class InputData(models.Model):
     field = models.ForeignKey("InputField", on_delete=models.CASCADE , related_name='field_data')
+    order = models.ForeignKey("OrderService", on_delete=models.CASCADE)
     content = models.CharField( max_length=500)
 
     def __str__(self) :
-        return str(self.field)
+        return str(self.field) + ' ' +str(self.order)

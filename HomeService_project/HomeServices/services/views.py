@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .models import Category ,Area,HomeService ,OrderService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField
+from .models import Category ,Area,HomeService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField , OrderService
 from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
@@ -68,6 +68,7 @@ class ReceivedOrders(APIView):
         3 - else it will be display all services"
        
 )
+#TODO filter rate order 
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -165,7 +166,7 @@ class UpdateFormHomeService(APIView):
         return Response(serializer.data ,status=status.HTTP_200_OK )
 
 
-class OrderService(APIView):
+class MakeOrderService(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
             responses={404 : None , 200 : InputFieldSerializerAll(many=True) , 401:None}
@@ -189,6 +190,12 @@ class OrderService(APIView):
             home_service = HomeService.objects.get(pk= service_id)
         except HomeService.DoesNotExist :
             return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
+        
+        # if home_service.seller == request.user.normal_user :
+        #     return Response({"detail":"You can't order service from yourself"})
+        check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
+        if check_sended_orders.count()>0:
+            return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)
         serializer = InputDataSerializer(data = request.data , many=True )
         serializer.is_valid(raise_exception=True)
 
@@ -203,11 +210,14 @@ class OrderService(APIView):
                     break
             if not is_exists:
                 return Response({"detail":f"Error fields are not compatible (you did'nt send field : {input_field_1.id})"} , status= status.HTTP_400_BAD_REQUEST)
+        new_order = OrderService.objects.create(client = request.user.normal_user , home_service=home_service )
+        new_order.save()
         index = 0
         all_fields = home_service.field.all()
         for input_data in validated_data:
-            InputData.objects.create(field = all_fields[index] , content = input_data['content'])
+            InputData.objects.create(field = all_fields[index] , content = input_data['content'] , order = new_order).save()
             index+=1
 
+        
         return Response("Success", status=status.HTTP_200_OK)
             
