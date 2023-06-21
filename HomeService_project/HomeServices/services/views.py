@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,OrderService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -64,7 +64,9 @@ class ReceivedOrders(APIView):
 
 @extend_schema(
     description="NOTE : When you use this api use :<br> 1 - ( services/list_home_services?username=\{username\} ) to filter \
-       the services for this user <br> 2 -  ( services/list_home_services?category=\{category\} ) to filter the services by category"
+       the services for this user <br> 2 -  ( services/list_home_services?category=\{category\} ) to filter the services by category\
+        3 - else it will be display all services"
+       
 )
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
@@ -161,3 +163,48 @@ class UpdateFormHomeService(APIView):
         delete_data(queryset)
         serializer.save(home_service= home_service)
         return Response(serializer.data ,status=status.HTTP_200_OK )
+
+
+class OrderService(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    @extend_schema(
+            responses={404 : None , 200 : InputFieldSerializerAll(many=True)}
+    )
+    def get(self , request , service_id) :
+        try :
+            home_service = HomeService.objects.get(pk= service_id)
+        except HomeService.DoesNotExist :
+            return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
+        form  = home_service.field
+        serializer = InputFieldSerializerAll(data=form , many=True)
+        serializer.is_valid(raise_exception=False)
+        return Response(serializer.data , status= status.HTTP_200_OK)
+
+
+    def post(self , request , service_id):
+        try :
+            home_service = HomeService.objects.get(pk= service_id)
+        except HomeService.DoesNotExist :
+            return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
+        serializer = InputDataSerializer(data = request.data , many=True )
+        serializer.is_valid(raise_exception=True)
+
+        # validate all fields that belong to this service are exist 
+        validated_data = []
+        for input_field_1 in home_service.field.all() :
+            is_exists = False
+            for input_field_2 in serializer.data :
+                if input_field_1.id == input_field_2['field'] :
+                    is_exists =True
+                    validated_data.append(input_field_2)
+                    break
+            if not is_exists:
+                return Response({"detail":f"Error fields are not compatible (you did'nt send field : {input_field_1.id})"} , status= status.HTTP_400_BAD_REQUEST)
+        index = 0
+        all_fields = home_service.field.all()
+        for input_data in validated_data:
+            InputData.objects.create(field = all_fields[index] , content = input_data['content'])
+            index+=1
+
+        return Response("Success", status=status.HTTP_200_OK)
+            
