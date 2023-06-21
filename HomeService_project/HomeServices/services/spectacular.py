@@ -4,12 +4,12 @@ from .models import OrderService, HomeService
 from .serializers import CategorySerializer ,AreaSerializer
 
 class HomeServiceSpectacular(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True)
     service_area = AreaSerializer(many=True)
     seller = serializers.CharField(max_length = 150)
     class Meta :
         model = HomeService
-        fields = ['title','categories','average_price_per_hour','service_area' , 'seller' ]
+        fields = ['title','category','average_price_per_hour','service_area' , 'seller' ]
+        depth=2
 
 class ListOrdersSpectacular(serializers.ModelSerializer):
     home_service = HomeServiceSpectacular()

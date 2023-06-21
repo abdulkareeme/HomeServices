@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HomeService , Area , Category ,OrderService , Rating , InputField , input_choices
+from .models import HomeService , Area , Category ,OrderService , Rating , InputField , input_choices , InputData
 from rest_framework.validators import ValidationError
 from core.models import NormalUser , User
 
@@ -112,4 +112,11 @@ class RetrieveUpdateHomeServiceSerializer(serializers.ModelSerializer):
         model = HomeService
         fields =['title','description','average_price_per_hour','service_area']
 
-     
+class InputFieldSerializerAll(serializers.ModelSerializer):
+    class Meta:
+        model = InputField
+        fields= ['id','title','field_type','note']
+class InputDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InputData
+        fields = ['field','content']
