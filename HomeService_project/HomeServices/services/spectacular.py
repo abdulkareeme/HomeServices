@@ -16,4 +16,4 @@ class ListOrdersSpectacular(serializers.ModelSerializer):
     client = serializers.CharField(max_length = 150)
     class Meta : 
         model = OrderService
-        fields = ['create_date','description_message','status','answer_time','end_service','home_service' , 'client']
+        fields = ['id','create_date','status','home_service' , 'client']

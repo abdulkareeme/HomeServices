@@ -53,7 +53,7 @@ class ListOrdersSerializer(serializers.ModelSerializer):
     home_service = HomeServiceSerializer()
     class Meta : 
         model = OrderService
-        fields = ['create_date','description_message','status','answer_time','end_service','home_service']
+        fields = ['id','create_date','status','home_service']
 
 class ListHomeServicesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
