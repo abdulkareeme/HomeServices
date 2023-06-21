@@ -164,6 +164,5 @@ class UpdateNormalUser(serializers.ModelSerializer):
             instance.normal_user.bio = validated_data['bio']
 
         instance.save()
-        # print(instance.bio)
         return instance
 
