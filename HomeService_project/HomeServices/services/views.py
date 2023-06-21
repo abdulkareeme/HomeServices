@@ -168,7 +168,7 @@ class UpdateFormHomeService(APIView):
 class OrderService(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
-            responses={404 : None , 200 : InputFieldSerializerAll(many=True)}
+            responses={404 : None , 200 : InputFieldSerializerAll(many=True) , 401:None}
     )
     def get(self , request , service_id) :
         try :
@@ -180,7 +180,10 @@ class OrderService(APIView):
         serializer.is_valid(raise_exception=False)
         return Response(serializer.data , status= status.HTTP_200_OK)
 
-
+    @extend_schema(
+            request=InputDataSerializer(many=True),
+            responses={200:None , 400:None , 401:None}
+    )
     def post(self , request , service_id):
         try :
             home_service = HomeService.objects.get(pk= service_id)
