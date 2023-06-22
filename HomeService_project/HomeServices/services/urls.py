@@ -12,4 +12,6 @@ urlpatterns = [
     path('delete_home_service/<int:home_service_id>' , views.DeleteHomeService.as_view()),
     path('update_form_home_service/<int:home_service_id>', views.UpdateFormHomeService.as_view()),
     path('order_service/<int:service_id>', views.MakeOrderService.as_view()),
+    path('cancel_order/<int:order_id>',views.CancelOrder.as_view()),
+    path('reject_order/<int:order_id>',views.RejectOrder.as_view()),
 ]
