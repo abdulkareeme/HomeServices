@@ -1,6 +1,8 @@
 import show from "../Images/show-service.png";
 import order from "../Images/order-service.png";
 import recieve from "../Images/recieve-service.png";
+import { fetchFromAPI } from "../api/FetchFromAPI";
+import { useDispatch } from "react-redux";
 
 export const BASE_API_URL = "http://abdulkareemedres.pythonanywhere.com";
 export const navbarLinks = [
@@ -30,7 +32,7 @@ export const normalUserLinks = [
   {
     label: "الطلبات المرسلة",
     icon: <ion-icon name="cart-outline"></ion-icon>,
-    link: "/",
+    link: "/my_order",
   },
 ];
 export const sellerUserLinks = [
@@ -43,25 +45,7 @@ export const sellerUserLinks = [
   {
     label: "الطلبات الواردة",
     icon: <ion-icon name="arrow-undo-circle-outline"></ion-icon>,
-    link: "/",
-  },
-];
-
-export const avatarList = [
-  {
-    label: "الرصيد",
-    icon: <ion-icon name="cash-outline"></ion-icon>,
-    link: "/",
-  },
-  {
-    label: "تعديل الحساب",
-    icon: <ion-icon name="create-outline"></ion-icon>,
-    link: "/",
-  },
-  {
-    label: "تسجيل خروج",
-    icon: <ion-icon name="log-out-outline"></ion-icon>,
-    link: "/",
+    link: "/my_recieve_order",
   },
 ];
 
@@ -75,18 +59,22 @@ export const offcanvasAccordion = [
 export const categories = [
   {
     label: "تنظيف",
-    link: "/",
+    link: "/services/Cleaning",
   },
   {
     label: "نقل أثاث منزل",
-    link: "/",
+    link: "/services/Home_Furniture_Move",
   },
   {
     label: "صيانة",
-    link: "/",
+    link: "/services/Maintenance",
   },
 ];
-
+export const getCategoryLink = (cate) => {
+  if (cate === "صيانة") return "Maintenance";
+  else if (cate === "تنظيف") return "Cleaning";
+  else return "Home_Furniture_Move";
+};
 export const howItWorksBoxes = [
   {
     icon: show,
@@ -127,3 +115,61 @@ export const commonQuetionsData = [
     text: "يتم تقديم خدمات التنظيف لجميع الأماكن، بما في ذلك المنازل والمكاتب والمحلات التجارية. يمكن للمستخدمين تحديد نوع الخدمة التي يرغبون في الحصول عليها وتحديد الموقع المطلوب للتنظيف",
   },
 ];
+
+export const handleRateStars = (avg, clients_number) => {
+  let stars = [];
+  for (let i = 0; i < avg; ++i) {
+    stars.push(<ion-icon name="star"></ion-icon>);
+  }
+  for (let i = 0; i < 5 - avg; ++i) {
+    stars.push(<ion-icon name="star-outline"></ion-icon>);
+  }
+  return stars;
+};
+
+export const updateUserTotalInfo = async (
+  dispatch,
+  userTotalInfo,
+  setUserTotalInfo
+) => {
+  try {
+    const userUpdateInfo = await fetchFromAPI(
+      `api/user/${userTotalInfo?.username}`
+    );
+    localStorage.setItem("userTotalInfo", JSON.stringify(userUpdateInfo));
+    dispatch(setUserTotalInfo(userUpdateInfo));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const myOrderHeader = [
+  "الرقم التعريفي",
+  "تاريخ الطلب",
+  "عنوان الخدمة",
+  "تصنيف الخدمة",
+  "متوسط السعر",
+  "البائع",
+  "فورم الطلب",
+  "الحالة",
+  "الغاء الطلب",
+];
+export const myReciveOrderHeader = [
+  "الرقم التعريفي",
+  "تاريخ الطلب",
+  "عنوان الخدمة",
+  "تصنيف الخدمة",
+  "متوسط السعر",
+  "الزبون",
+  "فورم الطلب",
+  "قبول",
+  "رفض",
+];
+export const shortInfo = {
+  "نقل أثاث منزل":
+    "نضمن لك نقل أثاث منزلك بأمان وجودة عالية وفي الوقت المحدد، بفريق عمل مدرب ومجهز بأحدث الأدوات والمعدات لتلبية جميع احتياجاتك",
+  صيانة:
+    "توفر خدمات الصيانة لجميع أنواع الأجهزة الإلكترونية والكهربائية، بفريق فنيين محترفين وخبرة واسعة، لتضمن لك أعلى مستويات الأداء والجودة",
+  تنظيف:
+    "نوفر لك خدمات تنظيف شاملة لمنزلك أو مكتبك بأعلى مستويات الجودة، بفريق عمل مدرب ومجهز بأحدث المعدات والمنظفات الآمنة، لتحصل على نتائج مثالية وتلبية جميع متطلباتك واحتياجاتك",
+};

@@ -1,14 +1,20 @@
 .services {
-    justify-content: center;
     gap: 15px;
 }
 
 .services.page {
-    padding-top: 30px;
-    padding-bottom: 50px;
     background-color: #f1f1f1;
 }
 
+.services img {
+    cursor: pointer;
+}
+
+.services.page .row {
+    gap: 30px;
+}
+
+.services .container .row div,
 .services>div {
     display: flex;
     flex-direction: column;
@@ -16,12 +22,16 @@
 }
 
 
+.services .container .row>div h1,
 .services>div h1 {
-    font-size: 18px;
+    cursor: pointer;
+    font-size: 20px;
     margin: 0;
 }
 
-.services>div p {
-    font-size: 16px;
-    color: gray;
+.services .container .row>div span:first-of-type,
+.services>div span:first-of-type {
+    font-size: 15px;
+    color: #777777;
+    font-weight: 500;
 }

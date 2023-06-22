@@ -50,3 +50,7 @@
     color: rgb(239, 239, 49);
     padding: 0;
 }
+
+.user-profile .row>div ul .row .stars span {
+    color: #7777;
+}

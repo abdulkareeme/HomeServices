@@ -5,12 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import "./user-profile-card.css";
 import moment from "moment/moment";
 import { Link } from "react-router-dom";
-import { setIsSelected } from "../../Store/homeServiceSlice";
+import { setIsSelected, setUserTotalInfo } from "../../Store/homeServiceSlice";
 const UserProfileCard = () => {
   const { userTotalInfo, isSelected } = useSelector(
     (state) => state.homeService
   );
   const dispatch = useDispatch();
+  if (userTotalInfo === null) {
+    const storedUser = localStorage.getItem("userTotalInfo");
+    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+  }
   const sellerProfileLinks = [
     {
       id: 1,
@@ -35,36 +39,36 @@ const UserProfileCard = () => {
     <div className="user-profile-card">
       <Container>
         <Row>
-          <img src={userTotalInfo.gender === "Male" ? Male : Female} alt="" />
+          <img src={userTotalInfo?.gender === "Male" ? Male : Female} alt="" />
           <h2>
             <span>
-              {userTotalInfo.first_name} {userTotalInfo.last_name}
+              {userTotalInfo?.first_name} {userTotalInfo?.last_name}
             </span>
             <span className="green-circle"></span>
           </h2>
           <div className="mode">
             <ion-icon name="person"></ion-icon>
-            {userTotalInfo.mode === "seller" ? "بائع" : "مستخدم"}
+            {userTotalInfo?.mode === "seller" ? "بائع" : "مستخدم"}
           </div>
           <div>
             <span>
               <ion-icon name="location"></ion-icon>
               متواجد في
             </span>
-            {userTotalInfo.area}
+            {userTotalInfo?.area_name}
           </div>
           <div>
             <span>
               <ion-icon name="calendar"></ion-icon>
               تاريخ التسجيل
             </span>
-            {moment(userTotalInfo.date_joined).format("DD/MM/YYYY")}
+            {moment(userTotalInfo?.date_joined).format("DD/MM/YYYY")}
           </div>
-          <Link>
+          <Link to={`/user/${userTotalInfo?.username}/update_profile`}>
             <ion-icon name="create"></ion-icon>
             <span>تعديل الملف الشخصي</span>
           </Link>
-          {userTotalInfo.mode === "seller" ? (
+          {userTotalInfo?.mode === "seller" ? (
             <ul>
               {sellerProfileLinks.map((item) => (
                 <Link

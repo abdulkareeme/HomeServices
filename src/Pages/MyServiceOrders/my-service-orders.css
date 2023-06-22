@@ -1,0 +1,13 @@
+.my-service-orders {
+    padding-top: 100px;
+    background-color: #f1f1f1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+}
+
+.my-service-orders .form-link {
+    text-decoration: underline;
+    cursor: pointer;
+}

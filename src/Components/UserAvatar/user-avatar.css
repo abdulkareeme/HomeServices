@@ -8,13 +8,13 @@
     cursor: pointer;
 }
 
-.list-group {
+.user .list-group {
     position: absolute;
     left: 10px;
     top: 105%;
 }
 
-a.list-group-item {
+.user .list-group-item {
     width: 100%;
     font-size: 14px;
     display: flex;
@@ -22,6 +22,6 @@ a.list-group-item {
     gap: 5px;
 }
 
-a.list-group-item ion-icon {
+.user .list-group-item ion-icon {
     font-size: 18px;
 }

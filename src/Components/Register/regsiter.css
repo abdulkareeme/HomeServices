@@ -105,8 +105,9 @@ form.register-1>span {
     color: black;
 }
 
-.react-date-picker {
-    background-color: white;
+form.register-2 .react-date-picker {
+    height: 40px;
+    background-color: #f7f9fc;
     margin-top: 15px;
 }
 

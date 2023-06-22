@@ -3,22 +3,15 @@ import { fetchFromAPI } from "../api/FetchFromAPI";
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
 const initialState = {
-  isRegistered: false,
+  isRegistered: true,
   userInputValue: { email: "", password: "" },
   isSelected: 1,
+  areasList: null,
   userTotalInfo: null,
-  // userTotalInfo: {
-  //   first_name: "عمر",
-  //   last_name: "هلال",
-  //   gender: "Male",
-  //   username: "omarhlal00",
-  //   mode: "seller",
-  //   date_joined: "2019-08-24T14:15:22Z",
-  //   area: "اللاذقية",
-  //   bio: "أنا مطور React وproblem solver لدي شغف لتزويد عملائي بمواقع حديثة ونظيفة ومعتمدة بالكامل. من خلال خبرتي في تحليل التطبيقات المعقدة ، قمت ببناء تطبيقات ويب تتوافق مع احتياجات العملاء منlashy portfolio sites إلى single-page applications باستخدام أفضل الممارسات الحالية لتطوير الواجهة الأمامية. تسلط مجموعة المهارات القوية الخاصة بي الضوء على استجابة React.js و Tailwindcss و Bootstrap وReact responsivity مع الخبرة المتزايدة في إنشاء تطبيقات مرنة وتفاعل",
-  //   clients_number: 2,
-  //   services_number: 3,
-  // },
+  userToken: null,
+  categories: null,
+  selectedServiceToUpdate: null,
+  selectedCategory: null,
 };
 
 export const getNewRelease = createAsyncThunk(
@@ -45,11 +38,26 @@ const homeServiceSlice = createSlice({
     setUserInputValue: (state, action) => {
       state.userInputValue = action.payload;
     },
+    setCategories: (state, action) => {
+      state.categories = action.payload;
+    },
     setUserTotalInfo: (state, action) => {
+      state.userTotalInfo = action.payload;
+    },
+    setUserToken: (state, action) => {
       state.userToken = action.payload;
     },
     setIsSelected: (state, action) => {
       state.isSelected = action.payload;
+    },
+    setAreasList: (state, action) => {
+      state.areasList = action.payload;
+    },
+    setSelectedServiceToUpdate: (state, action) => {
+      state.selectedServiceToUpdate = action.payload;
+    },
+    setSelectedCategory: (state, action) => {
+      state.selectedCategory = action.payload;
     },
   },
 });
@@ -59,5 +67,10 @@ export const {
   setUserInputValue,
   setIsSelected,
   setUserTotalInfo,
+  setUserToken,
+  setCategories,
+  setAreasList,
+  setSelectedServiceToUpdate,
+  setSelectedCategory,
 } = homeServiceSlice.actions;
 export default homeServiceSlice.reducer;

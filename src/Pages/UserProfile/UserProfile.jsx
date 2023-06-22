@@ -1,13 +1,21 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./user-profile.css";
 import UserProfileLayout from "../../Components/UserProfileLayout";
 import ServicesList from "../../Components/ServicesList/ServicesList";
+import { setUserTotalInfo } from "../../Store/homeServiceSlice";
+import { handleRateStars } from "../../utils/constants";
 const UserProfile = () => {
   const { userTotalInfo } = useSelector((state) => state.homeService);
+  const dispatch = useDispatch();
+  if (userTotalInfo === null) {
+    const storedUser = localStorage.getItem("userTotalInfo");
+    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    console.log(userTotalInfo);
+  }
   return (
     <UserProfileLayout>
-      {userTotalInfo.mode === "seller" ? (
+      {userTotalInfo?.mode === "seller" ? (
         <div className="user-profile">
           <Container>
             <Row>
@@ -26,24 +34,12 @@ const UserProfile = () => {
                 <ul>
                   <Row>
                     <Col>التقييمات</Col>
-                    {userTotalInfo.clients_number > 0 ? (
-                      <Col className="stars">
-                        <ion-icon name="star"></ion-icon>
-                        <ion-icon name="star"></ion-icon>
-                        <ion-icon name="star"></ion-icon>
-                        <ion-icon name="star"></ion-icon>
-                        <ion-icon name="star"></ion-icon>
-                        <span>{`( ${userTotalInfo.clients_number} )`}</span>
-                      </Col>
-                    ) : (
-                      <Col className="stars">
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                        <ion-icon name="star-outline"></ion-icon>
-                      </Col>
-                    )}
+                    <Col className="stars">
+                      {handleRateStars(
+                        userTotalInfo?.average_rating,
+                        userTotalInfo?.clients_number
+                      )}
+                    </Col>
                   </Row>
                   <Row>
                     <Col>الخدمات المنشورة</Col>
@@ -51,7 +47,11 @@ const UserProfile = () => {
                   </Row>
                   <Row>
                     <Col>متوسط سرعة الرد</Col>
-                    <Col>6 ساعات</Col>
+                    <Col>
+                      {userTotalInfo?.average_fast_answer
+                        ? userTotalInfo?.average_fast_answer
+                        : "لم يحسب بعد"}
+                    </Col>
                   </Row>
                 </ul>
               </Col>

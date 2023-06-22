@@ -88,5 +88,20 @@ hr {
 }
 
 section.confirm-email {
-    height: 100vh;
+  height: 100vh;
+}
+
+section.confirm-email .container {
+  /* height: 100vh; */
+  text-align: center;
+}
+
+.resend-code {
+  font-size: 15px;
+  /* transform: translateX(100%); */
+}
+
+.resend-code span {
+  cursor: pointer;
+  color: #2caae2;
 }

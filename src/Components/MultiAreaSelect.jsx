@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchFromAPI } from "../api/FetchFromAPI";
 import { setAreasList } from "../Store/homeServiceSlice";
-import { json } from "react-router-dom";
 
 const customStyles = {
   control: (provided) => ({
@@ -13,7 +12,7 @@ const customStyles = {
     borderRadius: "5px",
     border: "none",
     boxShadow: "none",
-    width: "200px",
+    width: "100%",
     height: "40px",
   }),
   option: (provided, state) => ({
@@ -31,8 +30,13 @@ const customStyles = {
   }),
 };
 
-const AreaSelect = ({ areaSelected, setAreaSelected }) => {
+const MultiAreaSelect = ({ value = null, setAreasServiceList }) => {
   const { areasList } = useSelector((state) => state.homeService);
+  const [defaultValue, setDefaultValue] = useState(
+    value?.map((item) => {
+      return { value: item.id, label: item.name };
+    })
+  );
   const dispatch = useDispatch();
   if (!areasList) {
     const storedAreas = localStorage.getItem("areasList");
@@ -44,29 +48,34 @@ const AreaSelect = ({ areaSelected, setAreaSelected }) => {
     } else dispatch(setAreasList(JSON.parse(storedAreas)));
   }
   const handleChange = (selectedOption) => {
-    console.log(selectedOption.value);
-    setAreaSelected(
-      areasList.filter((item) => item.name === selectedOption.value)[0].id
-    );
-    console.log(areaSelected);
+    let list = [];
+    console.log(selectedOption);
+    setDefaultValue(selectedOption);
+    for (let i = 0; i < selectedOption.length; ++i) {
+      list = [
+        ...list,
+        // areasList.filter((item) => item.name === selectedOption[i].value)[0].id,
+        selectedOption[i].value,
+      ];
+    }
+    console.log(list);
+    setAreasServiceList(list);
   };
   let options = [];
   options = areasList?.map((area) => {
-    return { value: area.name, label: area.name };
+    return { value: area.id, label: area.name };
   });
+
   return (
     <Select
+      value={defaultValue}
       options={options}
-      placeholder="اختر المدينة"
-      defaultValue={
-        areaSelected === null
-          ? null
-          : { value: areaSelected, label: areaSelected }
-      }
+      isMulti={true}
+      placeholder="اختر المدن"
       styles={customStyles}
       onChange={handleChange}
     />
   );
 };
 
-export default AreaSelect;
+export default MultiAreaSelect;

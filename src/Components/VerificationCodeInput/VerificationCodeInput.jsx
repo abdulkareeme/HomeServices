@@ -4,9 +4,11 @@ import { postToAPI } from "../../api/FetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { setUserTotalInfo } from "../../Store/homeServiceSlice";
+import { useNavigate } from "react-router-dom";
 const VerificationCodeInput = () => {
   const { userInputValue } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();
+  const history = useNavigate();
   const inputRefs = [
     useRef(null),
     useRef(null),
@@ -74,15 +76,6 @@ const VerificationCodeInput = () => {
     e.preventDefault();
     if (checkFields()) {
       console.log(getCode());
-      alert("Right fill!");
-      toast.error("", {
-        duration: 3000,
-        position: "top-center",
-        ariaProps: {
-          role: "status",
-          "aria-live": "polite",
-        },
-      });
       const confirmData = {
         confirmation_code: getCode(),
         email: userInputValue.email,
@@ -92,6 +85,7 @@ const VerificationCodeInput = () => {
           postToAPI("api/login/", userInputValue).then((res) => {
             dispatch(setUserTotalInfo(res));
             console.log(res);
+            history("/");
           });
           toast.success(
             "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى الصفحة الرئيسية",
@@ -106,6 +100,7 @@ const VerificationCodeInput = () => {
           );
         })
         .catch((err) => {
+          console.log(err);
           if (err.response.data.detail === "Wrong code please try again") {
             toast.error("رمز التحقق غير صحيح", {
               duration: 3000,
@@ -117,6 +112,15 @@ const VerificationCodeInput = () => {
             });
           } else if (err.response.data.detail === "Email already verified") {
             toast.error("هذا البريد مفعل مسبقا", {
+              duration: 3000,
+              position: "top-center",
+              ariaProps: {
+                role: "status",
+                "aria-live": "polite",
+              },
+            });
+          } else if (err.response.data.detail.includes("Try again")) {
+            toast.error("حاول مجددا بعد 24 ساعة", {
               duration: 3000,
               position: "top-center",
               ariaProps: {
@@ -136,7 +140,7 @@ const VerificationCodeInput = () => {
   return (
     <form className="verification-code-form" onSubmit={handleSubmit}>
       <div className="verification-code-input">{inputFields}</div>
-      <button type="submit">Verify</button>
+      <button type="submit">ارسال</button>
     </form>
   );
 };

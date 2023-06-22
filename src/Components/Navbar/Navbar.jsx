@@ -1,24 +1,55 @@
 import Male from "../../Images/Male.jpg";
 import Female from "../../Images/Female.jpg";
 import { Accordion, Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   accountLinks,
-  categories,
+  getCategoryLink,
   normalUserLinks,
   offcanvasAccordion,
   sellerUserLinks,
 } from "../../utils/constants";
 import "./navbar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../SeachBar/SearchBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserAvatar from "../UserAvatar/UserAvatar";
+import {
+  setCategories,
+  setSelectedCategory,
+  setUserTotalInfo,
+} from "../../Store/homeServiceSlice";
+import { fetchFromAPI } from "../../api/FetchFromAPI";
 
 const NavBar = () => {
+  const { userTotalInfo, categories } = useSelector(
+    (state) => state.homeService
+  );
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  // const history = useNavigate();
   const handleToggle = () => setShow(!show);
-  const { userTotalInfo } = useSelector((state) => state.homeService);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userTotalInfo");
+    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    const storedCategories = localStorage.getItem("categories");
+    if (storedCategories) {
+      dispatch(setCategories(JSON.parse(storedCategories)));
+    } else {
+      fetchFromAPI("services/categories").then((res) => {
+        dispatch(setCategories(res));
+        localStorage.setItem("categories", JSON.stringify(res));
+      });
+    }
+  }, [dispatch]);
+  const handleCategClick = (name) => {
+    console.log("ss");
+    dispatch(setSelectedCategory(name));
+    localStorage.setItem("selectedCategory", name);
+    // const link = getCategoryLink(name);
+    // console.log(link);
+    // history(`/services/${link}`);
+  };
   return (
     <Navbar fixed="top" expand="md" className="fixed left-0 top-0 w-screen">
       <Container className="d-flex justify-content-between">
@@ -56,26 +87,27 @@ const NavBar = () => {
           <hr />
           <ul className="mt-2 px-4 d-flex flex-column gap-3">
             {userTotalInfo
-              ?(userTotalInfo.mode ==="client")? 
-              normalUserLinks.map((canvasItem, index) => (
-                  <Link
-                    className="text-decoration-none text-black d-flex gap-2 align-items-center"
-                    key={index}
-                  >
-                    {canvasItem.icon}
-                    <span>{canvasItem.label}</span>
-                  </Link>
-                ))
-                :
-                sellerUserLinks.map((canvasItem, index) => (
-                  <Link
-                    className="text-decoration-none text-black d-flex gap-2 align-items-center"
-                    key={index}
-                  >
-                    {canvasItem.icon}
-                    <span>{canvasItem.label}</span>
-                  </Link>
-                ))
+              ? userTotalInfo.mode === "client"
+                ? normalUserLinks.map((canvasItem, index) => (
+                    <Link
+                      className="text-decoration-none text-black d-flex gap-2 align-items-center"
+                      key={index}
+                      to={canvasItem.link}
+                    >
+                      {canvasItem.icon}
+                      <span>{canvasItem.label}</span>
+                    </Link>
+                  ))
+                : sellerUserLinks.map((canvasItem, index) => (
+                    <Link
+                      className="text-decoration-none text-black d-flex gap-2 align-items-center"
+                      key={index}
+                      to={canvasItem.link}
+                    >
+                      {canvasItem.icon}
+                      <span>{canvasItem.label}</span>
+                    </Link>
+                  ))
               : accountLinks.map((canvasItem, index) => (
                   <Link
                     className="text-decoration-none text-black d-flex gap-2 align-items-center"
@@ -95,12 +127,14 @@ const NavBar = () => {
                     </div>
                   </Accordion.Header>
                   <Accordion.Body>
-                    {categories.map((cate, index) => (
+                    {categories?.map((cate) => (
                       <Link
                         className="mb-2 text-decoration-none text-black d-flex gap-2 align-items-center"
-                        key={index}
+                        key={cate.id}
+                        onClick={() => handleCategClick(cate.name)}
+                        to={`/services/${getCategoryLink(cate.name)}`}
                       >
-                        <span>{cate.label}</span>
+                        <span>{cate.name}</span>
                       </Link>
                     ))}
                   </Accordion.Body>

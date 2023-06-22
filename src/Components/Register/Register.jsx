@@ -1,9 +1,9 @@
 import { ErrorMessage, Formik } from "formik";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import "./regsiter.css";
-import { Form } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import DatePicker from "react-date-picker";
 import { format } from "date-fns";
 import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
@@ -12,10 +12,9 @@ import { ClipLoader } from "react-spinners";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
+  setAreasList,
   setIsRegistered,
-  setUserConfirmEmail,
   setUserInputValue,
-  setUserLoginValues,
 } from "../../Store/homeServiceSlice";
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -49,8 +48,7 @@ const Register = () => {
   const [dateValue, setDateValue] = useState(new Date());
   const [mode, setMode] = useState(null);
   const [gender, setGender] = useState(null);
-  const [listOfAreas, setListOfAreas] = useState(null);
-  const [areaSelected, setAreaSelected] = useState(null);
+  const [areaSelected, setAreaSelected] = useState("");
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isPasswordVisible2, setPasswordVisible2] = useState(false);
   const initialValues = {
@@ -79,7 +77,9 @@ const Register = () => {
         setIsSubmitting(0);
         dispatch(setIsRegistered(true));
         console.log(values.email);
-        dispatch(setUserInputValue({"email":values.email,"password":values.password}));
+        dispatch(
+          setUserInputValue({ email: values.email, password: values.password })
+        );
         history("/confirm_email");
       })
       .catch((err) => {
@@ -125,15 +125,12 @@ const Register = () => {
       });
     console.log(userInfo);
   };
-  useEffect(() => {
-    fetchFromAPI("api/register/").then((res) => setListOfAreas(res));
-  }, []);
   return (
     <section className="d-flex justify-content-center align-items-center">
       <Toaster />
       <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, isValid, handleChange, handleBlur, errors, touched }) => (
-          <Fragment>
+          <Container className="d-flex justify-content-center align-items-center">
             <form
               onSubmit={(e) => e.preventDefault()}
               className={`register-1 ${page === 1 ? "hidden" : ""}`}
@@ -319,7 +316,7 @@ const Register = () => {
                   <span>*</span>
                 </label>
                 <AreaSelect
-                  listOfAreas={listOfAreas}
+                  areaSelected={areaSelected}
                   setAreaSelected={setAreaSelected}
                 />
               </div>
@@ -396,7 +393,7 @@ const Register = () => {
                 </button>
               </div>
             </form>
-          </Fragment>
+          </Container>
         )}
       </Formik>
     </section>
