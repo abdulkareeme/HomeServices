@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField , OrderService
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -11,6 +11,21 @@ from django.db.models import Q ,Avg ,F , Sum
 from django.db import transaction
 from datetime import datetime , timedelta
 from .spectacular import ListOrdersSpectacular
+
+@transaction.atomic
+def taking_money(user , required_balance, order, general_services):
+    order.status="Underway"
+    order.save()
+    user.balance.total_balance -= required_balance
+    user.balance.save()
+    for beneficiary in general_services:
+        Earnings.objects.create(order = order, earnings  = beneficiary.price ,beneficiary=beneficiary.beneficiary)
+    return True
+
+def get_from_data(order):
+    serializer = RetrieveInputDataSerializer(data = order.input_data_set , many=True)
+    serializer.is_valid(raise_exception=False)
+    return serializer.data
 
 class IsOwner(permissions.BasePermission):
 
@@ -30,7 +45,7 @@ class ListCategories(APIView):
 class MyOrders(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
-            responses={200:ListOrdersSpectacular , 401:None}
+            responses={200:ListOrdersSpectacular(many=True) , 401:None}
     )
     def get(self, request):
         queryset= OrderService.objects.filter(client = request.user.normal_user)
@@ -40,19 +55,19 @@ class MyOrders(APIView):
         for order in queryset :
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
+            serializer.data[i]['form'] = get_from_data(order=order)
             i+=1
         return Response(serializer.data )
     
-class ReceivedOrders(APIView):
+class ReceivedPendingOrders(APIView):
     permission_classes=[permissions.IsAuthenticated]
     @extend_schema(
         responses={200:ListOrdersSpectacular , 403:None , 401:None},
-        description="NOTE : Get pending orders only"
     )
     def get(self , request):
         if request.user.mode == 'client':
             return Response({"detail":"Error 403 Forbidden , you are a buyer you don't receive orders"} , status=status.HTTP_403_FORBIDDEN)
-        queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user , status = "Pending")
+        queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user , status = 'Pending')
         serializer = ListOrdersSerializer(data = queryset , many=True)
         serializer.is_valid()
         i = 0
@@ -233,6 +248,8 @@ class CancelOrder(APIView):
             return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
         if request.user.normal_user != order.client :
             return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if order.status != 'Pending':
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -242,14 +259,43 @@ class RejectOrder(APIView):
     @extend_schema(
         responses={204:None ,401 :None , 403:None , 404:None }
     )
-    def post(self , request  , order_id):
+    def put(self , request  , order_id):
         try :
             order = OrderService.objects.get(pk= order_id)
         except OrderService.DoesNotExist :
             return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
         if order.home_service.seller != request.user.normal_user:
             return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if order.status != 'Pending':
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
         order.status="Rejected"
         order.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+@extend_schema(
+    responses={401:None , 403:None ,404 : None , 200:RetrieveInputDataSerializer(many=True) , 400:None}
+)
+class AcceptOrder(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def put(self , request , order_id):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if order.home_service.seller != request.user.normal_user:
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if order.status != 'Pending':
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        required_balance = GeneralServicesPrice.objects.all().aggregate(Sum('price'))['price__sum']
+        if request.user.normal_user.balance.total_balance < required_balance:
+            return Response({"detail":"You don't have enough money"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        general_services = GeneralServicesPrice.objects.all()
+        if not taking_money(general_services=general_services,order=order,required_balance=required_balance,user=request.user.normal_user) :
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(get_from_data(order=order))
+
+
+

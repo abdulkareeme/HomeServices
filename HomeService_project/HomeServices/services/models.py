@@ -68,7 +68,7 @@ class Earnings(models.Model):
     order = models.ForeignKey("OrderService", on_delete=models.SET_NULL , related_name='earnings_order'  , null=True)
     beneficiary= models.ForeignKey("Beneficiary", on_delete=models.SET_NULL  , null=True , related_name='earnings_beneficiary')
     earnings = models.IntegerField()
-
+    created_date = models.DateTimeField(auto_now_add=True)
     def __str__(self) :
         return str(self.beneficiary)+' '+str(self.earnings)
     
@@ -83,7 +83,7 @@ class InputField(models.Model):
 
 class InputData(models.Model):
     field = models.ForeignKey("InputField", on_delete=models.CASCADE , related_name='field_data')
-    order = models.ForeignKey("OrderService", on_delete=models.CASCADE)
+    order = models.ForeignKey("OrderService", on_delete=models.CASCADE , related_name='input_data_set')
     content = models.CharField( max_length=500)
 
     def __str__(self) :

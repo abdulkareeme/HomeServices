@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import OrderService, HomeService 
 
-from .serializers import CategorySerializer ,AreaSerializer
+from .serializers import CategorySerializer ,AreaSerializer ,RetrieveInputDataSerializer
 
 class HomeServiceSpectacular(serializers.ModelSerializer):
     service_area = AreaSerializer(many=True)
@@ -14,6 +14,7 @@ class HomeServiceSpectacular(serializers.ModelSerializer):
 class ListOrdersSpectacular(serializers.ModelSerializer):
     home_service = HomeServiceSpectacular()
     client = serializers.CharField(max_length = 150)
+    form = RetrieveInputDataSerializer()
     class Meta : 
         model = OrderService
-        fields = ['id','create_date','status','home_service' , 'client']
+        fields = ['id','create_date','status','home_service' , 'client' , 'form']
