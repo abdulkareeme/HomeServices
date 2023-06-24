@@ -3,22 +3,26 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:home_services/style/user_profile_style.dart';
 import 'package:home_services/Home Page/Drawer/Widget/drawer_components.dart';
+import 'package:home_services/user_profile/Widget/user_profile_body.dart';
 import 'package:home_services/user_profile/my_services_requests/my_requests.dart';
-import 'package:http/http.dart';
+import 'package:home_services/user_profile/user_profile_drawer/user_profile_drawer.dart';
+import 'dart:ui'as ui;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'Api/User_Profile_Api.dart';
 import 'package:home_services/user_profile/update_profile/update_user_info.dart';
+
 // ignore: must_be_immutable
 class UserProfile extends StatefulWidget {
-  var userInfo;
+  var user;
   UserProfile({
-    required this.userInfo,
+    required this.user,
     super.key,
 });
 
   @override
   State<StatefulWidget> createState() => _UserProfileState();
-  String mode = "seller";
+  String mode = "دمشق";
   String gender = "female";
 
 }
@@ -36,218 +40,15 @@ class _UserProfileState extends State<UserProfile> {
     double constWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: ui.TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("عبد الهادي ابو الشامات"),
+            title: Text(widget.user.firstName +" "+ widget.user.lastName),
           ),
           drawer: Drawer(
-            child: Column(
-              children: [
-                   UserAccountsDrawerHeader(
-                    currentAccountPicture: (myImage != null)? CircleAvatar(
-                      radius: 90,
-                      backgroundImage: MemoryImage(myImage!),
-                    ): CircleAvatar(
-                        backgroundImage:(widget.gender == "male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg') ),
-                    accountName: const Text("عبد الهادي ابو الشامات "),
-                    accountEmail: const Text("abode2001a123@gmail.com")
-                ),
-                Visibility(
-                  visible: true,
-                  child: Padding(
-                    padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
-                    child:Drawer_component(
-                      text: "تعديل الملف الشخصي",
-                      color: Colors.black,
-                      icon: Icons.edit,
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UpdateUserInfo(userInfo: widget.userInfo,)));
-                      },
-                     iconColor: Colors.blueGrey),
-                  ),
-                ),
-                Visibility(
-                  visible:(widget.mode == "client")? false :true,
-                  child: Padding(
-                    padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
-                    child:Drawer_component(
-                        text: "خدماتي",
-                        color: Colors.black,
-                        icon: Icons.sensors_rounded,
-                        onTap: (){
-
-                        },
-                        iconColor: Colors.blueGrey),
-                  ),
-                ),
-
-                Visibility(
-                  visible:(widget.mode == "client") ? false : true,
-                  child: Padding(
-                    padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
-                    child:Drawer_component(
-                        text: "تقيماتي",
-                        color: Colors.black,
-                        icon: Icons.rate_review,
-                        onTap: (){
-
-                        },
-                        iconColor: Colors.blueGrey),
-                  ),
-                ),
-                Visibility(
-                  visible: true,
-                  child: Padding(
-                    padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
-                    child:Drawer_component(
-                        text: "الطلبات الواصلة",
-                        color: Colors.black,
-                        icon: Icons.local_offer,
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyRequests()));
-                        },
-                        iconColor: Colors.blueGrey),
-                  ),
-                ),
-                 const Divider(
-                  thickness: 0.5,
-                  color: Colors.black,
-                ),
-                Visibility(
-                  visible: true,
-                  child: Padding(
-                    padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
-                    child:Drawer_component(
-                        text: "تسجيل خروج",
-                        color: Colors.black,
-                        icon: Icons.logout,
-                        onTap: (){
-
-                        },
-                        iconColor: Colors.blueGrey),
-                  ),
-                ),
-                const SizedBox(height: 10,),
-              ],
-            ),
+            child: UserProfileDrawer(user: widget.user, height: constHeight, width: constWidth, myImage: myImage)
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: constHeight / 14,
-                ),
-                 Center(
-                  child: InkWell(
-                  onTap: (){
-                    selectImage();
-                  }
-                  , child: (myImage != null)? CircleAvatar(
-                      radius: 90,
-                      backgroundImage: MemoryImage(myImage!),
-                     ): CircleAvatar(
-                      backgroundImage:(widget.gender == "male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg'),
-                      radius: 90,
-
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: constHeight / 37,
-                ),
-                Text(
-                  "عبد الهادي ابو الشامات",
-                  style: UserProfileStyle.usernameStyle(),
-                ),
-                SizedBox(
-                  height: constHeight / 45,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.person, color: Colors.black),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "بائع",
-                      style: UserProfileStyle.locationStyle(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: constHeight / 100,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.red),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "متواجد في مخبر الزلم",
-                      style: UserProfileStyle.locationStyle(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: constHeight / 100,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.calendar_month,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "تاريخ التسجيل 2021/4/5",
-                      style: UserProfileStyle.locationStyle(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: constHeight / 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        "نبذة عني :",
-                        style: UserProfileStyle.bioTitleStyle(),
-                      )
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  child: Divider(
-                    color: Colors.black45,
-                    thickness: 1.4,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 33,right: 33),
-                  child: SingleChildScrollView(
-                    child: Wrap(
-                      children: [
-                        Text('انا مهندس برمجيات اجيد التعامل مع ال data base و برمجة التطبيقات باستخدام flutter و ال react native مع خبرة عالية في ال problem solving باستخدام لغة بالرمجة c++ او ال java',style: UserProfileStyle.bioStyle(),)
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+          body: UserProfileBody(user: widget.user, height: constHeight, width: constWidth, selectImageMethod: selectImage),
         ),
       ),
     );

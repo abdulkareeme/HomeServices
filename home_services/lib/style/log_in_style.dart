@@ -25,8 +25,7 @@ class LogInStyle {
             fontWeight: FontWeight.w800,
             color: Colors.white,
             decoration: TextDecoration.underline,
-            decorationThickness: 1.7,
-            fontSize: 13.3
+            fontSize: 15.3
         )
     );
   }
@@ -37,6 +36,7 @@ class LogInStyle {
 
           fontSize: 17,
           fontWeight: FontWeight.w600,
+          color: Colors.white
         )
     );
   }
@@ -44,10 +44,10 @@ class LogInStyle {
   static TextStyle signUpStyle(){
     return (
       const TextStyle(
-        fontSize: 17,
+        fontSize: 18,
         fontWeight: FontWeight.w800,
         decoration: TextDecoration.underline,
-        decorationThickness: 1.6,
+        color: Colors.white
       )
     );
   }

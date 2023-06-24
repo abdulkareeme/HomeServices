@@ -38,7 +38,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>{
         ],
         done: Text("Done",style: OnBoardingScreenStyle.doneButtonStyle(),),
         onDone: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(userInfo: widget.op)));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(user: widget.op)));
         },
         skip: Text("Skip",style: OnBoardingScreenStyle.doneButtonStyle(),),
         onSkip: (){

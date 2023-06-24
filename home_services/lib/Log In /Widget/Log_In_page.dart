@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../Sign up/Widget/first_page_of_signup.dart';
+import '../../Sign up/Widget/get_area_list.dart';
 import 'Log_In_button_and_field.dart';
 import 'package:home_services/style/log_in_style.dart';
 
+// ignore: must_be_immutable
 class LogIn extends StatefulWidget {
   String error;
 
@@ -16,8 +17,6 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-  List op = ['Lattakia', 'Damascus', 'aleppo', 'Hama', 'tartous', 'raqa', 'hasaka', 'Homes'];
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -51,35 +50,34 @@ class _LogInState extends State<LogIn> {
                     ),
 
                     const SizedBox(height: 160,),
+
                     // Log in button and field
-                    /*Expanded(
-                        child:*/
-                    //Text(widget.error,style: LogInStyle.errorStyle(),),
                     LogInButtonAndField(
                       height: height,
                       loginError: widget.error,
                     )/*)*/,
+
                     const SizedBox(height: 6,),
-                    // already have account option
+
+                    // don't have account option
+
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "already have account ? ",
+                            "لا تملك حساب حاليا ؟ ",
                             style: LogInStyle.alreadyHaveAccountStyle(),
                           ),
                           InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => FirstPageOfSignUp(
-                                        areaList: op,
-                                      )));
+                                  builder: (context) => const GetAreaList()));
                             },
                             focusColor: Colors.black,
                             child: Text(
-                              "Sign up",
+                              "إنشاء حساب",
                               style: LogInStyle.signUpStyle(),
                             ),
                           )

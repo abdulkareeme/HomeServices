@@ -15,12 +15,13 @@ class SignUpApi{
         List os = info;
         for(int i=0;i<os.length;i++){
           //print(info[i]["name"]);
-          List o = [];
-          o.add(info[i]["id"]);
+          List? o = [];
+          o.add(info[i]["id"].toString());
           String op = info[i]['name'];
           o.add(utf8.decode(op.codeUnits));
           areaList.add(o);
         }
+        print(areaList);
         return areaList;
       } else {
         return areaList;
@@ -68,25 +69,46 @@ class SignUpApi{
     }
   }
 
-  Future postVerificationCode(var code, var email,BuildContext context) async{
+  Future<List?> postVerificationCode(var code, var email) async{
     try{
       String initialError = "";
       Response response = await post(Uri.parse(Server.host+Server.userConfirmCode),body: {
         'email': email,
         'confirmation_code' : code,
       });
-      print('hellllllllllloooooooo');
-      print(code);
+      List op =[];
       var responseBody = jsonDecode(response.body);
       if(response.statusCode == 200){
         // ignore: use_build_context_synchronously
-        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LogIn(error: initialError,)));
+        return op;
       } else {
-        print(code);
+        op.add("ops");
         print(responseBody);
+        return op;
       }
     }catch(e){
       print(e);
     }
   }
+  Future<List?> resendEmailCode(var email) async{
+    try{
+
+      Response response = await post(Uri.parse(Server.host+Server.resendCode),
+        body: {
+          'email' : email,
+        });
+      List op = [];
+      if(response.statusCode == 200){
+        print(jsonDecode(response.body));
+        return op;
+      } else {
+        print(jsonDecode(response.body));
+        op.add("ops");
+        return op;
+      }
+    }catch(e){
+      print(e);
+    }
+  }
+
 }

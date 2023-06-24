@@ -15,11 +15,12 @@ class LogInApis {
     await pref.setInt('id', info['user_info']['id']);
     print(info['user_info']['id']);
     await pref.setString(
-        'first_name', info['user_info']['first_name'].toString());
-    print(info['user_info']['first_name']);
+        'first_name', utf8.decode(info['user_info']['first_name'].toString().codeUnits));
+    print(utf8.decode(info['user_info']['first_name'].toString().codeUnits));
+    String ls = utf8.decode(info['user_info']['last_name'].toString().codeUnits);
     await pref.setString(
-        'last_name', info['user_info']['last_name'].toString());
-    print(info['user_info']['last_name']);
+        'last_name',ls);
+    print(ls);
     await pref.setString('mode', info['user_info']['mode']);
     print(info['user_info']['mode']);
     await (info['user_info']['birth_date'] != null)
@@ -46,7 +47,8 @@ class LogInApis {
     (info['user_info']['average_rating'] != null)
         ? await pref.setInt('rating', info['user_info']['average_rating'])
         : await pref.setInt('rating', 0);
-    await pref.setString('area_name', info['user_info']['area_name']);
+    await pref.setString('area_name',utf8.decode(info['user_info']['area_name'].toString().codeUnits));
+    //print(info['user_info']['area_name']);
     await pref.setInt('area_id', info['user_info']["area_id"]);
   }
 
@@ -61,39 +63,59 @@ class LogInApis {
       var list = [];
       if (response.statusCode == 200) {
         var info = jsonDecode(response.body);
-        print(info);
-        list.add(info['user_info']['first_name']);
-        list.add(info['user_info']['last_name']);
-        list.add(info['user_info']["date_joined"]);
-        list.add(info['user_info']["id"]);
-        list.add(info['user_info']["email"]);
-        list.add(info['user_info']["gender"]);
-        list.add(info['user_info']["mode"]);
-        list.add(info['user_info']["username"]);
-        list.add(info['user_info']["area_id"]);
-        list.add(info['user_info']["area_name"]);
-        list.add(info["token"][0]);
+        //print(info);
         if(info['user_info']['mode'] != "client"){
-          (info['user_info']['average_fast_answer'] != null)
-              ?  list.add(info['user_info']['average_fast_answer'])
-              :  list.add("");
-          (info['user_info']['average_rating'] != null)
-              ?  list.add(info['user_info']['average_rating'])
-              :  list.add(0);
-          (info['user_info']['clients_number'] != null)
-              ?  list.add(info['user_info']['clients_number'])
-              :  list.add(0);
-          (info['user_info']['services_number'] != null)
-              ?  list.add(info['user_info']['services_number'])
-              :  list.add(0);
+          Seller seller = Seller.noPhoto(
+              (info['user_info']['services_number'] != null)
+                  ? info['user_info']['services_number']
+                  : 0,
+              info['user_info']["id"],
+              (info['user_info']['clients_number'] != null)
+                  ? info['user_info']['clients_number']
+                  : 0,
+              info['user_info']["area_id"],
+              utf8.decode(info['user_info']['first_name'].toString().codeUnits),
+              utf8.decode(info['user_info']["last_name"].toString().codeUnits),
+              info['user_info']["username"],
+              (info['user_info']['average_fast_answer'] != null)
+                  ? info['user_info']['average_fast_answer']
+                  :  "",
+              info['user_info']['email'],
+              info['token'][0],
+              info['user_info']['mode'],
+              info['user_info']['gender'],
+              info['user_info']['birth_date'],
+              info['user_info']["date_joined"],
+              utf8.decode(info['user_info']["area_name"].toString().codeUnits),
+              info['user_info']["bio"],
+              (info['user_info']['average_rating'] != null)
+                  ? info['user_info']['average_rating']
+                  : 0);
+          list.add(seller);
+        } else {
+          User user = User.noPhoto(
+            utf8.decode(info['user_info']['first_name'].toString().codeUnits),
+            utf8.decode(info['user_info']['last_name'].toString().codeUnits),
+            info['user_info']["username"],
+            info['user_info']["email"],
+            info["token"][0],
+            info['user_info']["mode"],
+            info['user_info']["gender"],
+            info['user_info']["birth_date"],
+            info['user_info']["date_joined"],
+            utf8.decode(info['user_info']["area_name"].toString().codeUnits),
+            (info['user_info']['bio'] != null)
+                ? info['user_info']['bio']
+                :  "",
+            info['user_info']["area_id"],
+            info['user_info']["id"]);
+          list.add(user);
         }
-        setData(info);
-        print(list);
+        setData(info);;
       } else {
         print(jsonDecode(response.body));
         print(response.statusCode);
       }
-
       return list;
     } catch (e) {
       print(e);
@@ -102,20 +124,80 @@ class LogInApis {
 
   Future<List?> checkIfLoggedIn() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? userName, firstName, lastName, email, token;
-    //bool? logOutCase = pref.getBool('logout')!;
     List? info = [];
-    userName = await pref.getString('username');
-    print(userName.toString());
-    firstName = await pref.getString('first_name');
-    print(firstName);
+    int ? id ,serviceNumber,clientsNumber,areaId,rating;
+    String? firstName,lastName,userName,answerSpeed,email,token,gender,birthDate,joinedDate,areaName,bio,mode;
+    firstName =  await pref.getString("first_name");
     lastName = await pref.getString('last_name');
-    print(lastName);
+    userName = await pref.getString('username');
     email = await pref.getString('email');
-    print(email);
     token = await pref.getString('token');
-    print(token);
-    info = [userName, firstName, lastName, email, token];
-    return info;
+    mode = await pref.getString('mode');
+    birthDate = await pref.getString('birth_date');
+    joinedDate = await pref.getString("joined_date");
+    bio = await pref.getString('bio');
+    gender = await pref.getString('gender');
+    areaName = await pref.getString('area_name');
+    areaId = await pref.getInt('area_id');
+    id = await pref.getInt('id');
+   // print("/////////////////");
+   // print (firstName);
+   // print (lastName);
+   // print (userName);
+   // print (email);
+   // print (token);
+   // print (areaName);
+   // print (mode);
+   // print(gender);
+   // print (birthDate);
+   // print (joinedDate);*/
+    if(firstName != null && lastName != null && userName != null && email != null && token != null && areaName != null && mode != null && gender != null && birthDate != null && joinedDate != null && bio != null && areaId != null && id != null){
+      if(mode == "seller"){
+        serviceNumber = await pref.getInt('services_number');
+        answerSpeed = await pref.getString('answer_speed');
+        rating = await pref.getInt('rating');
+        clientsNumber = await pref.getInt('clients_number');
+        Seller? seller = Seller.noPhoto(
+            serviceNumber!,
+            id,
+            clientsNumber,
+            areaId,
+            firstName,
+            lastName,
+            userName,
+            answerSpeed,
+            email,
+            token,
+            mode,
+            gender,
+            birthDate,
+            joinedDate,
+            areaName,
+            bio,
+            rating!);
+        info.add(seller);
+        return info;
+      }else{
+        User? user = User.noPhoto(
+            firstName,
+            lastName,
+            userName,
+            email,
+            token,
+            mode,
+            gender,
+            birthDate,
+            joinedDate,
+            areaName,
+            bio,
+            areaId,
+            id
+        );
+        info.add(user);
+        return info;
+      }
+    } else{
+      return info;
+    }
   }
 }

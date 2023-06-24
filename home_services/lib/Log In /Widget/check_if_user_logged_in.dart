@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log In /Api/log_in_api.dart';
-import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
 import '../../Home Page/home_page.dart';
 import '../../On Boarding Screen/Widget/on_boarding_screen.dart';
 
@@ -25,20 +24,12 @@ class _CheckIfLoggedInState extends State<CheckIfLoggedIn>{
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return const CircularProgressIndicator();
                 } else{
-                  if(snapshot.connectionState == ConnectionState.done){
-                    bool ok = true;
-                    for(int i=0;i<snapshot.data!.length;i++){
-                      //print(snapshot.data![i]);
-                      if(snapshot.data![i] != null){
-                        continue;
-                      } else {
-                        ok = false;
-                        break;
-                      }
-                    }
-                    if(ok){
-                      //print("heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeey");
-                      return HomePage(userInfo: snapshot.data);
+                  if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+
+                    if(snapshot.data!.isNotEmpty){
+                      // we need to defined a user or seller object
+                      // then return it to the home page
+                      return HomePage(user: snapshot.data![0]);
                     } else {
                         return OnBoardingScreen();
                     }

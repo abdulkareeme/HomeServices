@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Log%20In%20/Widget/check_if_user_logged_in.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
 // ignore: must_be_immutable
 class SetUserNewData extends StatefulWidget{
@@ -25,7 +26,7 @@ class _SetUserNewDataState extends State<SetUserNewData>{
                   return const CircularProgressIndicator();
                 } else {
                   if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-                    return const Text("niiiceeee");
+                    return CheckIfLoggedIn();
                   } else {
                     return AlertDialog(
                       title: const Text('unable to update data'),

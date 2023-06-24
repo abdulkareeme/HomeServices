@@ -4,10 +4,10 @@ import 'package:home_services/Home%20Page/Drawer/Widget/drawer_components.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class Drawer_ extends StatefulWidget {
-  var userInfo;
+  var user;
   Drawer_({
     super.key,
-    required this.userInfo,
+    required this.user,
 });
   @override
   State<StatefulWidget> createState() => DrawerState();
@@ -21,8 +21,9 @@ class DrawerState extends State<Drawer_> {
     return Column(
       children: [
         UserAccountsDrawerHeader(
-          accountName: Text(widget.userInfo[0]),
-          accountEmail: Text(widget.userInfo[1]),
+          accountName: Text(widget.user!.firstName +" "+ widget.user!.lastName),
+
+          accountEmail: Text(widget.user.email),
         ),
         const SizedBox(
           height: 15,
@@ -31,7 +32,7 @@ class DrawerState extends State<Drawer_> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                   onTap: (){
 
@@ -45,7 +46,7 @@ class DrawerState extends State<Drawer_> {
               height: 30,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                   onTap: (){
 
@@ -59,7 +60,7 @@ class DrawerState extends State<Drawer_> {
               height: 30,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                   onTap: (){
 
@@ -73,7 +74,7 @@ class DrawerState extends State<Drawer_> {
               height: 30,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                 onTap: (){
 
@@ -88,7 +89,7 @@ class DrawerState extends State<Drawer_> {
               height: 30,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                   onTap: (){
 
@@ -102,7 +103,7 @@ class DrawerState extends State<Drawer_> {
               height: 30,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                   onTap: (){
 
@@ -126,7 +127,7 @@ class DrawerState extends State<Drawer_> {
             const SizedBox(height: 30,),
 
             Padding(
-              padding:const EdgeInsets.only(left: 15),
+              padding:const EdgeInsets.only(right: 15),
               child: Drawer_component(
                 onTap: (){
 

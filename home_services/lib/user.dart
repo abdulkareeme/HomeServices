@@ -1,58 +1,62 @@
 class User {
-   String userName,
-      email,
-      id,
+  late String
       firstName,
       lastName,
+      userName,
+      email,
+      token,
       mode,
-      joinDate,
       gender,
+      birthDate,
+      joinDate,
       areaName,
-      token;
-   int areaId;
+      bio,
+      photo;
 
-  // ignore: prefer_typing_uninitialized_variables
-  var birthDate, bio, photo;
+  int areaId,id;
 
-  User({
-    required this.firstName,
-    required this.lastName,
-    required this.joinDate,
-    required this.id,
-    required this.email,
-    required this.gender,
-    required this.mode,
-    required this.userName,
-    required this.areaId,
-    required this.areaName,
-    required this.token,
-    this.birthDate,
-    this.bio,
-    this.photo,
-  });
+  User(
+      this.id,
+      this.firstName,
+      this.lastName,
+      this.userName,
+      this.email,
+      this.token,
+      this.mode,
+      this.gender,
+      this.birthDate,
+      this.joinDate,
+      this.areaName,
+      this.bio,
+      this.areaId,
+      this.photo);
+
+  factory User.noPhoto(String firstName, lastName, userName, email, token,
+      mode, gender, birthDate, joinDate, areaName, bio, int areaId,id) {
+    return User(id, firstName, lastName, userName, email, token, mode, gender,
+        birthDate, joinDate, areaName, bio, areaId,"");
+  }
 }
 
-class Seller extends User {
-  int clientNumber, serviceNumber;
+class Seller extends User{
+  int servicesNumber, clientsNumber;
   String averageFastAnswer;
-  double averageRatting;
-
-  Seller({
-    required super.firstName,
-    required super.lastName,
-    required super.joinDate,
-    required super.id,
-    required super.email,
-    required super.gender,
-    required super.mode,
-    required super.userName,
-    required super.areaId,
-    required super.areaName,
-    required super.token,
-    required this.averageFastAnswer,
-    required this.averageRatting,
-    required this.clientNumber,
-    required this.serviceNumber,
-  });
-
+  int averageRating;
+  Seller(super.id, super.firstName, super.lastName, super.userName, super.email, super.token, super.mode, super.gender, super.birthDate, super.joinDate, super.areaName, super.bio, super.areaId, super.photo,this.averageFastAnswer,this.averageRating,this.clientsNumber,this.servicesNumber);
+  factory Seller.noPhoto(int servicesNumber,id,clientsNumber,areaId,String
+      firstName,
+      lastName,
+      userName,
+      averageFastAnswer,
+      email,
+      token,
+      mode,
+      gender,
+      birthDate,
+      joinDate,
+      areaName,
+      bio,
+      int averageRating){
+    return Seller(id, firstName, lastName, userName, email, token, mode, gender, birthDate, joinDate, areaName, bio, areaId, "", averageFastAnswer, averageRating, clientsNumber, servicesNumber);
+  }
 }

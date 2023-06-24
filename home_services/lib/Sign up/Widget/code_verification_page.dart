@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:home_services/Sign up/Api/sign_up_api.dart';
+import 'package:home_services/Sign%20up/Widget/code_verification_progres.dart';
+import 'package:home_services/Sign%20up/Widget/resend_email_code.dart';
 import 'package:home_services/style/code_verification_page.dart';
 
+// ignore: must_be_immutable
 class CodeVerificationPage extends StatefulWidget {
    String email;
    CodeVerificationPage({
@@ -179,9 +181,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                 ElevatedButton(
                   onPressed: (){
                     widget.code = widget.firstDigit.text.toString()+widget.secondDigit.text.toString()+widget.thirdDigit.text.toString()+widget.fourthDigit.text.toString()+widget.fifthDigit.text.toString()+widget.sixthDigit.text.toString();
-                    SignUpApi op = SignUpApi();
-                    op.postVerificationCode(widget.code, widget.email, context);
-
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CodeVerificationProcess(email: widget.email, code: widget.code)));
                   },
                   style: CodeVerificationPageStyle.buttonStyle(),
                   child: Text("إرسال",style:CodeVerificationPageStyle.buttonText() ,),
@@ -194,7 +194,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                     children: [
                       InkWell(
                         onTap: (){
-
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ResendEmailCode(email: widget.email)));
                         },
                         child: Text("إعادة ارسال الرمز",style: CodeVerificationPageStyle.resendCondeText(),),
                       ),
