@@ -56,10 +56,14 @@ class MyOrders(APIView):
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
             serializer.data[i]['form'] = get_from_data(order=order)
+            photo = None 
+            if order.client.user.photo :
+                photo = order.client.user.photo.url
+            serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
     
-class ReceivedPendingOrders(APIView):
+class ReceivedOrders(APIView):
     permission_classes=[permissions.IsAuthenticated]
     @extend_schema(
         responses={200:ListOrdersSpectacular , 403:None , 401:None},
@@ -67,13 +71,21 @@ class ReceivedPendingOrders(APIView):
     def get(self , request):
         if request.user.mode == 'client':
             return Response({"detail":"Error 403 Forbidden , you are a buyer you don't receive orders"} , status=status.HTTP_403_FORBIDDEN)
-        queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user , status = 'Pending')
+        queryset= OrderService.objects.filter(home_service__seller = request.user.normal_user ).filter(~Q(status="Rejected"))
         serializer = ListOrdersSerializer(data = queryset , many=True)
         serializer.is_valid()
         i = 0
         for order in queryset :
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
+            if order.status != 'Pending':
+                serializer.data[i]['form'] = get_from_data(order=order)
+            else :
+                serializer.data[i]['form'] = []
+            photo = None 
+            if order.client.user.photo :
+                photo = order.client.user.photo.url
+            serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
 
