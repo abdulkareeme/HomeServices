@@ -113,10 +113,17 @@ class RetrieveUpdateHomeServiceSerializer(serializers.ModelSerializer):
         fields =['title','description','average_price_per_hour','service_area']
 
 class InputFieldSerializerAll(serializers.ModelSerializer):
+    field_type = serializers.ChoiceField(choices=input_choices , required = True)
     class Meta:
         model = InputField
         fields= ['id','title','field_type','note']
 class InputDataSerializer(serializers.ModelSerializer):
     class Meta:
+        model = InputData
+        fields = ['field','content']
+
+class RetrieveInputDataSerializer(serializers.ModelSerializer):
+    field = InputFieldSerializer()
+    class Meta :
         model = InputData
         fields = ['field','content']
