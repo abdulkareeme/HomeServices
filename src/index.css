@@ -38,21 +38,6 @@ hr {
   width: fit-content;
 }
 
-.my-btn {
-  color: white;
-  border: 1px solid #efefef;
-  padding: 5px 10px;
-  transition: 0.4s;
-  background-color: transparent;
-}
-
-.my-btn ion-icon {
-  font-size: 20px;
-}
-
-.my-btn:hover {
-  background-color: #efefef86;
-}
 
 .accordion-item {
   border: none;
@@ -104,4 +89,25 @@ section.confirm-email .container {
 .resend-code span {
   cursor: pointer;
   color: #2caae2;
+}
+
+.my-btn {
+  border: none;
+  outline: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 500;
+  color: white;
+  margin: 10px 0;
+  background-color: #2caae2;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swal-text {
+  text-align: right;
+  line-height: 1.7;
 }

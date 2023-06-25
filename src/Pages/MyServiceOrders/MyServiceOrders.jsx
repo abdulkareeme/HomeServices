@@ -1,11 +1,11 @@
-import { Container, Modal, Table } from "react-bootstrap";
+import { Col, Container, Modal, Row } from "react-bootstrap";
 import "./my-service-orders.css";
-import { myOrderHeader } from "../../utils/constants";
-import { useEffect, useState } from "react";
-import { deleteFromAPI, fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
+import { Fragment, useEffect, useLayoutEffect, useState } from "react";
+import { deleteFromAPI, fetchFromAPI } from "../../api/FetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
-
+import Male from "../../Images/Male.jpg";
+import swal from "sweetalert";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -21,13 +21,17 @@ const MyServiceOrders = () => {
   }
   const [myorderData, setMyOrderData] = useState(null);
   const [show, setShow] = useState(false);
-  const [formData, setFormData] = useState(null);
+  const [selectedform, setSelectedForm] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const formDetails = selectedform?.map((item, index) => (
+    <div key={index} className="question">
+      <label htmlFor="">{item.field.title}</label>
+      <input value={item.content} readOnly type={item.field.field_type} />
+      {item.field.note.length > 0 ? <p>{item.field.note}</p> : null}
+    </div>
+  ));
 
   const handleClose = () => setShow(false);
-  const handleShow = (id) => {
-    //fetch form data and finaly setShow
-    setShow(true);
-  };
   const getMyOrderData = async () => {
     try {
       const data = await fetchFromAPI("services/my_orders", {
@@ -43,16 +47,44 @@ const MyServiceOrders = () => {
   };
   const statusObj = {
     Pending: "جاري الطلب",
-    "Rejected ": "مرفوض",
+    Rejected: "مرفوض",
     Underway: "جاري التنفيذ",
-    "Expire ": "تم الانتهاء بحاجة الى تقييم",
+    Expire: "تم الانتهاء بحاجة الى تقييم",
   };
   useEffect(() => {
     getMyOrderData();
   }, []);
-  const handleUndo = async (id) => {
+  // to fire function after state update
+  useLayoutEffect(() => {
+    if (selectedOrderId) {
+      handelShowAlert();
+    }
+  }, [selectedOrderId]);
+  const handelShowAlert = async () => {
+    console.log(selectedOrderId);
+    swal({
+      title: "الغاء الطلب",
+      text: "هل أنت متأكد من رغبتك في الغاء الطلب؟",
+      icon: "warning",
+      buttons: ["إلغاء", "تأكيد"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        handleAlertConfirm();
+      }
+    });
+  };
+  const handleAlertConfirm = async () => {
+    swal("تم الإلغاء بنجاح", {
+      icon: "success",
+    });
+    handleUndo();
+  };
+  const handleUndo = async () => {
+    console.log(selectedOrderId);
+    setMyOrderData(myorderData.filter((item) => item.id !== selectedOrderId));
     try {
-      await deleteFromAPI(`services/cancel_order/${id}`, {
+      await deleteFromAPI(`services/cancel_order/${selectedOrderId}`, {
         headers: {
           Authorization: `token ${userToken}`,
         },
@@ -65,51 +97,72 @@ const MyServiceOrders = () => {
     <section className="my-service-orders">
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>الفورم المرفق</Modal.Title>
         </Modal.Header>
-        <Modal.Body></Modal.Body>
+        <Modal.Body>
+          <form action="">{formDetails}</form>
+        </Modal.Body>
       </Modal>
       <Container>
-        <h1>الطلبات المرسلة</h1>
+        {!myorderData ? <div className="loader">يتم التحميل</div> : null}
+        {myorderData?.length === 0 ? (
+          <div className="loader"> لا يوجد طلبات مرسلة</div>
+        ) : null}
+        {myorderData?.length > 0 ? (
+          <Fragment>
+            <h1>الطلبات المرسلة</h1>
+            <Row className="d-flex justify-content-center gap-2">
+              {myorderData?.map((order) => (
+                <Col lg={3} md={4} xs={10} key={order.id}>
+                  <div className="card my-3 bg-white shadow-sm border-0 rounded">
+                    <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
+                      <div className="image-holder mt-4">
+                        <img src={order.photo ? order.photo : Male} alt="" />
+                      </div>
+                      <div className="d-flex text-center flex-column gap-2">
+                        <h5 className="m-0">{order.client}</h5>
+                        <div>{order.home_service.title}</div>
+                        <div className="text-muted">
+                          {order.home_service.category.name}
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <button
+                          onClick={() => {
+                            setSelectedForm(order.form);
+                            setShow(true);
+                          }}
+                          className="my-btn"
+                        >
+                          الفورم المرفق
+                        </button>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <span className="circle"></span>
+                        <span>{statusObj[order.status]}</span>
+                      </div>
+                      <div className="d-flex flex-column align-items-end gap-4">
+                        <div className="date text-muted w-max">
+                          {order?.create_date}
+                        </div>
+                        {order.status === "Pending" ? (
+                          <ion-icon
+                            onClick={() => {
+                              setSelectedOrderId(order.id);
+                            }}
+                            ion-icon
+                            name="arrow-undo"
+                          ></ion-icon>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          </Fragment>
+        ) : null}
       </Container>
-      <Table bordered striped responsive hover size="xl">
-        {/* head row */}
-        <thead>
-          <tr>
-            {myOrderHeader.map((item, index) => (
-              <th key={index}>{item}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {/* each tr is row and is obj */}
-          {myorderData?.map((item, index) => (
-            <tr key={index}>
-              <td>{item.id}</td>
-              <td>{item.create_date}</td>
-              <td>{item.home_service.title}</td>
-              <td>{item.home_service.category.name}</td>
-              <td>{item.home_service.average_price_per_hour}</td>
-              <td>{item.home_service.seller}</td>
-              <td>
-                <a
-                  onClick={() => handleShow(item.id)}
-                  className="form-link"
-                  href=""
-                >
-                  اضغط هنا
-                </a>
-              </td>
-              <td>{statusObj[item.status]}</td>
-              {item.status === "Pending" ? (
-                <td onClick={() => handleUndo(item.id)}>
-                  <ion-icon ion-icon name="arrow-undo"></ion-icon>
-                </td>
-              ) : null}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
     </section>
   );
 };

@@ -23,6 +23,8 @@
     "react-select": "^5.7.3",
     "react-spinners": "^0.13.8",
     "react-tooltip": "^5.14.0",
+    "sweetalert": "^2.1.2",
+    "use-state-with-callback": "^3.0.2",
     "web-vitals": "^2.1.4",
     "yup": "^1.1.1"
   },
