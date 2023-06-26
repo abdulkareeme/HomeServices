@@ -14,7 +14,8 @@ class HomeServiceSpectacular(serializers.ModelSerializer):
 class ListOrdersSpectacular(serializers.ModelSerializer):
     home_service = HomeServiceSpectacular()
     client = serializers.CharField(max_length = 150)
-    form = RetrieveInputDataSerializer()
+    form = RetrieveInputDataSerializer(many=True)
+    photo = serializers.ImageField()
     class Meta : 
         model = OrderService
-        fields = ['id','create_date','status','home_service' , 'client' , 'form']
+        fields = ['id','create_date','status','home_service' , 'client' , 'form' , 'photo']
