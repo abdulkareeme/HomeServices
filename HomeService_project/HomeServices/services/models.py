@@ -23,7 +23,7 @@ class HomeService(models.Model):
     seller = models.ForeignKey(User , on_delete=models.CASCADE, related_name='home_services_seller')
     service_area = models.ManyToManyField("Area" , related_name='home_services_area_set')
     number_of_served_clients = models.PositiveIntegerField(default=0)
-    average_ratings = models.IntegerField(default=0)
+    average_ratings = models.FloatField(default=0)
     def __str__(self) :
         return self.title
 

@@ -92,11 +92,11 @@ class ReceivedOrders(APIView):
 
 @extend_schema(
     description="NOTE : When you use this api use :<br> 1 - ( services/list_home_services?username=\{username\} ) to filter \
-       the services for this user <br> 2 -  ( services/list_home_services?category=\{category\} ) to filter the services by category\
-        3 - else it will be display all services"
+       the services for this user <br> 2 -  ( services/list_home_services?category=\{category name\} ) to filter the services by category\
+        3 - ( services/list_home_services?category=\{category name\}&title=\{string you want to contains in the title\} ) to filter the services by category and title<br>\
+            4 - else it will return all services"
 
 )
-#TODO filter rate order
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
     permission_classes = [permissions.AllowAny]
@@ -104,10 +104,15 @@ class ListHomeServices(generics.ListAPIView):
 
     def get_queryset(self):
         if 'username' in self.request.GET:
-            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username'))
+            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).order_by('-average_ratings')
         if 'category' in self.request.GET :
-            return HomeService.objects.filter(category__name = self.request.GET.get('category'))
-        return HomeService.objects.all()
+            query= HomeService.objects.filter(category__name = self.request.GET.get('category')).order_by('-average_ratings')
+            if 'title' in self.request.GET :
+                query.filter(title__contains = self.request.GET.get('title'))
+            return query
+        if 'title' in self.request.GET :
+               return HomeService.objects.filter(title__contains = self.request.GET.get('title')).order_by('-average_ratings')
+        return HomeService.objects.all().order_by('-average_ratings')
 
 @extend_schema(
     responses={200:RetrieveHomeServices}
