@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyFild extends StatefulWidget {
+class MyINTField extends StatefulWidget {
   final obscure;
   final hintText;
   final contorller;
@@ -15,39 +15,42 @@ class MyFild extends StatefulWidget {
   final keyboardType;
   final autoValidateMode;
   final onTap;
-  bool readOnly;
   final maxLine;
   final maxLetters;
 
-  MyFild(
+  bool readOnly;
+
+  MyINTField(
       {super.key,
-      required this.contorller,
-      required this.hintText,
-      required this.obscure,
-      required this.lable,
-      required this.readOnly,
-      this.onTap,
-      this.maxLine,
-      this.maxLetters,
-      this.preffixIcon,
-      this.suffixIcon,
-      this.autoValidateMode,
-      this.errorText,
-      this.val,
-      this.color,
-      this.sidesColor,
-      this.keyboardType});
+        required this.contorller,
+        required this.hintText,
+        required this.obscure,
+        required this.lable,
+        required this.readOnly,
+        this.onTap,
+        this.maxLine,
+        this.maxLetters,
+        this.preffixIcon,
+        this.suffixIcon,
+        this.autoValidateMode,
+        this.errorText,
+        this.val,
+        this.color,
+        this.sidesColor,
+        this.keyboardType});
 
   @override
-  State<MyFild> createState() => _MyFildState();
+  State<StatefulWidget> createState() => _MyINTFieldState();
 }
-
-class _MyFildState extends State<MyFild> {
+class _MyINTFieldState extends State<MyINTField>{
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: TextFormField(
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly
+          ],
           maxLines: widget.maxLine,
           maxLength: widget.maxLetters,
           keyboardType: widget.keyboardType,
@@ -68,7 +71,7 @@ class _MyFildState extends State<MyFild> {
               fontStyle: FontStyle.italic,
             ),
             contentPadding:
-                const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+            const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
             filled: true,
             fillColor: widget.color,
             //enabled: true,
@@ -88,15 +91,15 @@ class _MyFildState extends State<MyFild> {
             focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide(color: widget.sidesColor
-                    //width:2,
-                    )),
+                  //width:2,
+                )),
             errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide(color: widget.sidesColor
-                    //width:2,
-                    )),
+                  //width:2,
+                )),
           )),
     );
   }
-}
 
+}

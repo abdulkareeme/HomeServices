@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Sign%20up/Widget/get_area_list.dart';
 import 'package:home_services/user_profile/create_new_service/create_new_service_page.dart';
+import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 import 'package:home_services/user_profile/update_profile/get_area_list.dart';
 import '../../Home Page/Drawer/Widget/drawer_components.dart';
 import '../my_services_requests/my_requests.dart';
@@ -44,7 +46,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 color: Colors.black,
                 icon: Icons.add_box,
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CreateNewService()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const GetCategoriesList()/*CreateNewService()*/));
                 },
                 iconColor: Colors.blueGrey),
           ),

@@ -98,4 +98,31 @@ class ProfileApi {
       print("no such image");
     }
   }
+  Future<List?> getCategories() async{
+
+    try{
+      Response response = await get(Uri.parse(Server.host+Server.listCategories));
+      List finalCat = [];
+      if(response.statusCode == 200){
+        var cate = jsonDecode(response.body);
+        print(cate);
+        List os = cate;
+        for(int i=0;i<os.length;i++){
+          List op = [];
+          op.add(cate[i]['id']);
+          op.add(utf8.decode(cate[i]['name'].toString().codeUnits));
+          finalCat.add(op);
+        }
+        print(finalCat);
+        return finalCat;
+      } else {
+        print(jsonDecode(response.body));
+        return finalCat;
+      }
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
 }

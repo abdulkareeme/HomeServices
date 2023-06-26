@@ -6,4 +6,5 @@ class Server{
   static const String logOut = "api/logout/";
   static const String updateInfo = "api/update_profile";
   static const String resendCode ="api/resend_email_code";
+  static const String listCategories = "services/categories";
 }
