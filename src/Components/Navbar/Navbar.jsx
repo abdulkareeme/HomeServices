@@ -1,7 +1,7 @@
 import Male from "../../Images/Male.jpg";
 import Female from "../../Images/Female.jpg";
 import { Accordion, Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   accountLinks,
   getCategoryLink,
@@ -22,12 +22,11 @@ import {
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 
 const NavBar = () => {
-  const { userTotalInfo, categories } = useSelector(
+  const { userTotalInfo, categories, flagToClose } = useSelector(
     (state) => state.homeService
   );
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  // const history = useNavigate();
   const handleToggle = () => setShow(!show);
   useEffect(() => {
     const storedUser = localStorage.getItem("userTotalInfo");
@@ -42,13 +41,15 @@ const NavBar = () => {
       });
     }
   }, [dispatch]);
+  //! doesn't work yet
+  // when I submit a search word this function will fire to close Offcanvas
+  useEffect(() => {
+    if (flagToClose) setShow(false);
+  }, [flagToClose]);
   const handleCategClick = (name) => {
     console.log("ss");
     dispatch(setSelectedCategory(name));
     localStorage.setItem("selectedCategory", name);
-    // const link = getCategoryLink(name);
-    // console.log(link);
-    // history(`/services/${link}`);
   };
   return (
     <Navbar fixed="top" expand="md" className="fixed left-0 top-0 w-screen">
@@ -69,6 +70,7 @@ const NavBar = () => {
               <Nav.Item key={index}>
                 <Link
                   className="text-decoration-none text-black"
+                  onClick={() => setShow(false)}
                   to={navItem.link}
                 >
                   <button className="my-btn d-flex gap-2 align-items-center">
@@ -83,7 +85,7 @@ const NavBar = () => {
       </Container>
       <Offcanvas placement="end" show={show}>
         <Offcanvas.Body>
-          <SearchBar type="outlined" />
+          <SearchBar type="outlined" goto="page" />
           <hr />
           <ul className="mt-2 px-4 d-flex flex-column gap-3">
             {userTotalInfo
@@ -92,6 +94,7 @@ const NavBar = () => {
                     <Link
                       className="text-decoration-none text-black d-flex gap-2 align-items-center"
                       key={index}
+                      onClick={() => setShow(false)}
                       to={canvasItem.link}
                     >
                       {canvasItem.icon}
@@ -102,6 +105,7 @@ const NavBar = () => {
                     <Link
                       className="text-decoration-none text-black d-flex gap-2 align-items-center"
                       key={index}
+                      onClick={() => setShow(false)}
                       to={canvasItem.link}
                     >
                       {canvasItem.icon}
@@ -111,6 +115,7 @@ const NavBar = () => {
               : accountLinks.map((canvasItem, index) => (
                   <Link
                     className="text-decoration-none text-black d-flex gap-2 align-items-center"
+                    onClick={() => setShow(false)}
                     key={index}
                   >
                     {canvasItem.icon}
@@ -131,7 +136,10 @@ const NavBar = () => {
                       <Link
                         className="mb-2 text-decoration-none text-black d-flex gap-2 align-items-center"
                         key={cate.id}
-                        onClick={() => handleCategClick(cate.name)}
+                        onClick={() => {
+                          handleCategClick(cate.name);
+                          setShow(false);
+                        }}
                         to={`/services/${getCategoryLink(cate.name)}`}
                       >
                         <span>{cate.name}</span>

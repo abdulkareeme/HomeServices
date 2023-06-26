@@ -44,6 +44,7 @@ const MyRecieveOrders = () => {
           Authorization: `token ${userToken}`,
         },
       });
+      console.log(data);
       setMyRecieveOrderData(data);
       setPendingRecieveData(data.filter((item) => item.status === "Pending"));
       setunderwayRecieveData(data.filter((item) => item.status === "Underway"));
@@ -93,7 +94,7 @@ const MyRecieveOrders = () => {
       },
     });
     try {
-      await putToAPI(`services/accept_order/${order.id}`, null, {
+      const res = await putToAPI(`services/accept_order/${order.id}`, null, {
         headers: {
           Authorization: `token ${userToken}`,
         },
@@ -101,6 +102,7 @@ const MyRecieveOrders = () => {
       setPendingRecieveData(
         pendingRecieveData.filter((item) => item.id !== order.id)
       );
+      order.form = res;
       setunderwayRecieveData([...underwayRecieveData, order]);
     } catch (err) {
       if (err.response.data?.detail === "You don't have enough money") {
@@ -186,10 +188,10 @@ const MyRecieveOrders = () => {
             ) : (
               <div className="loader">لا يوجد طلبات بحاجة لموافقة أو رفض</div>
             )}
-            <h1>طلبات قيد التنفيذ</h1>
+            <h1 className="mt-5">طلبات قيد التنفيذ</h1>
             {underwayRecieveData?.length > 0 ? (
               <Row className="underway d-flex justify-content-center gap-2">
-                {myRecieveorderData?.map((order) => (
+                {underwayRecieveData?.map((order) => (
                   <Col lg={4} md={5} xs={10} key={order.id}>
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">

@@ -16,7 +16,7 @@ const Landing = () => {
               <p className="fs-5 w-fit mx-auto mb-6">
                 سهولة الوصول لمزودي الخدمات المناسبين
               </p>
-              <SearchBar type="filled" />
+              <SearchBar type="filled" goto="page" />
             </Col>
           </Row>
         </Container>

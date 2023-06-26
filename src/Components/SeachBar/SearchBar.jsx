@@ -1,14 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { setClearResults, setFlagToClose } from "../../Store/homeServiceSlice";
+import { useDispatch } from "react-redux";
 import "./searchbar.css";
-const SearchBar = ({ type, setFilterList }) => {
+const SearchBar = ({ type, goto }) => {
   const [inputValue, setInputValue] = useState("");
-  const handelChange = (input) => {
-    setInputValue(input.target.value);
-    // setFilterList(
-    //   products.filter((item) =>
-    //     item.productName?.toLowerCase().includes(inputValue?.toLowerCase())
-    //   )
-    // );
+  const history = useNavigate();
+  const dispatch = useDispatch();
+  const handelSubmit = () => {
+    if (goto === "page") {
+      dispatch(setFlagToClose(true));
+      history(`/search/${inputValue}`);
+    } else dispatch(setClearResults(true));
+    localStorage.setItem("searchWord", inputValue);
   };
   return (
     <div
@@ -18,9 +22,13 @@ const SearchBar = ({ type, setFilterList }) => {
         type="text"
         placeholder="ابحث عن"
         value={inputValue}
-        onChange={handelChange}
+        onChange={(e) => setInputValue(e.target.value)}
       />
-      <ion-icon name="search-outline" className="search-icon"></ion-icon>
+      <ion-icon
+        onClick={() => inputValue.length > 0 && handelSubmit()}
+        name="search-outline"
+        className="search-icon"
+      ></ion-icon>
     </div>
   );
 };

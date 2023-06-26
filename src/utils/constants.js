@@ -39,7 +39,7 @@ export const sellerUserLinks = [
   {
     label: "أضف خدمة",
     icon: <ion-icon name="add-circle-outline"></ion-icon>,
-    link: "/",
+    link: "/service/new",
   },
   ...normalUserLinks,
   {

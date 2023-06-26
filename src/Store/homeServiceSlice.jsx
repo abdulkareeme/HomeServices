@@ -12,6 +12,8 @@ const initialState = {
   categories: null,
   selectedServiceToUpdate: null,
   selectedCategory: null,
+  clearResults: false,
+  flagToClose: false,
 };
 
 export const getNewRelease = createAsyncThunk(
@@ -59,6 +61,12 @@ const homeServiceSlice = createSlice({
     setSelectedCategory: (state, action) => {
       state.selectedCategory = action.payload;
     },
+    setClearResults: (state, action) => {
+      state.clearResults = action.payload;
+    },
+    setFlagToClose: (state, action) => {
+      state.flagToClose = action.payload;
+    },
   },
 });
 
@@ -72,5 +80,7 @@ export const {
   setAreasList,
   setSelectedServiceToUpdate,
   setSelectedCategory,
+  setClearResults,
+  setFlagToClose,
 } = homeServiceSlice.actions;
 export default homeServiceSlice.reducer;
