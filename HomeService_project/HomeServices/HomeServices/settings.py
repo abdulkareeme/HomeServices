@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'services',
     'drf_spectacular',
     'corsheaders',
+    'django_q',
+    'django_redis',
 
 ]
 
@@ -161,3 +163,34 @@ import os
 
 # BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+Q_CLUSTER = {
+    'name': 'HomeServices',
+    'workers': 4,
+    'timeout': 60,
+    'retry': 90,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com:18985/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': 'O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5',
+        }
+    }
+}
+
+Q_CLUSTER['redis'] = {
+    'host': 'redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com',
+    'port': 18985,
+    'password': 'O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5',
+    'db': 0,
+    'socket_timeout': 3,
+    'retry_on_timeout': True,
+}
+# redis-cli -u redis://default:O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5@redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com:18985
