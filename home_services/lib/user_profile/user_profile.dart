@@ -1,19 +1,13 @@
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:home_services/style/user_profile_style.dart';
-import 'package:home_services/Home Page/Drawer/Widget/drawer_components.dart';
 import 'package:home_services/user_profile/Widget/user_profile_body.dart';
-import 'package:home_services/user_profile/my_services_requests/my_requests.dart';
 import 'package:home_services/user_profile/user_profile_drawer/user_profile_drawer.dart';
 import 'dart:ui'as ui;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'Api/User_Profile_Api.dart';
-import 'package:home_services/user_profile/update_profile/update_user_info.dart';
-
 // ignore: must_be_immutable
 class UserProfile extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   var user;
   UserProfile({
     required this.user,

@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: (){
+                      print(widget.user.mode);
                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfile(user: widget.user,)));
                     },
                     child: const Text("go"),

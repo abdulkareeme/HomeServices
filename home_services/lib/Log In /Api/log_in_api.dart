@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:home_services/server/api_url.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:home_services/user.dart';
+
+import '../../Main Classes/user.dart';
+//import 'package:home_services/user.dart';
 
 class LogInApis {
   Future setData(var info) async {

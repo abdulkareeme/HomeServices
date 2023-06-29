@@ -60,7 +60,7 @@ class _UserProfileBodyState extends State<UserProfileBody>{
                     width: 5,
                   ),
                   Text(
-                    (widget.user.mode == "client")?"بائع":"مستخدم",
+                    (widget.user.mode == "client")?"مستخدم":"بائع",
                     style: UserProfileStyle.locationStyle(),
                   ),
                 ],

@@ -3,17 +3,16 @@ import 'package:home_services/my_field.dart';
 
 // ignore: must_be_immutable
 class FormItem extends StatefulWidget{
-  var formList,index;
+  var formList,index,questionController,noteController;
   FormItem({
-    required this.index,
-    required this.formList,
+    required this.questionController,
+    required this.noteController,
+    this.index,
+    this.formList,
     super.key
 });
   @override
   State<StatefulWidget> createState() => _FormItemState();
-
-  TextEditingController questionController = TextEditingController();
-  TextEditingController noteController = TextEditingController();
   String fieldType = "text";
   var initSelection = "نص";
   bool vis = true;
@@ -73,7 +72,7 @@ class _FormItemState extends State<FormItem>{
                         ],
                       );
                     });
-                  }, icon: const Icon(Icons.delete))
+                  }, icon: const Icon(Icons.delete,color: Colors.red,))
                 ],
               ),
               Row(

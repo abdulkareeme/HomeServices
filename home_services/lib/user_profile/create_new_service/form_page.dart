@@ -49,7 +49,7 @@ class _ServiceFormState extends State<ServiceForm>{
   );
   List forms = [];
   void addItem(){
-    FormItem ob = FormItem(formList: forms,index: forms.length,);
+    FormItem ob = FormItem(formList: forms,index: forms.length,questionController: TextEditingController(text: ""),noteController: TextEditingController(text: ""),);
     setState(() {
       forms.add(ob);
     });
