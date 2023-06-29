@@ -36,6 +36,8 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         ),
         // username field
         MyFild(
+          leftPadding: 20.0,
+          rightPadding: 20.0,
           contorller: widget.usernameController,
           hintText: "البريد الالكتروني",
           obscure: false,
@@ -51,6 +53,8 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
 
         // password field
         MyFild(
+          leftPadding: 20.0,
+          rightPadding: 20.0,
           contorller: widget.passwordController,
           hintText: "كلمة المرور",
           obscure: true,
@@ -58,6 +62,7 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
           color: Colors.white,
           sidesColor: Colors.black,
           readOnly: false,
+          maxLine: 1,
         ),
         Padding(
           padding: const EdgeInsets.only(left: 30, top: 5),

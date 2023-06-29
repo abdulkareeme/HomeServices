@@ -6,8 +6,10 @@ import 'package:home_services/user_profile/create_new_service/list_area.dart';
 
 
 
+// ignore: must_be_immutable
 class GetCategoriesList extends StatelessWidget{
-  const GetCategoriesList({Key? key}) : super(key: key);
+  var user;
+  GetCategoriesList({required this.user,super.key}) ;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class GetCategoriesList extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return GetListArea(categoriesList: snapshot.data!);
+                  return GetListArea(categoriesList: snapshot.data!,user: user,);
                 }
               } else {
                 return AlertDialog(

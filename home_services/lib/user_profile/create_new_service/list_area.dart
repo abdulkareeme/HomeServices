@@ -7,7 +7,8 @@ import 'package:home_services/user_profile/create_new_service/create_new_service
 // ignore: must_be_immutable
 class GetListArea extends StatelessWidget{
   var categoriesList;
-  GetListArea({required this.categoriesList,super.key});
+  var user;
+  GetListArea({required this.categoriesList,required this.user,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class GetListArea extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return CreateNewService(categoriesList:categoriesList,areaList: snapshot.data!,);
+                  return CreateNewService(categoriesList:categoriesList,areaList: snapshot.data!,user: user,);
                 }
               } else {
                 return AlertDialog(

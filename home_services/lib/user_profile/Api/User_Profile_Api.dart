@@ -113,7 +113,6 @@ class ProfileApi {
           op.add(utf8.decode(cate[i]['name'].toString().codeUnits));
           finalCat.add(op);
         }
-        print(finalCat);
         return finalCat;
       } else {
         print(jsonDecode(response.body));
@@ -122,6 +121,61 @@ class ProfileApi {
 
     } catch (e) {
       print(e);
+    }
+  }
+
+
+  Future<List?> createServeice(var titleController , var descriptionController, var priceController , var type, var areaList, var formList,var user )async{
+    try{
+      List toJson(var list){
+        List<Map<String,dynamic>> op = [];
+        for(int i=0;i<4;i++){
+            op.add({
+              "title": "${list[i][0].text}",
+              "field_type" : (list[i][1].text == "نص")? "text":"number",
+              "note":""
+            });
+        }
+        for(int i=4;i<list.length;i++){
+          op.add({
+            "title": "${list[i][0].text}",
+            "field_type" : "${list[i][1]}",
+            "note":"${list[i][2].text}"
+          });
+        }
+        return op;
+      }
+      var os = toJson(formList);
+      Map<String ,dynamic> finalObject() {
+        return{
+          "title": titleController.text,
+          "description": descriptionController.text,
+          "category": type,
+          "average_price_per_hour": priceController.text,
+          "service_area":areaList,
+          "form": os,
+        };
+      }
+      final body = jsonEncode(finalObject());
+      Response response = await post(Uri.parse(Server.host+Server.createService),
+          headers: {
+            "Authorization": 'token ${user.token}',
+            'Content-Type': 'application/json',
+          } ,
+
+          body: body
+      );
+      if(response.statusCode == 200 || response.statusCode == 201){
+        var yes = ['done'];
+        return yes;
+      } else {
+        var no = [];
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+        return no;
+      }
+    }catch (e){
+      print (e);
     }
   }
 

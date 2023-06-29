@@ -51,6 +51,7 @@ class SignUpApi{
         print (jsonDecode(response.body));
         return op;
       } else {
+        print(jsonDecode(response.body));
         var os = [];
         String ok = "";
         var info = jsonDecode(response.body);

@@ -42,6 +42,8 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   MyFild(
+                    leftPadding: 20.0,
+                    rightPadding: 20.0,
                     contorller: firstNameController,
                     hintText: "إسم المستخدم",
                     obscure: false,
@@ -56,6 +58,8 @@ class _UpdateUserInfoState extends State<UpdateUserInfo> {
                   ),
 
                   MyFild(
+                    leftPadding: 20.0,
+                    rightPadding: 20.0,
                     contorller: lastNameController,
                     hintText: "اسم العائلة",
                     obscure: false,

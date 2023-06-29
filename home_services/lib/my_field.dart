@@ -18,7 +18,8 @@ class MyFild extends StatefulWidget {
   bool readOnly;
   final maxLine;
   final maxLetters;
-
+  final leftPadding;
+  final rightPadding;
   MyFild(
       {super.key,
       required this.contorller,
@@ -26,6 +27,8 @@ class MyFild extends StatefulWidget {
       required this.obscure,
       required this.lable,
       required this.readOnly,
+      required this.rightPadding,
+      required this.leftPadding,
       this.onTap,
       this.maxLine,
       this.maxLetters,
@@ -34,8 +37,8 @@ class MyFild extends StatefulWidget {
       this.autoValidateMode,
       this.errorText,
       this.val,
-      this.color,
-      this.sidesColor,
+      required this.color,
+      required this.sidesColor,
       this.keyboardType});
 
   @override
@@ -46,7 +49,7 @@ class _MyFildState extends State<MyFild> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(left: widget.leftPadding, right: widget.rightPadding),
       child: TextFormField(
           maxLines: widget.maxLine,
           maxLength: widget.maxLetters,

@@ -46,7 +46,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 color: Colors.black,
                 icon: Icons.add_box,
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const GetCategoriesList()/*CreateNewService()*/));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> GetCategoriesList(user: widget.user,)/*CreateNewService()*/));
                 },
                 iconColor: Colors.blueGrey),
           ),

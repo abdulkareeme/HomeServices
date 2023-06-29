@@ -98,6 +98,8 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   ),
                   // first name field
                   MyFild(
+                    leftPadding: 20.0,
+                    rightPadding: 20.0,
                     errorText: "",
                     contorller: widget.firstnameController,
                     hintText: "الاسم",
@@ -121,6 +123,8 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
 
                   // last name field
                   MyFild(
+                    leftPadding: 20.0,
+                    rightPadding: 20.0,
                     errorText: "",
                     contorller: widget.lastnameController,
                     hintText: "اسم العائلة",
@@ -240,7 +244,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                         Radio(
                           activeColor: Colors.white,
                           focusColor: Colors.white,
-                          value: "Seller",
+                          value: "seller",
                           groupValue: mode,
                           onChanged: (val) {
                             setState(() {
@@ -343,7 +347,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                                   area != "Area") {
                                 Navigator.of(context).push(SlideRight(
                                     page: SecondPageOfSignUp(
-                                  birthdatecontroller: widget.dateController,
+                                  birthDateController: widget.dateController,
                                   area: area,
                                   firstnameController:
                                       widget.firstnameController,
