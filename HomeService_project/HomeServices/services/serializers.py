@@ -35,25 +35,28 @@ class HomeServiceSerializer(serializers.ModelSerializer):
         depth =2
 
 class RatingSerializer(serializers.ModelSerializer):
-    client_comment = serializers.CharField(required = False)
-
-    def validate(self, attrs):
-        if attrs['quality_of_service'] <1.0 or attrs['quality_of_service'] >5.0 :
-            raise ValidationError('value must be between 1 and 5')
-        if attrs['commitment_to_deadline'] <1.0 or attrs['commitment_to_deadline'] >5.0 :
-            raise ValidationError('value must be between 1 and 5')
-        if attrs['work_ethics'] <1.0 or attrs['work_ethics'] >5.0 :
-            raise ValidationError('value must be between 1.0 and 5.0')
-        return super().validate(attrs)
     class Meta:
         model = Rating
-        fields = ['quality_of_service','commitment_to_deadline','work_ethics','order_service','client_comment']
+        fields = ['quality_of_service','commitment_to_deadline','work_ethics','client_comment']
+
+    def validate_quality_of_service(self , value):
+        if value <1.0 or value >5.0 :
+            raise serializers.ValidationError('value must be between 1.0 and 5.0')
+        return value
+    def validate_commitment_to_deadline(self , value):
+        if value <1.0 or value >5.0 :
+            raise serializers.ValidationError('value must be between 1.0 and 5.0')
+        return value
+    def validate_work_ethics(self , value):
+        if value <1.0 or value >5.0 :
+            raise serializers.ValidationError('value must be between 1.0 and 5.0')
+        return value
 
 class ListOrdersSerializer(serializers.ModelSerializer):
     home_service = HomeServiceSerializer()
     class Meta : 
         model = OrderService
-        fields = ['id','create_date','status','home_service']
+        fields = ['id','create_date','status','home_service','is_rateable','expected_time_by_day_to_finish']
 
 class ListHomeServicesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
@@ -85,7 +88,7 @@ class CreateHomeServiceSerializer(serializers.ModelSerializer):
 
     def validate_form(self, value):
         if len(value) < 4 or len(value) > 10:
-            raise serializers.ValidationError("Number of fields must be between 4 and 10")
+            raise serializers.ValidationError("Number of fields must be between 3 and 10")
         return value
 
     def validate_average_price_per_hour(self, value):

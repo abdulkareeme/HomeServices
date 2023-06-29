@@ -94,6 +94,19 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'abdulkareemedres$home_service',
+#         'USER': 'abdulkareemedres',
+#         'PASSWORD': 'abdabdabd111222333',
+#         'HOST': 'abdulkareemedres.mysql.pythonanywhere-services.com',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
+
 AUTH_USER_MODEL = "core.User"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -174,6 +187,25 @@ Q_CLUSTER = {
     'orm': 'default',
 }
 
+# Q_CLUSTER = {
+#     'name': 'HomeServices',
+#     'workers': 4,
+#     'timeout': 60,
+#     'retry': 120,
+#     'queue_limit': 50,
+#     'bulk': 10,
+#     'orm': 'default',
+#     'store': 'django_db',
+#     'database': 'default',
+# }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.sqlite3',
+#         'LOCATION': BASE_DIR / 'cache.sqlite3',
+#     }
+# }
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -185,6 +217,7 @@ CACHES = {
     }
 }
 
+
 Q_CLUSTER['redis'] = {
     'host': 'redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com',
     'port': 18985,
@@ -194,3 +227,7 @@ Q_CLUSTER['redis'] = {
     'retry_on_timeout': True,
 }
 # redis-cli -u redis://default:O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5@redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com:18985
+
+import pymysql
+
+pymysql.install_as_MySQLdb()

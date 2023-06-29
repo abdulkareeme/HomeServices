@@ -15,4 +15,10 @@ urlpatterns = [
     path('cancel_order/<int:order_id>',views.CancelOrder.as_view()),
     path('reject_order/<int:order_id>',views.RejectOrder.as_view()),
     path('accept_order/<int:order_id>',views.AcceptOrder.as_view()),
+    path('accept_after_review/<int:order_id>', views.AcceptAfterUnderReview.as_view()),
+    path('reject_after_review/<int:order_id>',views.RejectAfterUnderReview.as_view()),
+    path('finish_order/<int:order_id>', views.FinishOrder.as_view()),
+    path('make_rating/<int:order_id>',views.MakeRateAndComment.as_view()),
+    
+
 ]

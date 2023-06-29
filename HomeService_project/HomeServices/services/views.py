@@ -10,15 +10,16 @@ from django.utils import timezone
 from django.db.models import Q ,Avg ,F , Sum
 from django.db import transaction
 from datetime import datetime , timedelta
-from .spectacular import ListOrdersSpectacular
+from .spectacular import ListOrdersSpectacular ,MakeOrderSpectacular
 from django_q.tasks import async_task
 from datetime import datetime, timedelta
 from django_q.tasks import schedule
 from django_q.models import Schedule
+import arrow
 
 @transaction.atomic
 def taking_money(user , required_balance, order, general_services):
-    order.status="Under review"
+    order.status = 'Under review'
     order.save()
     user.balance.total_balance -= required_balance
     user.balance.save()
@@ -45,7 +46,7 @@ class ListCategories(APIView):
         serializer = CategorySerializer(data=queryset, many=True)
         serializer.is_valid()
         return Response(serializer.data , status=status.HTTP_200_OK)
-    
+
 class MyOrders(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
@@ -60,13 +61,13 @@ class MyOrders(APIView):
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
             serializer.data[i]['form'] = get_from_data(order=order)
-            photo = None 
+            photo = None
             if order.client.user.photo :
                 photo = order.client.user.photo.url
             serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
-    
+
 class ReceivedOrders(APIView):
     permission_classes=[permissions.IsAuthenticated]
     @extend_schema(
@@ -86,7 +87,7 @@ class ReceivedOrders(APIView):
                 serializer.data[i]['form'] = get_from_data(order=order)
             else :
                 serializer.data[i]['form'] = []
-            photo = None 
+            photo = None
             if order.client.user.photo :
                 photo = order.client.user.photo.url
             serializer.data[i]['photo'] = photo
@@ -99,7 +100,7 @@ class ReceivedOrders(APIView):
        the services for this user <br> 2 -  ( services/list_home_services?category=\{category name\} ) to filter the services by category\
         3 - ( services/list_home_services?category=\{category name\}&title=\{string you want to contains in the title\} ) to filter the services by category and title<br>\
             4 - else it will returns all services"
-       
+
 )
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
@@ -117,14 +118,14 @@ class ListHomeServices(generics.ListAPIView):
         if 'title' in self.request.GET :
                return HomeService.objects.filter(title__contains = self.request.GET.get('title')).order_by('-average_ratings')
         return HomeService.objects.all().order_by('-average_ratings')
-    
+
 @extend_schema(
     responses={200:RetrieveHomeServices}
 )
 class HomeServiceDetail(generics.RetrieveAPIView):
     permission_classes=[permissions.AllowAny]
     serializer_class = RetrieveHomeServices
-    queryset = HomeService.objects.all()    
+    queryset = HomeService.objects.all()
 
 @extend_schema(
     request= CreateHomeServiceSerializer
@@ -168,11 +169,11 @@ class UpdateFormHomeService(APIView):
             responses={200 : InputFieldSerializer(many=True)}
     )
     def get(self , request , home_service_id):
-        try : 
+        try :
             home_service = HomeService.objects.get(pk=home_service_id)
         except HomeService.DoesNotExist :
             return Response("404 NOT FOUND", status=status.HTTP_404_NOT_FOUND)
-        
+
         if home_service.seller != request.user.normal_user :
             return Response({"detail" : "403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
         queryset= InputField.objects.filter(home_service= home_service , home_service__seller = request.user.normal_user)
@@ -184,20 +185,20 @@ class UpdateFormHomeService(APIView):
     responses={200:InputFieldSerializer(many=True) , 400 : None , 403 : None , 401 : None}
     )
     def put(self , request , home_service_id):
-        try : 
+        try :
             home_service = HomeService.objects.get(pk=home_service_id)
         except HomeService.DoesNotExist :
             return Response("404 NOT FOUND", status=status.HTTP_404_NOT_FOUND)
-        
+
         if home_service.seller != request.user.normal_user :
             return Response({"detail" : "403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
-        
+
         queryset= InputField.objects.filter(home_service = home_service, home_service__seller = request.user.normal_user)
         serializer  = InputFieldSerializer(data= request.data , many=True)
         serializer.is_valid(raise_exception=True)
         if len(serializer.validated_data) < 3 or len(serializer.validated_data) >10 :
             return Response({'detail':["Number of fields must be between 3 and 10"]}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         delete_data(queryset)
         serializer.save(home_service= home_service)
         return Response(serializer.data ,status=status.HTTP_200_OK )
@@ -219,7 +220,7 @@ class MakeOrderService(APIView):
         return Response(serializer.data , status= status.HTTP_200_OK)
 
     @extend_schema(
-            request=InputDataSerializer(many=True),
+            request=MakeOrderSpectacular,
             responses={200:None , 400:None , 401:None}
     )
     def post(self , request , service_id):
@@ -227,16 +228,20 @@ class MakeOrderService(APIView):
             home_service = HomeService.objects.get(pk= service_id)
         except HomeService.DoesNotExist :
             return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
-        
+
         # if home_service.seller == request.user.normal_user :
         #     return Response({"detail":"You can't order service from yourself"})
         check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
         if check_sended_orders.count()>0:
             return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)
-        serializer = InputDataSerializer(data = request.data , many=True )
+        serializer = InputDataSerializer(data = request.data.get('form_data',[]) , many=True )
         serializer.is_valid(raise_exception=True)
 
-        # validate all fields that belong to this service are exist 
+        expected_time_by_day_to_finish = request.data.get('expected_time_by_day_to_finish',None)
+        if expected_time_by_day_to_finish is not None and (expected_time_by_day_to_finish < 1 or expected_time_by_day_to_finish > 90) :
+            return Response({"expected_time_by_day_to_finish":"expected_time_by_day_to_finish must be between 1 and 90"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # make sure that all fields belong to this service are exist
         validated_data = []
         for input_field_1 in home_service.field.all() :
             is_exists = False
@@ -247,7 +252,7 @@ class MakeOrderService(APIView):
                     break
             if not is_exists:
                 return Response({"detail":f"Error fields are not compatible (you did'nt send field : {input_field_1.id})"} , status= status.HTTP_400_BAD_REQUEST)
-        new_order = OrderService.objects.create(client = request.user.normal_user , home_service=home_service )
+        new_order = OrderService.objects.create(client = request.user.normal_user , home_service=home_service , expected_time_by_day_to_finish=expected_time_by_day_to_finish)
         new_order.save()
         index = 0
         all_fields = home_service.field.all()
@@ -290,7 +295,11 @@ class RejectOrder(APIView):
         if order.status != 'Pending':
             return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
         order.status="Rejected"
+        order.answer_time=timezone.now()
+        average_fast_answer = OrderService.objects.exclude(status='Pending').annotate(average = Avg(F('answer_time')-F('create_date'))).values('average')[0]['average']
+        order.home_service.seller.average_fast_answer = average_fast_answer
         order.save()
+        order.home_service.seller.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @extend_schema(
@@ -307,19 +316,116 @@ class AcceptOrder(APIView):
             return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
         if order.status != 'Pending':
             return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         required_balance = GeneralServicesPrice.objects.all().aggregate(Sum('price'))['price__sum']
-        if request.user.normal_user.balance.total_balance < required_balance:
+        if required_balance is not None and request.user.normal_user.balance.total_balance < required_balance:
             return Response({"detail":"You don't have enough money"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         general_services = GeneralServicesPrice.objects.all()
-        
+
         if not taking_money(general_services=general_services,order=order,required_balance=required_balance,user=request.user.normal_user) :
             return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # task_id = async_task('services.tasks.update_status_to_Underway', order.id )
-        
-        scheduled_task = schedule('services.tasks.update_status_to_Underway',order.id ,schedule_type=Schedule.ONCE,  # 'O' for one-time 
-                                   minutes=1,repeats =-1)
+        order.answer_time=timezone.now()
+        average_fast_answer = OrderService.objects.filter(~Q(status='Pending')).annotate(time = F('answer_time')-F('create_date')).aggregate(Avg('time'))['time__avg']
+        order.home_service.seller.average_fast_answer = average_fast_answer
+        order.save()
+        order.home_service.seller.save()
+        schedule('services.tasks.update_status_to_Underway',order.id ,schedule_type=Schedule.ONCE, minutes=15,next_run=arrow.utcnow().shift(minutes=15).datetime)
 
         return Response(get_from_data(order=order),status=status.HTTP_200_OK)
+
+@extend_schema(
+    responses={200:None,400:None,401:None,404:None,403:None}
+)
+class AcceptAfterUnderReview(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+
+    def put(self , request, order_id ):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if order.home_service.seller != request.user.normal_user:
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if order.status != 'Under review':
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
+        order.status="Underway"
+        order.save()
+        return Response('Success')
+@extend_schema(
+    responses={200:None,400:None,401:None,404:None,403:None}
+)
+class RejectAfterUnderReview(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+
+    def put(self , request, order_id ):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if order.home_service.seller != request.user.normal_user:
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if order.status != 'Under review':
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
+        order.status='Rejected'
+        order.save()
+        return Response('Success')
+@extend_schema(
+    responses={200:None,400:None,401:None,404:None,403:None}
+)
+class FinishOrder(APIView):
+    permission_classes= [permissions.IsAuthenticated]
+    def put(self , request, order_id ):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if order.home_service.seller != request.user.normal_user:
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if order.status != 'Underway':
+            return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
+        order.end_service=timezone.now()
+        order.is_rateable = True
+        order.status="Expire"
+        order.save()
+        return Response("Order finished" , status=status.HTTP_200_OK)
+@extend_schema(
+    request=RatingSerializer,
+    responses={200:RatingSerializer ,400:None,401:None,404:None,403:None }
+)
+class MakeRateAndComment(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+    def post(self , request , order_id):
+        try :
+            order = OrderService.objects.get(pk= order_id)
+        except OrderService.DoesNotExist :
+            return Response({"detail":"404 NOT FOUND"} , status=status.HTTP_404_NOT_FOUND)
+        if order.client != request.user.normal_user :
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        try:
+            rate = Rating.objects.get(order_service = order)
+        except Rating.DoesNotExist:
+            rate = None
+        if rate is not None :
+            return Response({"detail":"You have already rated this service"} , status=status.HTTP_400_BAD_REQUEST)
+        if order.expected_time_by_day_to_finish is not None :
+            expected_finish_time = order.create_date + timedelta(days=order.expected_time_by_day_to_finish)
+        else :
+            expected_finish_time = None
+        if order.is_rateable or (expected_finish_time is not None and (timezone.now() > expected_finish_time)):
+            serializer = RatingSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            print(serializer.validated_data)
+            serializer.save(order_service = order)
+            print("tow")
+            order.status="Expire"
+            order.is_rateable=True
+            average_rate_for_this_order = float(serializer.validated_data['quality_of_service'] + serializer.validated_data['commitment_to_deadline'] + serializer.validated_data['work_ethics']) /3
+            order.home_service.average_ratings = (float(order.home_service.average_ratings * order.home_service.number_of_served_clients) + average_rate_for_this_order ) / (order.home_service.number_of_served_clients+1)
+            order.home_service.number_of_served_clients +=1
+            order.home_service.save()
+            order.save()
+            return Response(serializer.data , status=status.HTTP_200_OK)
+        else :
+            return Response({"detail":"The order has not finished yet"} , status=status.HTTP_400_BAD_REQUEST)
