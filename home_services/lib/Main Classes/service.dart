@@ -2,7 +2,8 @@ import 'area.dart';
 import 'category.dart';
 
 class Service{
-  late int id,hourPrice,rating;
+  late int id,hourPrice;
+  late double rating;
   late String title,creatorUserName,creatorFirstName,creatorLastName;
   late Category category;
   late List<Area> areaList;

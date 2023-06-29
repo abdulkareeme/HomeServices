@@ -4,6 +4,10 @@ import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Main Classes/service.dart';
+import '../../Main Classes/category.dart';
+import '../../Main Classes/area.dart';
+
 class ProfileApi {
   Future<List?> setUserNewData(List newData) async {
     try {
@@ -176,6 +180,49 @@ class ProfileApi {
       }
     }catch (e){
       print (e);
+    }
+  }
+
+  Future<List?> listMyServices(var user) async {
+    try{
+      Response response = await get(Uri.parse('${Server.host}${Server.listMyService}?username=${user.userName}'));
+      if(response.statusCode == 200 ){
+        var info = jsonDecode(response.body);
+        List os = info;
+        List services = [];
+        for(int i=0;i<os.length;i++){
+          List<Area> area= [];
+          Category ob = Category(
+              info[i]["category"]['id'],
+              utf8.decode(info[i]["category"]['name'].toString().codeUnits)
+          );
+          for(int j=0 ;j<info[i]["service_area"].length;j++){
+            Area o = Area(
+                info[i]["service_area"][j]['id'],
+                info[i]["service_area"][j]['name']
+            );
+            area.add(o);
+          }
+          Service service = Service(
+              info[i]['id'],
+              utf8.decode(info[i]["title"].toString().codeUnits),
+              info[i]["average_ratings"],
+              utf8.decode(info[i]["seller"]["user"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["seller"]["user"]["last_name"].toString().codeUnits),
+              info[i]["seller"]["user"]["username"],
+              info[i]["average_price_per_hour"],
+              ob,
+              area
+          );
+          services.add(service);
+        }
+        return services;
+      } else {
+        List op = [];
+        return op;
+      }
+    } catch (e){
+      print(e);
     }
   }
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20out/Api/Log_out_Api.dart';
+import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
+import 'package:home_services/user_profile/list_my_services/service_item.dart';
 import 'package:home_services/user_profile/user_profile.dart';
+import '../user_profile/list_my_services/fetch_data.dart';
 import 'Drawer/Widget/home_page_drawer.dart';
 
 // ignore: must_be_immutable
@@ -44,8 +47,7 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: (){
-                      print(widget.user.mode);
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfile(user: widget.user,)));
+                      
                     },
                     child: const Text("go"),
                   ),

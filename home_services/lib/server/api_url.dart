@@ -8,4 +8,5 @@ class Server{
   static const String resendCode ="api/resend_email_code";
   static const String listCategories = "services/categories";
   static const String createService = "services/create_service";
+  static const String listMyService = "services/list_home_services";
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Drawer/Widget/drawer_components.dart';
 
+import '../../../user_profile/user_profile.dart';
+
 
 // ignore: camel_case_types, must_be_immutable
 class Drawer_ extends StatefulWidget {
@@ -35,12 +37,12 @@ class DrawerState extends State<Drawer_> {
               padding: const EdgeInsets.only(right: 15),
               child: Drawer_component(
                   onTap: (){
-
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfile(user: widget.user,)));
                   },
-                  text: "My bills",
+                  text: "حسابي الشخصي",
                   iconColor: Colors.blue,
                   color: Colors.black87,
-                  icon: Icons.receipt),
+                  icon: Icons.person),
             ),
             const SizedBox(
               height: 30,
