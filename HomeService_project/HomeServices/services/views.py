@@ -11,10 +11,15 @@ from django.db.models import Q ,Avg ,F , Sum
 from django.db import transaction
 from datetime import datetime , timedelta
 from .spectacular import ListOrdersSpectacular
+from django_q.tasks import async_task
+from datetime import datetime, timedelta
+from django_q.tasks import schedule
+from django_q.models import Schedule
+import arrow
 
 @transaction.atomic
 def taking_money(user , required_balance, order, general_services):
-    order.status="Underway"
+    order.status="Under review"
     order.save()
     user.balance.total_balance -= required_balance
     user.balance.save()
@@ -94,7 +99,7 @@ class ReceivedOrders(APIView):
     description="NOTE : When you use this api use :<br> 1 - ( services/list_home_services?username=\{username\} ) to filter \
        the services for this user <br> 2 -  ( services/list_home_services?category=\{category name\} ) to filter the services by category\
         3 - ( services/list_home_services?category=\{category name\}&title=\{string you want to contains in the title\} ) to filter the services by category and title<br>\
-            4 - else it will return all services"
+            4 - else it will returns all services"
 
 )
 class ListHomeServices(generics.ListAPIView):
@@ -224,8 +229,8 @@ class MakeOrderService(APIView):
         except HomeService.DoesNotExist :
             return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
 
-        if home_service.seller == request.user.normal_user :
-            return Response({"detail":"You can't order service from yourself"})
+        # if home_service.seller == request.user.normal_user :
+        #     return Response({"detail":"You can't order service from yourself"})
         check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
         if check_sended_orders.count()>0:
             return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)
@@ -305,13 +310,16 @@ class AcceptOrder(APIView):
             return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
 
         required_balance = GeneralServicesPrice.objects.all().aggregate(Sum('price'))['price__sum']
-        if request.user.normal_user.balance.total_balance < required_balance:
+        if required_balance is not None and request.user.normal_user.balance.total_balance < required_balance:
             return Response({"detail":"You don't have enough money"}, status=status.HTTP_400_BAD_REQUEST)
 
         general_services = GeneralServicesPrice.objects.all()
+
         if not taking_money(general_services=general_services,order=order,required_balance=required_balance,user=request.user.normal_user) :
             return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(get_from_data(order=order))
+        # task_id = async_task('services.tasks.update_status_to_Underway', order.id )
 
+        scheduled_task = schedule('services.tasks.update_status_to_Underway',order.id ,schedule_type=Schedule.ONCE, minutes=15,next_run=arrow.utcnow().shift(minutes=15).datetime)
 
+        return Response(get_from_data(order=order),status=status.HTTP_200_OK)

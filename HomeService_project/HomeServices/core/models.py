@@ -18,7 +18,7 @@ class User(AbstractUser):
 
     resend_tries = models.IntegerField(default=3 , blank=True)
     next_confirmation_code_sent = models.DateTimeField(blank=True , null=True)
-    
+
 
 
 class NormalUser(models.Model):

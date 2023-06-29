@@ -27,7 +27,7 @@ class HomeService(models.Model):
     def __str__(self) :
         return self.title
 
-status_choices =[('Underway','Underway') , ('Expire','Expire') , ('Pending' , 'Pending') , ('Rejected' , 'Rejected')] 
+status_choices =[('Underway','Underway') , ('Expire','Expire') , ('Pending' , 'Pending') , ('Rejected' , 'Rejected'),("Under review","Under review")] 
 
 class OrderService(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE , related_name='client')

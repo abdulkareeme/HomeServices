@@ -38,12 +38,12 @@ class RatingSerializer(serializers.ModelSerializer):
     client_comment = serializers.CharField(required = False)
 
     def validate(self, attrs):
-        if attrs['quality_of_service'] <1 or attrs['quality_of_service'] >5 :
+        if attrs['quality_of_service'] <1.0 or attrs['quality_of_service'] >5.0 :
             raise ValidationError('value must be between 1 and 5')
-        if attrs['commitment_to_deadline'] <1 or attrs['commitment_to_deadline'] >5 :
+        if attrs['commitment_to_deadline'] <1.0 or attrs['commitment_to_deadline'] >5.0 :
             raise ValidationError('value must be between 1 and 5')
-        if attrs['work_ethics'] <1 or attrs['work_ethics'] >5 :
-            raise ValidationError('value must be between 1 and 5')
+        if attrs['work_ethics'] <1.0 or attrs['work_ethics'] >5.0 :
+            raise ValidationError('value must be between 1.0 and 5.0')
         return super().validate(attrs)
     class Meta:
         model = Rating
@@ -84,8 +84,8 @@ class CreateHomeServiceSerializer(serializers.ModelSerializer):
         fields = ['title', 'description', 'category', 'average_price_per_hour', 'service_area', 'form']
 
     def validate_form(self, value):
-        if len(value) < 3 or len(value) > 10:
-            raise serializers.ValidationError("Number of fields must be between 3 and 10")
+        if len(value) < 4 or len(value) > 10:
+            raise serializers.ValidationError("Number of fields must be between 4 and 10")
         return value
 
     def validate_average_price_per_hour(self, value):
