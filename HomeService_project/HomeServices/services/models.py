@@ -36,19 +36,21 @@ class OrderService(models.Model):
     status = models.CharField(choices=status_choices, max_length=50 , default='Pending')
     answer_time = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
     end_service = models.DateTimeField(auto_now=False, auto_now_add=False  , blank=True , null=True)
+    is_rateable = models.BooleanField(default=False)
+    expected_time_by_day_to_finish = models.PositiveIntegerField(null=True)
     def __str__(self) :
         return str(self.client)+' ordered '+str(self.home_service)
 
 class Rating(models.Model):
-    quality_of_service = models.IntegerField()
-    commitment_to_deadline = models.IntegerField()
-    work_ethics = models.IntegerField()
-    order_service = models.ForeignKey("OrderService" ,on_delete=models.CASCADE)
-    client_comment = models.CharField(max_length=1000 , blank=True , null=True)
+    quality_of_service = models.FloatField()
+    commitment_to_deadline = models.FloatField()
+    work_ethics = models.FloatField()
+    order_service = models.OneToOneField("OrderService", on_delete=models.CASCADE)
+    client_comment = models.CharField(max_length=1000)
     seller_comment = models.CharField(max_length=1000 , blank=True , null=True)
 
     def __str__(self) :
-        return self.order_service+' , Rating'
+        return str(self.order_service)+' , Rating'
 
 class Beneficiary(models.Model):
     beneficiary_name = models.CharField( max_length=100)

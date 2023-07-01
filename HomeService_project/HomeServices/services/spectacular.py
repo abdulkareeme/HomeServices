@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import OrderService, HomeService 
 
-from .serializers import CategorySerializer ,AreaSerializer ,RetrieveInputDataSerializer
+from .serializers import CategorySerializer ,AreaSerializer ,RetrieveInputDataSerializer,InputDataSerializer
 
 class HomeServiceSpectacular(serializers.ModelSerializer):
     service_area = AreaSerializer(many=True)
@@ -18,4 +18,10 @@ class ListOrdersSpectacular(serializers.ModelSerializer):
     photo = serializers.ImageField()
     class Meta : 
         model = OrderService
-        fields = ['id','create_date','status','home_service' , 'client' , 'form' , 'photo']
+        fields = ['id','create_date','status','home_service' , 'client' , 'form' , 'photo' , 'is_rateable','expected_time_by_day_to_finish']
+
+class MakeOrderSpectacular(serializers.ModelSerializer):
+    form_data = InputDataSerializer(many=True)
+    class Meta:
+        model = OrderService
+        fields = ['expected_time_by_day_to_finish','form_data']
