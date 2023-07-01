@@ -166,3 +166,23 @@ class UpdateNormalUser(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class ForgetPasswordResetSerializer(serializers.Serializer):
+    forget_password_code = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password2= serializers.CharField(required=True)
+    def validate_new_password(self, value):
+        user = self.context['user']
+        try:
+            validate_password(password=value, user=user)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
+        return value
+    def validate_forget_password_code(self, value):
+        user = self.context['user']
+        if user.forget_password_code is None or user.forget_password_code != value :
+            raise serializers.ValidationError("Wrong code please try again")
+        return value
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['new_password2'] : 
+            raise serializers.ValidationError({"password": "New password fields didn't match."})
+        return super().validate(attrs)

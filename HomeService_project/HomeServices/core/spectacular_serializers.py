@@ -43,3 +43,9 @@ class MyBalanceSpectacular(serializers.ModelSerializer):
     class Meta :
         model = Balance
         fields = ['total_balance']
+
+class ForgetPasswordResetSpectacular(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    forget_password_code = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password2= serializers.CharField(required=True)

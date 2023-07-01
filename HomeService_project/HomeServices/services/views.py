@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField , OrderService
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer ,RatingDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.db.models import Q ,Avg ,F , Sum
 from django.db import transaction
 from datetime import datetime , timedelta
-from .spectacular import ListOrdersSpectacular ,MakeOrderSpectacular
+from .spectacular import ListOrdersSpectacular ,MakeOrderSpectacular ,SellerCommentSpectacular , RetrieveRatingsSpectacular
 from django_q.tasks import async_task
 from datetime import datetime, timedelta
 from django_q.tasks import schedule
@@ -46,6 +46,20 @@ class ListCategories(APIView):
         serializer = CategorySerializer(data=queryset, many=True)
         serializer.is_valid()
         return Response(serializer.data , status=status.HTTP_200_OK)
+def is_rateable(order):
+    rateable = None
+    try :
+        order.rating
+        rateable = False
+    except :
+        pass 
+    if order.expected_time_by_day_to_finish is not None :
+        expected_finish_time = order.create_date + timedelta(days=order.expected_time_by_day_to_finish)
+    else :
+        expected_finish_time = None
+    if rateable is None and (order.is_rateable or (expected_finish_time is not None and (timezone.now() > expected_finish_time))):
+        rateable = True
+    return rateable
 
 class MyOrders(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -61,6 +75,7 @@ class MyOrders(APIView):
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
             serializer.data[i]['form'] = get_from_data(order=order)
+            serializer.data[i]['is_rateable'] = is_rateable(order=order)
             photo = None
             if order.client.user.photo :
                 photo = order.client.user.photo.url
@@ -87,6 +102,7 @@ class ReceivedOrders(APIView):
                 serializer.data[i]['form'] = get_from_data(order=order)
             else :
                 serializer.data[i]['form'] = []
+            serializer.data[i]['is_rateable'] = is_rateable(order=order)
             photo = None
             if order.client.user.photo :
                 photo = order.client.user.photo.url
@@ -99,25 +115,28 @@ class ReceivedOrders(APIView):
     description="NOTE : When you use this api use :<br> 1 - ( services/list_home_services?username=\{username\} ) to filter \
        the services for this user <br> 2 -  ( services/list_home_services?category=\{category name\} ) to filter the services by category\
         3 - ( services/list_home_services?category=\{category name\}&title=\{string you want to contains in the title\} ) to filter the services by category and title<br>\
-            4 - else it will returns all services"
+            4 - else it will returns all services\
+                NOTE 2 : If the user is logged in it will be filter by service area depending on his area "
 
 )
 class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = ListHomeServicesSerializer
-
     def get_queryset(self):
+        if not self.request.user.is_authenticated :
+            area = Area.objects.all()
+        else:
+            area = [self.request.user.area]
         if 'username' in self.request.GET:
             return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).order_by('-average_ratings')
-        if 'category' in self.request.GET :
-            query= HomeService.objects.filter(category__name = self.request.GET.get('category')).order_by('-average_ratings')
-            if 'title' in self.request.GET :
-                query.filter(title__contains = self.request.GET.get('title'))
-            return query
+        if 'category' in self.request.GET and 'title' in self.request.GET:
+            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),category__name = self.request.GET.get('category'),service_area__in =area ).order_by('-average_ratings')
         if 'title' in self.request.GET :
-               return HomeService.objects.filter(title__contains = self.request.GET.get('title')).order_by('-average_ratings')
-        return HomeService.objects.all().order_by('-average_ratings')
+            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),service_area__in =area).order_by('-average_ratings')
+        if 'category' in self.request.GET:
+            return HomeService.objects.filter(category__name = self.request.GET.get('category'),service_area__in =area).order_by('-average_ratings')
+        return HomeService.objects.filter(service_area__in =area).order_by('-average_ratings')
 
 @extend_schema(
     responses={200:RetrieveHomeServices}
@@ -231,6 +250,9 @@ class MakeOrderService(APIView):
 
         # if home_service.seller == request.user.normal_user :
         #     return Response({"detail":"You can't order service from yourself"})
+        rateable_services = OrderService.objects.filter(is_rateable = True)
+        if rateable_services.count() >0 :
+            return Response({"detail":"You have unrated services please rate it and order again"})
         check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
         if check_sended_orders.count()>0:
             return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)
@@ -409,18 +431,14 @@ class MakeRateAndComment(APIView):
             rate = None
         if rate is not None :
             return Response({"detail":"You have already rated this service"} , status=status.HTTP_400_BAD_REQUEST)
-        if order.expected_time_by_day_to_finish is not None :
-            expected_finish_time = order.create_date + timedelta(days=order.expected_time_by_day_to_finish)
-        else :
-            expected_finish_time = None
-        if order.is_rateable or (expected_finish_time is not None and (timezone.now() > expected_finish_time)):
+        if is_rateable(order=order) :
             serializer = RatingSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             print(serializer.validated_data)
             serializer.save(order_service = order)
             print("tow")
             order.status="Expire"
-            order.is_rateable=True
+            order.is_rateable=False
             average_rate_for_this_order = float(serializer.validated_data['quality_of_service'] + serializer.validated_data['commitment_to_deadline'] + serializer.validated_data['work_ethics']) /3
             order.home_service.average_ratings = (float(order.home_service.average_ratings * order.home_service.number_of_served_clients) + average_rate_for_this_order ) / (order.home_service.number_of_served_clients+1)
             order.home_service.number_of_served_clients +=1
@@ -429,3 +447,34 @@ class MakeRateAndComment(APIView):
             return Response(serializer.data , status=status.HTTP_200_OK)
         else :
             return Response({"detail":"The order has not finished yet"} , status=status.HTTP_400_BAD_REQUEST)
+@extend_schema(
+    request=SellerCommentSpectacular ,
+    responses={200:None , 404:None , 400 : None , 403 : None , 401:None}
+)
+class SellerComment(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self , request , rating_id):
+        try :
+            rating = Rating.objects.get(pk= rating_id)
+        except Rating.DoesNotExist :
+            return Response({"detail":"The client does not rate this service yet"} , status=status.HTTP_404_NOT_FOUND)
+        if rating.order_service.home_service.seller != request.user.normal_user:
+            return Response({"detail":"403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
+        if 'seller_comment' not in request.data :
+            return Response({"seller_comment":"This field is required "}, status=status.HTTP_400_BAD_REQUEST)
+        rating.seller_comment = request.data['seller_comment']
+        rating.save()
+        return Response("Success",status=status.HTTP_200_OK)
+    
+@extend_schema(
+    responses={200:RetrieveRatingsSpectacular(many=True)}
+)
+class ListRating(APIView):
+    def get(self , request , service_id ):
+        ratings= Rating.objects.filter(order_service__home_service__id = service_id)
+        serializer  = RatingDetailSerializer(data = ratings, many=True )
+        serializer.is_valid(raise_exception=False)
+        index = 0
+        for rate in ratings:
+            serializer.data[index]['client'] = rate.order_service.client.user.username
+        return Response(serializer.data,status=status.HTTP_200_OK)

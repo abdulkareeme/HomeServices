@@ -18,6 +18,8 @@ class User(AbstractUser):
 
     resend_tries = models.IntegerField(default=3 , blank=True)
     next_confirmation_code_sent = models.DateTimeField(blank=True , null=True)
+
+    forget_password_code = models.CharField(blank=True , null=True, max_length=6)
     
 
 

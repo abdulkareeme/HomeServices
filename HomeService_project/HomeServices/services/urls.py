@@ -19,6 +19,7 @@ urlpatterns = [
     path('reject_after_review/<int:order_id>',views.RejectAfterUnderReview.as_view()),
     path('finish_order/<int:order_id>', views.FinishOrder.as_view()),
     path('make_rating/<int:order_id>',views.MakeRateAndComment.as_view()),
-    
+    path('make_seller_comment/<int:rating_id>' , views.SellerComment.as_view()),
+    path('ratings/<int:service_id>',views.ListRating.as_view()),
 
 ]

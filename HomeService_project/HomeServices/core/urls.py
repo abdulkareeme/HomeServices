@@ -15,5 +15,7 @@ urlpatterns = [
     path('update_profile', views.UpdateUser.as_view()),
     path('confirm_email' , views.UserConfirmMessage.as_view()),
     path('resend_email_code' , views.ResendEmailMessage.as_view() ),
-    path('my_balance', views.RetrieverMyBalance.as_view() )
+    path('my_balance', views.RetrieverMyBalance.as_view() ),
+    path('send_forget_password_code' , views.SendForgetPasswordCode.as_view() ),
+    path('forget_password_reset', views.ForgetPasswordReset.as_view()),
 ]
