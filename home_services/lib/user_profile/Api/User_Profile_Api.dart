@@ -225,5 +225,66 @@ class ProfileApi {
       print(e);
     }
   }
+  Future<List?> myServiceDetail(int id) async {
+    try{
+      Response response = await get(Uri.parse('${Server.host}${Server.serviceDetails}$id'));
+      if(response.statusCode == 200 ){
+        var info = jsonDecode(response.body);
+        List services = [];
+        List<Area> area= [];
+        Category ob = Category(
+            info["category"]['id'],
+            utf8.decode(info["category"]['name'].toString().codeUnits)
+        );
+          for(int j=0 ;j<info["service_area"].length;j++){
+            Area o = Area(
+                info["service_area"][j]['id'],
+                info["service_area"][j]['name']
+            );
+            area.add(o);
+          }
+          ServiceDetails service = ServiceDetails(
+              info['id'],
+              utf8.decode(info["title"].toString().codeUnits),
+              info["average_ratings"],
+              utf8.decode(info["seller"]["user"]["first_name"].toString().codeUnits),
+              utf8.decode(info["seller"]["user"]["last_name"].toString().codeUnits),
+              info["seller"]["user"]["username"],
+              info["average_price_per_hour"],
+              ob,
+              area,
+              info["number_of_served_clients"],
+              utf8.decode(info["description"].toString().codeUnits)
+          );
+          services.add(service);
+          return services;
+        } else {
+        print(jsonDecode(response.body));
+          List op = [];
+          return op;
+        }
+      } catch (e){
+       print(e);
+      }
+  }
+  Future <List?> deleteService(int id,var user) async{
+    try{
+      Response response = await delete(Uri.parse("${Server.host}${Server.deleteService}$id"),headers: {
+        "Authorization": 'token ${user.token}',
+      });
+      if(response.statusCode == 204){
+        print(jsonDecode(response.body));
+        List op = [];
+        return op;
+      } else {
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+        List op = ['error'];
+        return op;
+      }
+    } catch (e){
+
+    }
+  }
 
 }

@@ -7,10 +7,11 @@ import '../../style/list_my_services.dart';
 class ServiceItem extends StatelessWidget {
   Service service;
    // ignore: prefer_typing_uninitialized_variables
-   var user;
+   var user,onTap;
    ServiceItem({
      required this.service,
      this.user,
+     this.onTap,
      super.key
   });
   double x= 3.4;
@@ -24,9 +25,7 @@ class ServiceItem extends StatelessWidget {
               Card(
                 elevation: 8,
                 child: InkWell(
-                  onTap: (){
-
-                  },
+                  onTap:onTap,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Column(

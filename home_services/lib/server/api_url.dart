@@ -9,4 +9,6 @@ class Server{
   static const String listCategories = "services/categories";
   static const String createService = "services/create_service";
   static const String listMyService = "services/list_home_services";
+  static const String serviceDetails= "services/home_service/detail/";
+  static const String deleteService = "services/delete_home_service/";
 }

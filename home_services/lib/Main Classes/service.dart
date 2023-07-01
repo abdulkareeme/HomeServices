@@ -19,3 +19,20 @@ class Service{
       this.areaList,
       );
 }
+class ServiceDetails extends Service{
+  late int numberOfClients;
+  late String description;
+  ServiceDetails(
+      super.id,
+      super.title,
+      super.rating,
+      super.creatorFirstName,
+      super.creatorLastName,
+      super.creatorUserName,
+      super.hourPrice,
+      super.category,
+      super.areaList,
+      this.numberOfClients,
+      this.description);
+
+}
