@@ -2,7 +2,8 @@ import show from "../Images/show-service.png";
 import order from "../Images/order-service.png";
 import recieve from "../Images/recieve-service.png";
 import { fetchFromAPI } from "../api/FetchFromAPI";
-import { useDispatch } from "react-redux";
+import Male from "../Images/Male.jpg";
+import Female from "../Images/Female.jpg";
 
 export const BASE_API_URL = "http://abdulkareemedres.pythonanywhere.com";
 export const navbarLinks = [
@@ -142,7 +143,11 @@ export const updateUserTotalInfo = async (
     console.log(err);
   }
 };
-
+export const getUserPhoto = (photo, gender) => {
+  if (photo === null) {
+    return gender === "Male" ? Male : Female;
+  } else return photo;
+};
 export const myOrderHeader = [
   "الرقم التعريفي",
   "تاريخ الطلب",

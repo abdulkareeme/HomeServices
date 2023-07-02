@@ -1,6 +1,7 @@
 .service-details {
     background-color: #f1f1f1;
-    margin-top: 70px;
+    padding-top: 130px;
+    min-height: 100vh;
 }
 
 .service-details .container h4 {
@@ -55,7 +56,6 @@
     width: 90px;
     border-radius: 50%;
     cursor: pointer;
-    /* object-fit: contain; */
 }
 
 .service-details .user-card {

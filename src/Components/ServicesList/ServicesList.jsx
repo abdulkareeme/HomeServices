@@ -1,19 +1,27 @@
 // import home from "../../Images/home-1.jpg";
 import { Col, Container, Row } from "react-bootstrap";
 import "./services-list.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import { useNavigate } from "react-router-dom";
+import { setSelectedUser } from "../../Store/homeServiceSlice";
 
 const ServicesList = ({ type }) => {
-  const { userTotalInfo } = useSelector((state) => state.homeService);
+  const { selectedUser } = useSelector((state) => state.homeService);
   const [serviceList, setServiceList] = useState(null);
   const history = useNavigate();
+  const dispatch = useDispatch();
+  if (selectedUser === null) {
+    const storedselectedUser = JSON.parse(
+      localStorage.getItem("selectedUser")
+    );
+    dispatch(setSelectedUser(storedselectedUser));
+  }
   const getServiceList = async () => {
     try {
       const serviceData = await fetchFromAPI(
-        `services/list_home_services?username=${userTotalInfo.username}`
+        `services/list_home_services?username=${selectedUser.username}`
       );
       setServiceList(serviceData);
     } catch (err) {
@@ -22,8 +30,8 @@ const ServicesList = ({ type }) => {
   };
   useEffect(() => {
     getServiceList();
-  }, [userTotalInfo]);
-  if (userTotalInfo.services_number > 0) {
+  }, [selectedUser]);
+  if (selectedUser.services_number > 0) {
     if (type === "page") {
       return (
         <section className="services page">
@@ -40,7 +48,7 @@ const ServicesList = ({ type }) => {
                     <img
                       onClick={() =>
                         history(
-                          `/user/${userTotalInfo.username}/services/${item.id}`
+                          `/user/${selectedUser.username}/services/${item.id}`
                         )
                       }
                       src={item.category.photo}
@@ -49,7 +57,7 @@ const ServicesList = ({ type }) => {
                     <h1
                       onClick={() =>
                         history(
-                          `/user/${userTotalInfo.username}/services/${item.id}`
+                          `/user/${selectedUser.username}/services/${item.id}`
                         )
                       }
                     >
@@ -73,7 +81,7 @@ const ServicesList = ({ type }) => {
                 <img
                   onClick={() =>
                     history(
-                      `/user/${userTotalInfo.username}/services/${item.id}`
+                      `/user/${selectedUser.username}/services/${item.id}`
                     )
                   }
                   src={item.category.photo}
@@ -82,7 +90,7 @@ const ServicesList = ({ type }) => {
                 <h1
                   onClick={() =>
                     history(
-                      `/user/${userTotalInfo.username}/services/${item.id}`
+                      `/user/${selectedUser.username}/services/${item.id}`
                     )
                   }
                 >
@@ -98,7 +106,11 @@ const ServicesList = ({ type }) => {
     }
   } else {
     if (type === "page") {
-      return <Row className="services page fs-4">لم يقم بإضافة خدمات بعد</Row>;
+      return (
+        <Row className="services page fs-4 px-5 py-4">
+          لم يقم بإضافة خدمات بعد
+        </Row>
+      );
     } else return "لم يقم بإضافة خدمات بعد";
   }
 };

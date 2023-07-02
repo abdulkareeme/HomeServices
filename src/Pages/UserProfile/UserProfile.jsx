@@ -3,19 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import "./user-profile.css";
 import UserProfileLayout from "../../Components/UserProfileLayout";
 import ServicesList from "../../Components/ServicesList/ServicesList";
-import { setUserTotalInfo } from "../../Store/homeServiceSlice";
 import { handleRateStars } from "../../utils/constants";
+import { useEffect } from "react";
+import { setSelectedUser } from "../../Store/homeServiceSlice";
 const UserProfile = () => {
-  const { userTotalInfo } = useSelector((state) => state.homeService);
+  const { selectedUser } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();
-  if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
-    console.log(userTotalInfo);
+  if (selectedUser === null) {
+    const storedselectedUser = JSON.parse(localStorage.getItem("selectedUser"));
+    dispatch(setSelectedUser(storedselectedUser));
   }
   return (
     <UserProfileLayout>
-      {userTotalInfo?.mode === "seller" ? (
+      {selectedUser?.mode === "seller" ? (
         <div className="user-profile">
           <Container>
             <Row>
@@ -23,8 +23,8 @@ const UserProfile = () => {
                 <h2>نبذة عني</h2>
                 <hr />
                 <p>
-                  {userTotalInfo?.bio?.length > 0
-                    ? userTotalInfo.bio
+                  {selectedUser?.bio?.length > 0
+                    ? selectedUser.bio
                     : "لم يكتب نبذة شخصية"}
                 </p>
               </Col>
@@ -36,20 +36,24 @@ const UserProfile = () => {
                     <Col>التقييمات</Col>
                     <Col className="stars">
                       {handleRateStars(
-                        userTotalInfo?.average_rating,
-                        userTotalInfo?.clients_number
+                        selectedUser?.average_rating,
+                        selectedUser?.clients_number
                       )}
                     </Col>
                   </Row>
                   <Row>
                     <Col>الخدمات المنشورة</Col>
-                    <Col>{userTotalInfo.services_number}</Col>
+                    <Col>{selectedUser?.services_number}</Col>
+                  </Row>
+                  <Row>
+                    <Col>عدد العملاء</Col>
+                    <Col>{selectedUser?.clients_number}</Col>
                   </Row>
                   <Row>
                     <Col>متوسط سرعة الرد</Col>
                     <Col>
-                      {userTotalInfo?.average_fast_answer
-                        ? userTotalInfo?.average_fast_answer
+                      {selectedUser?.average_fast_answer
+                        ? selectedUser?.average_fast_answer
                         : "لم يحسب بعد"}
                     </Col>
                   </Row>

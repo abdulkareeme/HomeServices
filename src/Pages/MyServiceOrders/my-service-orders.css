@@ -18,6 +18,19 @@
     border-radius: 50%;
 }
 
+.my-service-orders .image-holder img {
+    width: 100%;
+}
+
+.my-service-orders .form-link {
+    cursor: pointer;
+    color: #2caae2;
+}
+
+.my-service-orders .form-link:hover {
+    text-decoration: underline;
+}
+
 .modal-header .btn-close {
     margin: 0 !important;
 }
@@ -66,17 +79,8 @@
     background-color: #2caae2;
 } */
 
-.my-service-orders .form-link {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
 .my-service-orders ion-icon {
-    font-size: 25px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
+    font-size: 20px;
 }
 
 .my-service-orders .date {
@@ -89,6 +93,7 @@
     padding: 7px 5px !important;
     font-size: 16px !important;
     width: fit-content;
+    background-color: #e64942;
 }
 
 .my-service-orders .loader {

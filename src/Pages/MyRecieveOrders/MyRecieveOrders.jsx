@@ -7,6 +7,7 @@ import "./my-recieve-orders.css";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import swal from "sweetalert";
 import { Toaster, toast } from "react-hot-toast";
+import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 // import Male from "../../Images/Male.jpg";
 const MyRecieveOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
@@ -140,7 +141,7 @@ const MyRecieveOrders = () => {
         </Modal.Body>
       </Modal>
       <Container>
-        {!myRecieveorderData ? <div className="loader">يتم التحميل</div> : null}
+        {!myRecieveorderData ? <LoaderContent/> : null}
         {myRecieveorderData?.length === 0 ? (
           <div className="loader"> لا يوجد طلبات واردة</div>
         ) : null}

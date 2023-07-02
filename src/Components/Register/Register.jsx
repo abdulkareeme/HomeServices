@@ -76,7 +76,6 @@ const Register = () => {
         console.log(res);
         setIsSubmitting(0);
         dispatch(setIsRegistered(true));
-        console.log(values.email);
         dispatch(
           setUserInputValue({ email: values.email, password: values.password })
         );

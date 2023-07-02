@@ -70,6 +70,12 @@ const AddService = () => {
       field_type: "number",
       note: "",
     },
+    {
+      id: 4,
+      title: "عدد الأيام المتوقعة لإنهاء العمل",
+      field_type: "number",
+      note: "",
+    },
   ]);
   const initialValues = {
     title: "",
@@ -122,29 +128,10 @@ const AddService = () => {
           "aria-live": "polite",
         },
       });
-      // history(`/user/${userTotalInfo.username}`);
+      history(`/user/${userTotalInfo.username}`);
     } catch (err) {
       console.log(err);
     }
-    // postToAPI("services/create_service", values, {
-    //   headers: {
-    //     Authorization: bearer,
-    //   },
-    // })
-    //   .then((res) => {
-    //     toast.success("تم اضافة الخدمة بنجاح", {
-    //       duration: 3000,
-    //       position: "top-center",
-    //       ariaProps: {
-    //         role: "status",
-    //         "aria-live": "polite",
-    //       },
-    //     });
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     console.log(values);
   };
   return (
@@ -238,7 +225,7 @@ const AddService = () => {
                 اضافة الاسئلة تساعدك في الحصول على معلومات أكثر دقة من الزبون{" "}
               </p>
               {formDataList.map((item, index) => {
-                if (item.id < 4)
+                if (item.id < 5)
                   return (
                     <Fragment>
                       <div className="question">
@@ -306,25 +293,25 @@ const AddService = () => {
                     </Fragment>
                   );
               })}
-              {formDataList.length <= 10 ? (
-                  <div
-                    className="add"
-                    type="submit"
-                    onClick={() => {
-                      setFormDataList([
-                        ...formDataList,
-                        {
-                          id: formDataList.length + 1,
-                          title: "",
-                          field_type: "",
-                          note: "",
-                        },
-                      ]);
-                    }}
-                  >
-                    أضف سؤال للزبون
-                  </div>
-                ) : null}
+              {formDataList.length < 10 ? (
+                <div
+                  className="add"
+                  type="submit"
+                  onClick={() => {
+                    setFormDataList([
+                      ...formDataList,
+                      {
+                        id: formDataList.length + 1,
+                        title: "",
+                        field_type: "",
+                        note: "",
+                      },
+                    ]);
+                  }}
+                >
+                  أضف سؤال للزبون
+                </div>
+              ) : null}
               <div className="btn-group d-flex justify-content-between mt-4">
                 <div className="prev" onClick={() => setPage(0)}>
                   الرجوع

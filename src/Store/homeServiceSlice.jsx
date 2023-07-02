@@ -8,6 +8,7 @@ const initialState = {
   isSelected: 1,
   areasList: null,
   userTotalInfo: null,
+  selectedUser: null,
   userToken: null,
   categories: null,
   selectedServiceToUpdate: null,
@@ -46,6 +47,9 @@ const homeServiceSlice = createSlice({
     setUserTotalInfo: (state, action) => {
       state.userTotalInfo = action.payload;
     },
+    setSelectedUser: (state, action) => {
+      state.selectedUser = action.payload;
+    },
     setUserToken: (state, action) => {
       state.userToken = action.payload;
     },
@@ -75,6 +79,7 @@ export const {
   setUserInputValue,
   setIsSelected,
   setUserTotalInfo,
+  setSelectedUser,
   setUserToken,
   setCategories,
   setAreasList,

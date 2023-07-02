@@ -82,13 +82,8 @@ const VerificationCodeInput = () => {
       };
       postToAPI("api/confirm_email", confirmData)
         .then((res) => {
-          postToAPI("api/login/", userInputValue).then((res) => {
-            dispatch(setUserTotalInfo(res));
-            console.log(res);
-            history("/");
-          });
           toast.success(
-            "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى الصفحة الرئيسية",
+            "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى صفحة تسجيل الدخول",
             {
               duration: 5000,
               position: "top-center",
@@ -98,6 +93,7 @@ const VerificationCodeInput = () => {
               },
             }
           );
+          history("/login");
         })
         .catch((err) => {
           console.log(err);

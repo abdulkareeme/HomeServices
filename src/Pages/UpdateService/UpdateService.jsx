@@ -131,7 +131,6 @@ const UpdateService = () => {
     } catch (err) {
       console.log(err);
     }
-    // console.log(values);
   };
   const deleteHandler = async () => {
     setIsSubmitting(1);
@@ -276,7 +275,7 @@ const UpdateService = () => {
               <form onSubmit={(e) => e.preventDefault()} className={`add-form`}>
                 <h3>اسئلة الزبون</h3>
                 {formDataList.map((item, index) => {
-                  if (index < 3)
+                  if (index < 4)
                     return (
                       <Fragment>
                         <div className="question">
@@ -334,6 +333,7 @@ const UpdateService = () => {
                                   item.id
                                 )
                               }
+                              value={item.note}
                               name=""
                               id=""
                               cols="30"

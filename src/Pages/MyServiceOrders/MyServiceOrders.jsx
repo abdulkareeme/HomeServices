@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import Male from "../../Images/Male.jpg";
 import swal from "sweetalert";
+import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -61,6 +62,7 @@ const MyServiceOrders = () => {
     }
   }, [selectedOrderId]);
   const handelShowAlert = async () => {
+    setSelectedOrderId(null);
     console.log(selectedOrderId);
     swal({
       title: "الغاء الطلب",
@@ -70,24 +72,24 @@ const MyServiceOrders = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        handleAlertConfirm();
+        handleUndo();
       }
     });
   };
-  const handleAlertConfirm = async () => {
-    swal("تم الإلغاء بنجاح", {
-      icon: "success",
-    });
-    handleUndo();
-  };
   const handleUndo = async () => {
     console.log(selectedOrderId);
-    setMyOrderData(myorderData.filter((item) => item.id !== selectedOrderId));
+    swal({
+      title: "يتم الآن الغاء الخدمة",
+    });
     try {
       await deleteFromAPI(`services/cancel_order/${selectedOrderId}`, {
         headers: {
           Authorization: `token ${userToken}`,
         },
+      });
+      setMyOrderData(myorderData.filter((item) => item.id !== selectedOrderId));
+      swal("تم الإلغاء بنجاح", {
+        icon: "success",
       });
     } catch (err) {
       console.log(err);
@@ -104,7 +106,7 @@ const MyServiceOrders = () => {
         </Modal.Body>
       </Modal>
       <Container>
-        {!myorderData ? <div className="loader">يتم التحميل</div> : null}
+        {!myorderData ? <LoaderContent /> : null}
         {myorderData?.length === 0 ? (
           <div className="loader"> لا يوجد طلبات مرسلة</div>
         ) : null}
@@ -120,22 +122,22 @@ const MyServiceOrders = () => {
                         <img src={order.photo ? order.photo : Male} alt="" />
                       </div>
                       <div className="d-flex text-center flex-column gap-2">
-                        <h5 className="m-0">{order.client}</h5>
+                        <h5 className="m-0">{order.home_service.seller}</h5>
                         <div>{order.home_service.title}</div>
                         <div className="text-muted">
                           {order.home_service.category.name}
                         </div>
                       </div>
                       <div className="d-flex justify-content-center align-items-center">
-                        <button
+                        <span
                           onClick={() => {
                             setSelectedForm(order.form);
                             setShow(true);
                           }}
-                          className="my-btn"
+                          className="form-link"
                         >
                           الفورم المرفق
-                        </button>
+                        </span>
                       </div>
                       <div className="d-flex gap-2">
                         <span className="circle"></span>
@@ -146,13 +148,15 @@ const MyServiceOrders = () => {
                           {order?.create_date}
                         </div>
                         {order.status === "Pending" ? (
-                          <ion-icon
+                          <button
                             onClick={() => {
                               setSelectedOrderId(order.id);
                             }}
-                            ion-icon
-                            name="arrow-undo"
-                          ></ion-icon>
+                            className="my-btn d-flex gap-2 align-items-center"
+                          >
+                            تراجع
+                            <ion-icon ion-icon name="arrow-undo"></ion-icon>
+                          </button>
                         ) : null}
                       </div>
                     </div>
