@@ -23,7 +23,6 @@ class FetchServiceDetails extends StatelessWidget {
             return const Center(child: CircularProgressIndicator(),);
           } else if(snapshot.connectionState == ConnectionState.done&& snapshot.hasData){
             if(snapshot.data!.isEmpty){
-              print("ohhhhhhhhhhhhh");
               return  AlertDialog(
                 title: const Text("حدث مشكلة أثناء الاتصال, الرجاء المحاولة لاحقا"),
                 actions: [
@@ -39,7 +38,6 @@ class FetchServiceDetails extends StatelessWidget {
               );
             }
           } else {
-            print("im here");
             return  AlertDialog(
               title: const Text("حدث مشكلة أثناء الاتصال, الرجاء المحاولة لاحقا"),
               actions: [

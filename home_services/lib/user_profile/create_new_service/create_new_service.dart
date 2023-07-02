@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:home_services/Home%20Page/home_page.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
 
 // ignore: must_be_immutable
@@ -36,7 +39,14 @@ class CreateService extends StatelessWidget{
                 ],
               );
             } else {
-              return const Center(child: Text("heeeeeeeeeeeeeeeeeeeey"),);
+              return AlertDialog(
+                title: Text("تم إنشاء خدمة ${utf8.decode(snapshot.data![0].toString().codeUnits)} بنجاح  "),
+                actions: [
+                  ElevatedButton(onPressed: (){
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
+                  }, child: const Text("تأكيد"))
+                ],
+              );
             }
           } else {
             return  AlertDialog(

@@ -49,7 +49,7 @@ class _ServiceFormState extends State<ServiceForm>{
   );
   List forms = [];
   void addItem(){
-    FormItem ob = FormItem(formList: forms,index: forms.length,questionController: TextEditingController(text: ""),noteController: TextEditingController(text: ""),);
+    FormItem ob = FormItem(formList: forms,index: forms.length,questionController: TextEditingController(text: ""),noteController: TextEditingController(text: ""),responsetype: "نص",);
     setState(() {
       forms.add(ob);
     });
@@ -220,40 +220,59 @@ class _ServiceFormState extends State<ServiceForm>{
                    ],
                  ),
                  for(int i=0;i<forms.length;i++)forms[i],
-                 ElevatedButton(onPressed: (){
-                   addItem();
-                 }, child: const Text("add")),
-                 ElevatedButton(onPressed: (){
-                   for(int i=0;i<forms.length;i++){
-                     if(forms[i].getVisibility() == true){
-                      List op = [];
-                      if(forms[i].getQuestion() != null) {
-                        op.add(forms[i].getQuestion());
-                      } else {
-                        TextEditingController os = TextEditingController(text: "");
-                        op.add(os);
-                      }
-                      op.add(forms[i].getFieldType());
-                      if(forms[i].getNote() != null){
-                        op.add(forms[i].getNote());
-                      } else {
-                        TextEditingController of = TextEditingController(text: "");
-                        op.add(of);
-                      }
-                      //print(op);
-                      formsData.add(op);
-                     }
-                   }
-                   //print(formsData);
-                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CreateService(
-                       areaList: widget.areaList,
-                       priceController: widget.priceController,
-                       type: widget.serviceType,
-                       descriptionController: widget.descriptionController,
-                       titleController: widget.titleController,
-                       formList: formsData,
-                       user: widget.user)));
-                 }, child: const Text("op")),
+                 Padding(
+                   padding: const EdgeInsets.only(left: 25,right: 25,top: 20),
+                   child: Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       ElevatedButton(
+                           style: ElevatedButton.styleFrom(
+                             primary: Colors.green,
+                             padding: const EdgeInsets.only(left: 20,right: 20),
+                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                           ),
+                           onPressed: (){
+                         for(int i=0;i<forms.length;i++){
+                           if(forms[i].getVisibility() == true){
+                             List op = [];
+                             if(forms[i].getQuestion() != null) {
+                               op.add(forms[i].getQuestion());
+                             } else {
+                               TextEditingController os = TextEditingController(text: "");
+                               op.add(os);
+                             }
+                             op.add(forms[i].getFieldType());
+                             if(forms[i].getNote() != null){
+                               op.add(forms[i].getNote());
+                             } else {
+                               TextEditingController of = TextEditingController(text: "");
+                               op.add(of);
+                             }
+                             //print(op);
+                             formsData.add(op);
+                           }
+                         }
+                         //print(formsData);
+                         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CreateService(
+                             areaList: widget.areaList,
+                             priceController: widget.priceController,
+                             type: widget.serviceType,
+                             descriptionController: widget.descriptionController,
+                             titleController: widget.titleController,
+                             formList: formsData,
+                             user: widget.user)));
+                       }, child: const Text("إنشاء الخدمة",style:TextStyle(fontSize: 17),)),
+                       ElevatedButton(
+                           style: ElevatedButton.styleFrom(
+                             padding: const EdgeInsets.only(left: 20,right: 20),
+                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                           ),
+                           onPressed: (){
+                         addItem();
+                       }, child: const Text("إضافة سؤال للمستخدم",style:TextStyle(fontSize: 17),)),
+                     ],
+                   ),
+                 )
                ],
              ),
            ),

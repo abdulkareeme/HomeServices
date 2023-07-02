@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:home_services/style/service_details_style.dart';
 import '../../Main Classes/service.dart';
 import 'package:quickalert/quickalert.dart';
-
+import 'package:home_services/user_profile/update_service/list_area.dart';
 import 'delete_service.dart';
 
 // ignore: must_be_immutable
@@ -185,7 +185,9 @@ class SellerServiceDetails extends StatelessWidget {
                           padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/2.9,right: MediaQuery.of(context).size.width/2.9,top: 10,bottom: 10),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
-                      onPressed: (){},
+                      onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetListArea(service:service,user: user)));
+                      },
                       child: const Text("تعديل الخدمة",style: TextStyle(
                           fontSize: 17
                       ))),

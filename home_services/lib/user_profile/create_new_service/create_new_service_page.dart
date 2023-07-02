@@ -10,17 +10,18 @@ class CreateNewService extends StatefulWidget{
   var user;
   List areaList;
   List categoriesList;
-   CreateNewService({
-     required this.user,
-     required this.areaList,
-     required this.categoriesList,
-     super.key
+  TextEditingController titleController,descriptionController,priceController;
+  CreateNewService({
+    required this.descriptionController,
+    required this.titleController,
+    required this.priceController,
+    required this.user,
+    required this.areaList,
+    required this.categoriesList,
+    super.key
    });
   @override
   State<StatefulWidget> createState() => _CreateNewServiceState();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
 }
 
 class _CreateNewServiceState extends State<CreateNewService>{

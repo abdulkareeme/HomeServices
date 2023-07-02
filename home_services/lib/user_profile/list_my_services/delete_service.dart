@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/home_page.dart';
 import 'package:home_services/Main%20Classes/service.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
-import 'package:quickalert/quickalert.dart';
 
 // ignore: must_be_immutable
 class DeleteService extends StatelessWidget{
@@ -13,54 +12,49 @@ class DeleteService extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     ProfileApi ob = ProfileApi();
+    String op = service.title;
     return(
       SafeArea(
-        child: Scaffold(
-          body:FutureBuilder(
-            future: ob.deleteService(service.id,user),
-            builder: (context ,AsyncSnapshot<List?> snapshot){
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const Center(child: CircularProgressIndicator(),);
-              } else if(snapshot.connectionState == ConnectionState.done){
-                if(snapshot.data!.isEmpty){
-                  /*QuickAlert.show(
-                      context: context,
-                      type:QuickAlertType.success,
-                      title: "تم حذف الخدمة بنجاح",
-                      text: "",
-                      confirmBtnText: "تأكيد",
-                      onConfirmBtnTap: (){
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
-                      }
-                  );*/
-                  return Container();
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            body:FutureBuilder(
+              future: ob.deleteService(service.id,user),
+              builder: (context ,AsyncSnapshot<List?> snapshot){
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return const Center(child: CircularProgressIndicator(),);
+                } else if(snapshot.connectionState == ConnectionState.done){
+                  if(snapshot.data!.isEmpty){
+                    return AlertDialog(
+                      title: Text(" تم حذف خدمة $opبنجاح "),
+                      actions: [
+                        ElevatedButton(onPressed: (){
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
+                        }, child: const Text("تأكيد"))
+                      ],
+                    );
+                  } else {
+                    return AlertDialog(
+                      title: const Text("حدثت مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),
+                      actions: [
+                        ElevatedButton(onPressed: (){
+                          Navigator.of(context).pop();
+                        }, child: const Text("تأكيد"))
+                      ],
+                    );
+                  }
                 } else {
-                  /*QuickAlert.show(
-                      context: context,
-                      type:QuickAlertType.error,
-                      title: "حدث خطأ اثناء الاتصال,الرجاء المحاولة لاحقا",
-                      text: "",
-                      confirmBtnText: "تأكيد",
-                      onConfirmBtnTap: (){
+                  return AlertDialog(
+                    title: const Text("حدثت مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),
+                    actions: [
+                      ElevatedButton(onPressed: (){
                         Navigator.of(context).pop();
-                      }
-                  );*/
-                  return const Text("noooooooo");
+                      }, child: const Text("تأكيد"))
+                    ],
+                  );
                 }
-              } else {
-                /*QuickAlert.show(
-                    context: context,
-                    type:QuickAlertType.error,
-                    title: "حدث خطأ اثناء الاتصال,الرجاء المحاولة لاحقا",
-                    text: "",
-                    confirmBtnText: "تأكيد",
-                    onConfirmBtnTap: (){
-                      Navigator.of(context).pop();
-                    }
-                );*/
-                return const Text("NOOOOOOOOO");
-              }
-            },
+              },
+            ),
           ),
         ),
       )

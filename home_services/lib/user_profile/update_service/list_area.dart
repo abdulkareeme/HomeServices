@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Main%20Classes/service.dart';
 import 'package:home_services/Sign%20up/Api/sign_up_api.dart';
-import 'package:home_services/user_profile/create_new_service/create_new_service_page.dart';
-
-
+import 'package:home_services/user_profile/update_service/get_service_forms.dart';
 
 // ignore: must_be_immutable
 class GetListArea extends StatelessWidget{
-  var categoriesList;
+  // ignore: prefer_typing_uninitialized_variables
   var user;
-  GetListArea({required this.categoriesList,required this.user,super.key});
+  ServiceDetails service;
+  GetListArea({required this.user,required this.service,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class GetListArea extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return CreateNewService(categoriesList:categoriesList,areaList: snapshot.data!,user: user,titleController: TextEditingController(),descriptionController: TextEditingController(),priceController: TextEditingController(),);
+                  return GetServiceForm(service: service, areaList: snapshot.data!, user: user);
                 }
               } else {
                 return AlertDialog(

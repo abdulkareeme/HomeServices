@@ -11,4 +11,7 @@ class Server{
   static const String listMyService = "services/list_home_services";
   static const String serviceDetails= "services/home_service/detail/";
   static const String deleteService = "services/delete_home_service/";
+  static const String getServiceForm = "services/update_form_home_service/";
+  static const String updateServiceMainData= "services/retrieve_update_home_service/";
+  static const String updateServiceForm= "services/update_form_home_service/";
 }

@@ -170,7 +170,8 @@ class ProfileApi {
           body: body
       );
       if(response.statusCode == 200 || response.statusCode == 201){
-        var yes = ['done'];
+        var info = jsonDecode(response.body);
+        var yes = [info["title"]];
         return yes;
       } else {
         var no = [];
@@ -273,7 +274,8 @@ class ProfileApi {
         "Authorization": 'token ${user.token}',
       });
       if(response.statusCode == 204){
-        print(jsonDecode(response.body));
+        print("kakakakakaka");
+        //print(jsonDecode(response.body));
         List op = [];
         return op;
       } else {
@@ -286,5 +288,108 @@ class ProfileApi {
 
     }
   }
+  
+  Future <List?> getServiceFroms(int id,var user) async{
+    try {
+      Response response = await get(Uri.parse('${Server.host}${Server.getServiceForm}$id'),
+        headers: {
+          "Authorization": 'token ${user.token}',
+        }
+      );
+      if(response.statusCode == 200){
+        List op = [];
+        var info = jsonDecode(response.body);
+        List os = info;
+        for(int i=0;i<os.length;i++){
+          List item = [];
+          item.add(utf8.decode(info[i]["title"].toString().codeUnits));
+          (info[i]["field_type"] == "text")? item.add("نص") : item.add("رقم");
+          item.add(utf8.decode(info[i]["note"].toString().codeUnits));
+          op.add(item);
+        }
+        return op;
+      }
+
+      List op = [];
+      return op;
+    } catch (e){
+      print(e);
+    }
+  }
+
+  Future <List?> updateService(var titleController , var descriptionController, var priceController ,var areaList, var formList,var user,int id) async {
+    bool firstFunction = false;
+    bool secondFunction = false;
+
+
+    try {
+      Map<String,dynamic>toJson(){
+        return{
+          "title": titleController.text,
+          "description": descriptionController.text,
+          "average_price_per_hour": priceController.text,
+          "service_area": areaList
+        };
+      }
+      final body = jsonEncode(toJson());
+      Response response = await put(Uri.parse('${Server.host}${Server.updateServiceMainData}$id'),
+          headers:{
+            "Authorization": 'token ${user.token}',
+            'Content-Type': 'application/json'
+          },
+        body:body
+      );
+      if(response.statusCode == 200){
+        firstFunction = true;
+      }
+
+    } catch (e){
+      print(e);
+    }
+    // second function
+    try{
+      List toJson(var list){
+        List<Map<String,dynamic>> op = [];
+        for(int i=0;i<4;i++){
+          op.add({
+            "title": "${list[i][0]}",
+            "field_type" : (list[i][1] == "نص")? "text":"number",
+            "note":""
+          });
+        }
+        for(int i=4;i<list.length;i++){
+          op.add({
+            "title": "${list[i][0].text}",
+            "field_type" : "${list[i][1]}",
+            "note":"${list[i][2].text}"
+          });
+        }
+        return op;
+      }
+      final body = jsonEncode(toJson(formList));
+      Response response = await put(Uri.parse('${Server.host}${Server.updateServiceForm}$id'),
+        headers: {
+          "Authorization": 'token ${user.token}',
+          'Content-Type': 'application/json'
+        },
+        body: body
+      );
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        secondFunction = true;
+      }
+    }catch (e){
+      print(e);
+    }
+    if(firstFunction && secondFunction){
+      List oo = [];
+      return oo;
+    } else {
+      print("nop");
+      List oo = ["no"];
+      return oo;
+    }
+  }
+
 
 }

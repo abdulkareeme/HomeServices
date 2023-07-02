@@ -3,10 +3,11 @@ import 'package:home_services/my_field.dart';
 
 // ignore: must_be_immutable
 class FormItem extends StatefulWidget{
-  var formList,index,questionController,noteController;
+  var formList,index,questionController,noteController,responsetype;
   FormItem({
     required this.questionController,
     required this.noteController,
+    required this.responsetype,
     this.index,
     this.formList,
     super.key
@@ -14,7 +15,6 @@ class FormItem extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _FormItemState();
   String fieldType = "text";
-  var initSelection = "نص";
   bool vis = true;
    TextEditingController getQuestion() {
       return questionController;
@@ -31,7 +31,6 @@ class FormItem extends StatefulWidget{
 }
 class _FormItemState extends State<FormItem>{
   List fieldsType = [['نص',"text"],['رقم','number']];
-
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -48,7 +47,6 @@ class _FormItemState extends State<FormItem>{
               Row(
                 children: [
                   IconButton(onPressed: (){
-                    print(widget.index);
                     showDialog(context: context, builder: (context){
                       return AlertDialog(
                         title: const Text('Failed to sign up'),
@@ -96,12 +94,12 @@ class _FormItemState extends State<FormItem>{
                     ),
                   ),
                   DropdownButton(
-                      hint: Text(widget.initSelection),
+                      hint: Text(widget.responsetype),
                         items:fieldsType.map((e) => DropdownMenuItem(value:e[1] ,child: Text(e[0].toString()),)).toList(),
                         onChanged: (val){
                           setState(() {
                             widget.fieldType = val.toString();
-                            (val == "text")? widget.initSelection = "نص": widget.initSelection = "رقم";
+                            (val == "text")? widget.responsetype = "نص": widget.responsetype = "رقم";
                             //initSelection = e[0].toString();
                           });
                         },
