@@ -1,8 +1,9 @@
+from typing import Iterable, Optional
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.staticfiles.storage import staticfiles_storage
 
-
-gender_choices = [('Male','M') , ('Female','F') ]
+gender_choices = [('Male','Male') , ('Female','Female') ]
 mode_choices = [('client','buyer') , ('seller' , 'seller_buyer')]
 
 class User(AbstractUser):
@@ -20,6 +21,14 @@ class User(AbstractUser):
     next_confirmation_code_sent = models.DateTimeField(blank=True , null=True)
 
     forget_password_code = models.CharField(blank=True , null=True, max_length=6)
+
+    def save(self, *args, **kwargs):
+        if not self.photo:
+            if self.gender == 'Male':
+                self.photo = staticfiles_storage.url('images/Male.jpg')
+            else:
+                self.photo = staticfiles_storage.url('images/Female.jpg')
+        super().save(*args, **kwargs)
     
 
 

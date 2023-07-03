@@ -135,4 +135,4 @@ class RatingDetailSerializer(serializers.ModelSerializer):
     rating_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta :
         model = Rating
-        fields = ['quality_of_service','commitment_to_deadline','work_ethics','client_comment','seller_comment','rating_time']
+        fields = ['id','quality_of_service','commitment_to_deadline','work_ethics','client_comment','seller_comment','rating_time']
