@@ -44,15 +44,11 @@ const AreaSelect = ({ areaSelected, setAreaSelected }) => {
     } else dispatch(setAreasList(JSON.parse(storedAreas)));
   }
   const handleChange = (selectedOption) => {
-    console.log(selectedOption.value);
-    setAreaSelected(
-      areasList.filter((item) => item.name === selectedOption.value)[0].id
-    );
-    console.log(areaSelected);
+    setAreaSelected(selectedOption.value);
   };
   let options = [];
   options = areasList?.map((area) => {
-    return { value: area.name, label: area.name };
+    return { value: area.id, label: area.name };
   });
   return (
     <Select

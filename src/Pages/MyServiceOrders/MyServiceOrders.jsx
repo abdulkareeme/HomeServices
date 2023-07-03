@@ -108,7 +108,7 @@ const MyServiceOrders = () => {
       <Container>
         {!myorderData ? <LoaderContent /> : null}
         {myorderData?.length === 0 ? (
-          <div className="loader"> لا يوجد طلبات مرسلة</div>
+          <div className="message"> لا يوجد طلبات مرسلة</div>
         ) : null}
         {myorderData?.length > 0 ? (
           <Fragment>

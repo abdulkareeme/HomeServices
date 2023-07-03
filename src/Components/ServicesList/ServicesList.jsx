@@ -1,27 +1,27 @@
-// import home from "../../Images/home-1.jpg";
 import { Col, Container, Row } from "react-bootstrap";
 import "./services-list.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { setSelectedUser } from "../../Store/homeServiceSlice";
+import LoaderContent from "../LoaderContent/LoaderContent";
 
 const ServicesList = ({ type }) => {
   const { selectedUser } = useSelector((state) => state.homeService);
   const [serviceList, setServiceList] = useState(null);
   const history = useNavigate();
   const dispatch = useDispatch();
+  const { username } = useParams();
   if (selectedUser === null) {
-    const storedselectedUser = JSON.parse(
-      localStorage.getItem("selectedUser")
-    );
+    const storedselectedUser = JSON.parse(localStorage.getItem("selectedUser"));
     dispatch(setSelectedUser(storedselectedUser));
   }
+  // dispatch(setSelectedUser())
   const getServiceList = async () => {
     try {
       const serviceData = await fetchFromAPI(
-        `services/list_home_services?username=${selectedUser.username}`
+        `services/list_home_services?username=${username}`
       );
       setServiceList(serviceData);
     } catch (err) {
@@ -47,18 +47,14 @@ const ServicesList = ({ type }) => {
                   >
                     <img
                       onClick={() =>
-                        history(
-                          `/user/${selectedUser.username}/services/${item.id}`
-                        )
+                        history(`/user/${username}/services/${item.id}`)
                       }
                       src={item.category.photo}
                       alt=""
                     />
                     <h1
                       onClick={() =>
-                        history(
-                          `/user/${selectedUser.username}/services/${item.id}`
-                        )
+                        history(`/user/${username}/services/${item.id}`)
                       }
                     >
                       {item.title}
@@ -67,7 +63,7 @@ const ServicesList = ({ type }) => {
                     <span> {item.average_price_per_hour} ل.س</span>
                   </Col>
                 ))}
-              {!serviceList && <div>يتم التحميل</div>}
+              {!serviceList && <LoaderContent />}
             </Row>
           </Container>
         </section>
@@ -80,18 +76,14 @@ const ServicesList = ({ type }) => {
               <Col key={item.id} lg={type === "page" ? 3 : 5} md={5} xs={10}>
                 <img
                   onClick={() =>
-                    history(
-                      `/user/${selectedUser.username}/services/${item.id}`
-                    )
+                    history(`/user/${username}/services/${item.id}`)
                   }
                   src={item.category.photo}
                   alt=""
                 />
                 <h1
                   onClick={() =>
-                    history(
-                      `/user/${selectedUser.username}/services/${item.id}`
-                    )
+                    history(`/user/${username}/services/${item.id}`)
                   }
                 >
                   {item.title}
@@ -100,7 +92,7 @@ const ServicesList = ({ type }) => {
                 <span> {item.average_price_per_hour} ل.س</span>
               </Col>
             ))}
-          {!serviceList && <div>يتم التحميل</div>}
+          {!serviceList && <LoaderContent />}
         </Row>
       );
     }

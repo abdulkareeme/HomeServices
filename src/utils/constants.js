@@ -148,28 +148,9 @@ export const getUserPhoto = (photo, gender) => {
     return gender === "Male" ? Male : Female;
   } else return photo;
 };
-export const myOrderHeader = [
-  "الرقم التعريفي",
-  "تاريخ الطلب",
-  "عنوان الخدمة",
-  "تصنيف الخدمة",
-  "متوسط السعر",
-  "البائع",
-  "فورم الطلب",
-  "الحالة",
-  "الغاء الطلب",
-];
-export const myReciveOrderHeader = [
-  "الرقم التعريفي",
-  "تاريخ الطلب",
-  "عنوان الخدمة",
-  "تصنيف الخدمة",
-  "متوسط السعر",
-  "الزبون",
-  "فورم الطلب",
-  "قبول",
-  "رفض",
-];
+export const isString= (value)=> {
+  return typeof value === 'string' || value instanceof String;
+}
 export const shortInfo = {
   "نقل أثاث منزل":
     "نضمن لك نقل أثاث منزلك بأمان وجودة عالية وفي الوقت المحدد، بفريق عمل مدرب ومجهز بأحدث الأدوات والمعدات لتلبية جميع احتياجاتك",

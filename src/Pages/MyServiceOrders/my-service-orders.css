@@ -22,53 +22,6 @@
     width: 100%;
 }
 
-.my-service-orders .form-link {
-    cursor: pointer;
-    color: #2caae2;
-}
-
-.my-service-orders .form-link:hover {
-    text-decoration: underline;
-}
-
-.modal-header .btn-close {
-    margin: 0 !important;
-}
-
-.modal-body form {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding: 10px 50px;
-    background-color: white;
-}
-
-.modal-body input {
-    border: 1px solid #aaafb9;
-    font-size: 15px;
-    width: 100%;
-    background-color: #f7f9fc;
-    line-height: 1.25;
-    padding: 10px 15px;
-}
-
-.modal-body input:focus {
-    outline: none;
-}
-
-.modal-body label {
-    font-size: 17px;
-    font-weight: 500;
-    color: #222;
-    margin-bottom: 15px;
-}
-
-.modal-body input+p {
-    color: #5555558b;
-    font-size: 12px;
-    margin: 5px 0;
-}
-
 /* .my-service-orders .card::before {
     content: "";
     position: absolute;
@@ -94,12 +47,4 @@
     font-size: 16px !important;
     width: fit-content;
     background-color: #e64942;
-}
-
-.my-service-orders .loader {
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 40px;
 }

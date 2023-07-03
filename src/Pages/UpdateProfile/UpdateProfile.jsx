@@ -7,10 +7,17 @@ import AreaSelect from "../../Components/AreaSelect";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./update-profile.css";
+import { format } from "date-fns";
 import { Container, ListGroup } from "react-bootstrap";
 import { fetchFromAPI, putToAPI } from "../../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
+import {
+  getUserPhoto,
+  isString,
+  updateUserTotalInfo,
+} from "../../utils/constants";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -27,6 +34,8 @@ const UpdateProfile = () => {
     (state) => state.homeService
   );
   const dispatch = useDispatch();
+  const history = useNavigate();
+  const { username } = useParams();
   if (userTotalInfo === null) {
     const storedUser = localStorage.getItem("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
@@ -56,37 +65,34 @@ const UpdateProfile = () => {
       setImageFile(pair[1]);
     }
     let bearer = `token ${userToken}`;
-    // console.log(bearer);
     console.log("submit");
-    console.log(areaSelected.id);
     const user = {
-      photo: imageData,
       bio: bioValue,
       user: {
         first_name: values.first_name,
         last_name: values.last_name,
-        birth_date: dateValue,
-        area: areaSelected.id,
+        birth_date: isString(dateValue)
+          ? dateValue
+          : format(dateValue, "yyyy-MM-dd"),
+        area: isString(areaSelected) ? userTotalInfo?.area_id : areaSelected,
       },
     };
     console.log(user);
+    toast("يتم الآن تحديث المعلومات", {
+      duration: 3000,
+      position: "top-center",
+      ariaProps: {
+        role: "status",
+        "aria-live": "polite",
+      },
+    });
     putToAPI("api/update_profile", user, {
       headers: {
         Authorization: bearer,
       },
-      // body: imageData,
     })
-      .then((res) => {
-        dispatch(
-          setUserTotalInfo({
-            ...userTotalInfo,
-            first_name: values.first_name,
-            last_name: values.last_name,
-            birth_date: dateValue,
-            area: areaSelected,
-            bio: bioValue,
-          })
-        );
+      .then(async (res) => {
+        await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
         toast.success("تم تحديث المعلومات بنجاح", {
           duration: 3000,
           position: "top-center",
@@ -95,13 +101,15 @@ const UpdateProfile = () => {
             "aria-live": "polite",
           },
         });
+        setTimeout(() => {
+          history(`/user/${username}`);
+        }, 3000);
       })
       .catch((err) => {
         console.log(err);
       });
   };
   const handleFileInputChange = (e) => {
-    console.log("sadasdasd");
     console.log(e.target.files[0]);
     setFile(e.target.files[0]);
     const reader = new FileReader();
@@ -114,10 +122,6 @@ const UpdateProfile = () => {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
-  fetchFromAPI("api/user/omarhlal00").then((res) => {
-    console.log(res);
-  });
-
   return (
     <section className="update-profile d-flex justify-content-center align-items-center">
       <Toaster />
@@ -132,13 +136,7 @@ const UpdateProfile = () => {
               <h3>المعلومات الشخصية</h3>
               <div className="image-holder">
                 <img
-                  src={
-                    imageUrl
-                      ? imageUrl
-                      : userTotalInfo?.gender === "Male"
-                      ? Male
-                      : Female
-                  }
+                  src={getUserPhoto(imageUrl, userTotalInfo?.gender)}
                   alt=""
                 />
                 <div className="overlay">

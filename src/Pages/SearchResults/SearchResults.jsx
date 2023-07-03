@@ -51,7 +51,7 @@ const SearchResults = () => {
         <Row className="service-items justify-content-center d-flex gap-2">
           {servicesList?.map((item) => (
             <Col lg={4} md={5} xs={10} key={item.id}>
-              <ServiceCard serviceData={item} />
+              <ServiceCard serviceData={item} id={item.id} />
             </Col>
           ))}
         </Row>

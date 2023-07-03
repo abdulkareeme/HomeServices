@@ -76,15 +76,16 @@
     color: rgb(181, 10, 10);
 }
 
-.my-recieve-orders button {
-    font-size: 16px !important;
-    padding: 7px 5px !important;
+.my-recieve-orders button.done {
+    border: none;
+    outline: none;
+    padding: 6px 9px;
+    background-color: #52b035;
+    color: white;
+    font-size: 16px;
+    margin: 10px 0;
 }
 
-.my-recieve-orders .loader {
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 40px;
+.my-recieve-orders button.done ion-icon {
+    color: white;
 }

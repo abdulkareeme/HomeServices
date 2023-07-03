@@ -6,13 +6,12 @@ import "./regsiter.css";
 import { Container, Form } from "react-bootstrap";
 import DatePicker from "react-date-picker";
 import { format } from "date-fns";
-import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
+import { postToAPI } from "../../api/FetchFromAPI";
 import AreaSelect from "../AreaSelect";
 import { ClipLoader } from "react-spinners";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
-  setAreasList,
   setIsRegistered,
   setUserInputValue,
 } from "../../Store/homeServiceSlice";
