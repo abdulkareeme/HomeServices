@@ -45,9 +45,10 @@ class Rating(models.Model):
     quality_of_service = models.FloatField()
     commitment_to_deadline = models.FloatField()
     work_ethics = models.FloatField()
-    order_service = models.OneToOneField("OrderService", on_delete=models.CASCADE)
+    order_service = models.OneToOneField("OrderService", on_delete=models.CASCADE , related_name="rating")
     client_comment = models.CharField(max_length=1000)
     seller_comment = models.CharField(max_length=1000 , blank=True , null=True)
+    rating_time = models.DateTimeField( auto_now_add=True )
 
     def __str__(self) :
         return str(self.order_service)+' , Rating'

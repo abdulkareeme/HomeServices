@@ -25,3 +25,16 @@ class MakeOrderSpectacular(serializers.ModelSerializer):
     class Meta:
         model = OrderService
         fields = ['expected_time_by_day_to_finish','form_data']
+
+class SellerCommentSpectacular(serializers.Serializer):
+    seller_comment = serializers.CharField(max_length=500 , required = True)
+    
+class RetrieveRatingsSpectacular(serializers.Serializer):
+    id = serializers.IntegerField()
+    quality_of_service = serializers.FloatField(required=True)
+    commitment_to_deadline = serializers.FloatField(required=True)
+    work_ethics = serializers.FloatField(required=True)
+    client_comment = serializers.CharField(required=True)
+    seller_comment = serializers.CharField(allow_null=True , required=False)
+    rating_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    client = serializers.CharField( required=True )

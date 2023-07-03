@@ -56,7 +56,7 @@ class ListOrdersSerializer(serializers.ModelSerializer):
     home_service = HomeServiceSerializer()
     class Meta : 
         model = OrderService
-        fields = ['id','create_date','status','home_service','is_rateable','expected_time_by_day_to_finish']
+        fields = ['id','create_date','status','home_service','expected_time_by_day_to_finish']
 
 class ListHomeServicesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
@@ -130,3 +130,9 @@ class RetrieveInputDataSerializer(serializers.ModelSerializer):
     class Meta :
         model = InputData
         fields = ['field','content']
+
+class RatingDetailSerializer(serializers.ModelSerializer):
+    rating_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    class Meta :
+        model = Rating
+        fields = ['quality_of_service','commitment_to_deadline','work_ethics','client_comment','seller_comment','rating_time']

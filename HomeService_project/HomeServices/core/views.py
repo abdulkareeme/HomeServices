@@ -2,13 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken
-from .serializers import RegisterSerializer, UserConfirmEmailSerializer , NormalUserSerializer , ListUsersSerializer , PasswordResetSerializer ,UpdateNormalUser
+from .serializers import RegisterSerializer, UserConfirmEmailSerializer , NormalUserSerializer , ListUsersSerializer , PasswordResetSerializer ,UpdateNormalUser ,ForgetPasswordResetSerializer
 from rest_framework.views import APIView
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import status , generics ,permissions
 from .models import Balance
-from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular
+from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular,ForgetPasswordResetSpectacular
 from .models import NormalUser ,User
 from services.serializers import Area,AreaSerializer
 from django.contrib.auth.hashers import make_password
@@ -31,7 +31,7 @@ def get_user_info(user):
 
     clients_number =0
     for service in  user.normal_user.home_services_seller.all() :
-        clients_number  += service.order_home_service.count()
+        clients_number  += service.number_of_served_clients
     delta = average_fast_answer
     if delta is not None :
         hours, remainder = divmod(delta.seconds, 3600)
@@ -57,7 +57,7 @@ def get_user_info(user):
         'mode':user.mode,
         'photo':photo,
         'birth_date':user.birth_date,
-        'date_joined' : user.date_joined,
+        'date_joined' : user.date_joined, #TODO change the format
         'gender':user.gender,
         'bio':user.normal_user.bio,
         'clients_number' : clients_number ,
@@ -95,26 +95,26 @@ def Confirm_process(request):
             return Response({"detail":f"Try again after{request.user.next_confirm_try - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail":"Wrong code please try again"} , status=status.HTTP_400_BAD_REQUEST)
 
-def send_process(request):
-    if request.user.is_active :
+def send_process_verify_email(user):
+    if user.is_active :
             return Response({'detail':"Email already verified"}, status=status.HTTP_400_BAD_REQUEST)
-    if request.user.next_confirmation_code_sent is None or request.user.next_confirmation_code_sent <= timezone.now() :
-        request.user.resend_tries = 3
-        request.user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
-        request.user.save()
+    if user.next_confirmation_code_sent is None or user.next_confirmation_code_sent <= timezone.now() :
+        user.resend_tries = 3
+        user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
+        user.save()
 
-    if request.user.resend_tries == 0 :
-        return Response({"detail":f"Can't send , try again after {request.user.next_confirmation_code_sent - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
+    if user.resend_tries == 0 :
+        return Response({"detail":f"Can't send , try again after {user.next_confirmation_code_sent - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
 
 
-    request.user.resend_tries -=1
-    request.user.confirmation_code = str(random.randint(100000, 999999))
-    request.user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
-    request.user.save()
+    user.resend_tries -=1
+    user.confirmation_code = str(random.randint(100000, 999999))
+    user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
+    user.save()
     subject = 'Confirm your email'
-    message = f'Please use the following 6-digit code to confirm your email address: {request.user.confirmation_code}'
+    message = f'Please use the following 6-digit code to confirm your email address: {user.confirmation_code}'
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [request.user.email,]
+    recipient_list = [user.email,]
     send_mail(subject, message, email_from, recipient_list)
     return Response({"detail":"Code sent successfully , Please check your email inbox"} , status=status.HTTP_200_OK)
 
@@ -270,20 +270,19 @@ class UserConfirmMessage(APIView):
 
 @extend_schema(
     request=ResendCodeEmailSpectacular,
-    responses={200:None , 400:None}
+    responses={200:None , 400:None , 404: None , 500:None}
 )
 class ResendEmailMessage(APIView):
     permission_classes=[permissions.AllowAny]
     def post(self , request):
         if 'email' not in request.data :
             return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
-
         try :
-            request.user= User.objects.get(email= request.data['email'])
+            user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
             return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return send_process(request=request)
+        return send_process_verify_email(user=user)
 
 
 class UpdateUser(APIView):
@@ -317,3 +316,47 @@ class UpdateUser(APIView):
 class RetrieverMyBalance(APIView):
     def get(self , request):
         return Response({"total_balance": request.user.normal_user.balance.total_balance})
+
+def send_process_forget_password(user):
+    user.forget_password_code = str(random.randint(100000, 999999))
+    user.save()
+
+    subject = 'Reset your password'
+    message = f'Please use the following 6-digit code to reset your password: {user.forget_password_code}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [user.email,]
+    send_mail(subject, message, email_from, recipient_list)
+    return Response({"detail":"Code sent successfully , Please check your email inbox"} , status=status.HTTP_200_OK)
+@extend_schema(
+    request=ResendCodeEmailSpectacular,
+    responses={200:None , 400:None , 404: None , 500:None}
+)
+class SendForgetPasswordCode(APIView):
+    def post(self , request):
+        if 'email' not in request.data :
+            return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
+        try :
+            user= User.objects.get(email= request.data['email'])
+        except User.DoesNotExist :
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        return send_process_forget_password(user=user)
+
+@extend_schema(
+    request=ForgetPasswordResetSpectacular,
+    responses={200:None , 400:None , 404:None}
+)
+class ForgetPasswordReset(APIView):
+    serializer_class = ForgetPasswordResetSerializer
+    def post(self, request):
+        if 'email' not in request.data :
+            return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
+        try :
+            user= User.objects.get(email= request.data['email'])
+        except User.DoesNotExist :
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data, context={'user': user})
+        serializer.is_valid(raise_exception=True)
+        user.password = make_password(serializer.validated_data['new_password'])
+        user.forget_password_code=None
+        user.save()
+        return Response({'message': 'Password updated successfully.'}, status=status.HTTP_200_OK)
