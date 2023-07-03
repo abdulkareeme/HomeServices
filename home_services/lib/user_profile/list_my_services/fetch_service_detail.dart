@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
 import 'package:home_services/user_profile/list_my_services/seller_details_page.dart';
+
+import '../../Home Page/user_options_for_service.dart';
 // ignore: must_be_immutable
 class FetchServiceDetails extends StatelessWidget {
   int id;
   // ignore: prefer_typing_uninitialized_variables
   var user;
+  bool userSellerCase;
   FetchServiceDetails({
     required this.id,
+    required this.userSellerCase,
     this.user,
     super.key,
   });
@@ -32,7 +36,10 @@ class FetchServiceDetails extends StatelessWidget {
                 ],
               );
             } else {
-              return SellerServiceDetails(
+              return (userSellerCase == false) ? SellerServiceDetails(
+                service: snapshot.data![0],
+                user: user,
+              ) : UserOptionForService(
                 service: snapshot.data![0],
                 user: user,
               );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20out/Api/Log_out_Api.dart';
-import '../user_profile/list_my_services/seller_details_page.dart';
 import 'Drawer/Widget/home_page_drawer.dart';
 
 // ignore: must_be_immutable
@@ -8,8 +7,10 @@ class HomePage extends StatefulWidget {
 
   // ignore: prefer_typing_uninitialized_variables
   var user;
+  List category;
   HomePage({
     required this.user,
+    required this.category,
     super.key,
   });
   @override
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
               title: const Text("Home Page"),
             ),
             drawer: Drawer(
-              child: Drawer_(user: widget.user),
+              child: Drawer_(user: widget.user,category: widget.category),
             ),
             body: Column(
               children: [

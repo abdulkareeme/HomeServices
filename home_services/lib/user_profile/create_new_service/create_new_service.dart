@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/home_page.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
+import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 
 // ignore: must_be_immutable
 class CreateService extends StatelessWidget{
@@ -43,7 +44,7 @@ class CreateService extends StatelessWidget{
                 title: Text("تم إنشاء خدمة ${utf8.decode(snapshot.data![0].toString().codeUnits)} بنجاح  "),
                 actions: [
                   ElevatedButton(onPressed: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>GetCategoriesList(user: user, op: true)));
                   }, child: const Text("تأكيد"))
                 ],
               );

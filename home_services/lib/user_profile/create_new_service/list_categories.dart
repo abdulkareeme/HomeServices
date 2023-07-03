@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Sign%20up/Api/sign_up_api.dart';
+import 'package:home_services/Home%20Page/home_page.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
-import 'package:home_services/user_profile/create_new_service/create_new_service_page.dart';
 import 'package:home_services/user_profile/create_new_service/list_area.dart';
 
 
@@ -9,7 +8,8 @@ import 'package:home_services/user_profile/create_new_service/list_area.dart';
 // ignore: must_be_immutable
 class GetCategoriesList extends StatelessWidget{
   var user;
-  GetCategoriesList({required this.user,super.key}) ;
+  bool op ;
+  GetCategoriesList({required this.user,required this.op,super.key}) ;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class GetCategoriesList extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return GetListArea(categoriesList: snapshot.data!,user: user,);
+                  return (op == false)?GetListArea(categoriesList: snapshot.data!,user: user,): HomePage(user: user,category: snapshot.data!,);
                 }
               } else {
                 return AlertDialog(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/home_page.dart';
 import 'package:home_services/Main%20Classes/service.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
+import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 
 // ignore: must_be_immutable
 class DeleteService extends StatelessWidget{
@@ -29,7 +30,7 @@ class DeleteService extends StatelessWidget{
                       title: Text(" تم حذف خدمة $opبنجاح "),
                       actions: [
                         ElevatedButton(onPressed: (){
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomePage(user: user)));
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>GetCategoriesList(user: user, op: true)));
                         }, child: const Text("تأكيد"))
                       ],
                     );

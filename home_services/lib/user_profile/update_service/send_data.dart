@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/home_page.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
+import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 
 import '../../Main Classes/service.dart';
 // ignore: must_be_immutable
@@ -35,7 +36,7 @@ class SendUpdatedService extends StatelessWidget {
               title: Text("تم تعديل خدمة ${service.title} بنجاح "),
               actions: [
                 ElevatedButton(onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> HomePage(user: user)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> GetCategoriesList(user: user, op: true)));
                 }, child: const Text("تأكيد"))
               ],
             );

@@ -47,8 +47,8 @@ class LogInApis {
             'services_number', info['user_info']['services_number'])
         : await pref.setInt('services_number', 0);
     (info['user_info']['average_rating'] != null)
-        ? await pref.setInt('rating', info['user_info']['average_rating'])
-        : await pref.setInt('rating', 0);
+        ? await pref.setDouble('rating', info['user_info']['average_rating'])
+        : await pref.setDouble('rating', 0.0);
     await pref.setString('area_name',utf8.decode(info['user_info']['area_name'].toString().codeUnits));
     //print(info['user_info']['area_name']);
     await pref.setInt('area_id', info['user_info']["area_id"]);
@@ -113,7 +113,7 @@ class LogInApis {
             info['user_info']["id"]);
           list.add(user);
         }
-        setData(info);;
+        setData(info);
       } else {
         print(jsonDecode(response.body));
         print(response.statusCode);
@@ -127,7 +127,8 @@ class LogInApis {
   Future<List?> checkIfLoggedIn() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     List? info = [];
-    int ? id ,serviceNumber,clientsNumber,areaId,rating;
+    int ? id ,serviceNumber,clientsNumber,areaId;
+    double? rating;
     String? firstName,lastName,userName,answerSpeed,email,token,gender,birthDate,joinedDate,areaName,bio,mode;
     firstName =  await pref.getString("first_name");
     lastName = await pref.getString('last_name');
@@ -142,22 +143,11 @@ class LogInApis {
     areaName = await pref.getString('area_name');
     areaId = await pref.getInt('area_id');
     id = await pref.getInt('id');
-   // print("/////////////////");
-   // print (firstName);
-   // print (lastName);
-   // print (userName);
-   // print (email);
-   // print (token);
-   // print (areaName);
-   // print (mode);
-   // print(gender);
-   // print (birthDate);
-   // print (joinedDate);*/
     if(firstName != null && lastName != null && userName != null && email != null && token != null && areaName != null && mode != null && gender != null && birthDate != null && joinedDate != null && bio != null && areaId != null && id != null){
       if(mode == "seller"){
         serviceNumber = await pref.getInt('services_number');
         answerSpeed = await pref.getString('answer_speed');
-        rating = await pref.getInt('rating');
+        rating = await pref.getDouble('rating')!;
         clientsNumber = await pref.getInt('clients_number');
         Seller? seller = Seller.noPhoto(
             serviceNumber!,
@@ -176,7 +166,7 @@ class LogInApis {
             joinedDate,
             areaName,
             bio,
-            rating!);
+            rating);
         info.add(seller);
         return info;
       }else{

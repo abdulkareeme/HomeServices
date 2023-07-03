@@ -150,35 +150,6 @@ class SellerServiceDetails extends StatelessWidget {
                         ],
                       ),
                     const SizedBox(height: 25,),
-                    /*Padding(
-                      padding: const EdgeInsets.only(left: 25,right: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.red,
-                                padding: const EdgeInsets.all(10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                              ),
-                              onPressed: (){},
-                              child: const Text("حذف الخدمة",style: TextStyle(
-                                  fontSize: 17
-                              ),)),
-                          const SizedBox(height: 20,),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.blue,
-                                padding: const EdgeInsets.all(10)/*only(left: MediaQuery.of(context).size.width/2.9,right: MediaQuery.of(context).size.width/2.9,top: 10,bottom: 10)*/,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                              ),
-                              onPressed: (){},
-                              child: const Text("تعديل الخدمة",style: TextStyle(
-                                  fontSize: 17
-                              ))),
-                        ],
-                      ),
-                    )*/
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue,

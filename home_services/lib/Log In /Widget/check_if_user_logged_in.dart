@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log In /Api/log_in_api.dart';
-import '../../Home Page/home_page.dart';
+import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 import '../../On Boarding Screen/Widget/on_boarding_screen.dart';
 
 // ignore: must_be_immutable
@@ -27,9 +27,7 @@ class _CheckIfLoggedInState extends State<CheckIfLoggedIn>{
                   if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
 
                     if(snapshot.data!.isNotEmpty){
-                      // we need to defined a user or seller object
-                      // then return it to the home page
-                      return HomePage(user: snapshot.data![0]);
+                      return GetCategoriesList(user: snapshot.data![0], op: true);
                     } else {
                         return OnBoardingScreen();
                     }

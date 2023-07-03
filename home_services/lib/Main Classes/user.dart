@@ -41,7 +41,7 @@ class User {
 class Seller extends User{
   int servicesNumber, clientsNumber;
   String averageFastAnswer;
-  int averageRating;
+  double averageRating;
   Seller(super.id, super.firstName, super.lastName, super.userName, super.email, super.token, super.mode, super.gender, super.birthDate, super.joinDate, super.areaName, super.bio, super.areaId, super.photo,this.averageFastAnswer,this.averageRating,this.clientsNumber,this.servicesNumber);
   factory Seller.noPhoto(int servicesNumber,id,clientsNumber,areaId,String
       firstName,
@@ -56,7 +56,7 @@ class Seller extends User{
       joinDate,
       areaName,
       bio,
-      int averageRating){
+      double averageRating){
     return Seller(id, firstName, lastName, userName, email, token, mode, gender, birthDate, joinDate, areaName, bio, areaId, "", averageFastAnswer, averageRating, clientsNumber, servicesNumber);
   }
 }

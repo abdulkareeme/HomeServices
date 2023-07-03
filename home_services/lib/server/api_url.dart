@@ -14,4 +14,5 @@ class Server{
   static const String getServiceForm = "services/update_form_home_service/";
   static const String updateServiceMainData= "services/retrieve_update_home_service/";
   static const String updateServiceForm= "services/update_form_home_service/";
+  static const String getUserDetails = "api/user/";
 }

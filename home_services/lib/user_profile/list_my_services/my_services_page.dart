@@ -26,6 +26,7 @@ class MyServices extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FetchServiceDetails(
                     id: services[i].id,
                     user: user,
+                    userSellerCase: false,
                   )));
                 }),
               ],
