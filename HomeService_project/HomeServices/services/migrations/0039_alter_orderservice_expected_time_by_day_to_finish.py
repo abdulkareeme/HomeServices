@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='orderservice',
             name='expected_time_by_day_to_finish',
-            field=models.PositiveIntegerField(),
+            field=models.PositiveIntegerField(null=True),
         ),
     ]

@@ -53,12 +53,12 @@ def is_rateable(order):
         order.rating
         rateable = False
     except :
-        pass 
-    if order.expected_time_by_day_to_finish is not None :
-        expected_finish_time = order.create_date + timedelta(days=order.expected_time_by_day_to_finish)
+        pass
+    if order.expected_time_by_day_to_finish is not None and order.answer_time is not None :
+        expected_finish_time = order.answer_time + timedelta(days=order.expected_time_by_day_to_finish)
     else :
         expected_finish_time = None
-    if rateable is None and (order.is_rateable or (expected_finish_time is not None and (timezone.now() > expected_finish_time))):
+    if order.status != 'Pending' and rateable is None and (order.is_rateable or (expected_finish_time is not None and (timezone.now() > expected_finish_time))):
         rateable = True
     return rateable
 
@@ -77,6 +77,7 @@ class MyOrders(APIView):
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
             serializer.data[i]['form'] = get_from_data(order=order)
             serializer.data[i]['is_rateable'] = is_rateable(order=order)
+            serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
             photo = None
             if order.client.user.photo :
                 photo = order.client.user.photo.url
@@ -104,6 +105,7 @@ class ReceivedOrders(APIView):
             else :
                 serializer.data[i]['form'] = []
             serializer.data[i]['is_rateable'] = is_rateable(order=order)
+            serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
             photo = None
             if order.client.user.photo :
                 photo = order.client.user.photo.url
@@ -248,22 +250,30 @@ class MakeOrderService(APIView):
             home_service = HomeService.objects.get(pk= service_id)
         except HomeService.DoesNotExist :
             return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
+        if 'form_data' not in request.data:
+            return Response({"form_data":"This field is required"},status = status.HTTP_400_BAD_REQUEST)
+        if not isinstance(request.data['form_data'], list):
+            return Response({"form_data":"This field must be list"},status = status.HTTP_400_BAD_REQUEST)
+        if 'expected_time_by_day_to_finish' not in request.data :
+            return Response({"expected_time_by_day_to_finish":"This field is required"},status = status.HTTP_400_BAD_REQUEST)
+        if home_service.seller == request.user.normal_user :
+            return Response({"detail":"You can't order service from yourself"},status = status.HTTP_400_BAD_REQUEST)
+        rateable_services = OrderService.objects.filter(client= request.user.normal_user , is_rateable = True)
 
-        # if home_service.seller == request.user.normal_user :
-        #     return Response({"detail":"You can't order service from yourself"})
-        rateable_services = OrderService.objects.filter(is_rateable = True)
         if rateable_services.count() >0 :
-            return Response({"detail":"You have unrated services please rate it and order again"})
+            return Response({"detail":"You have unrated services please rate it and order again"},status = status.HTTP_400_BAD_REQUEST)
         check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
         if check_sended_orders.count()>0:
             return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)
-        serializer = InputDataSerializer(data = request.data.get('form_data',[]) , many=True )
+        try :
+            expected_time_by_day_to_finish =int( request.data['expected_time_by_day_to_finish'])
+        except ValueError :
+            return Response({"expected_time_by_day_to_finish":"This value must be integer"},status=status.HTTP_400_BAD_REQUEST)
+        serializer = InputDataSerializer(data = request.data['form_data'] , many=True )
         serializer.is_valid(raise_exception=True)
-
-        expected_time_by_day_to_finish = request.data.get('expected_time_by_day_to_finish',None)
         if expected_time_by_day_to_finish is not None and (expected_time_by_day_to_finish < 1 or expected_time_by_day_to_finish > 90) :
             return Response({"expected_time_by_day_to_finish":"expected_time_by_day_to_finish must be between 1 and 90"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         # make sure that all fields belong to this service are exist
         validated_data = []
         for input_field_1 in home_service.field.all() :
@@ -348,14 +358,13 @@ class AcceptOrder(APIView):
 
         if not taking_money(general_services=general_services,order=order,required_balance=required_balance,user=request.user.normal_user) :
             return Response({"detail":"Unexpected error"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         order.answer_time=timezone.now()
         average_fast_answer = OrderService.objects.filter(~Q(status='Pending')).annotate(time = F('answer_time')-F('create_date')).aggregate(Avg('time'))['time__avg']
         order.home_service.seller.average_fast_answer = average_fast_answer
         order.save()
         order.home_service.seller.save()
         schedule('services.tasks.update_status_to_Underway',order.id ,schedule_type=Schedule.ONCE, minutes=15,next_run=arrow.utcnow().shift(minutes=15).datetime)
-
         return Response(get_from_data(order=order),status=status.HTTP_200_OK)
 
 @extend_schema(
@@ -466,7 +475,7 @@ class SellerComment(APIView):
         rating.seller_comment = request.data['seller_comment']
         rating.save()
         return Response("Success",status=status.HTTP_200_OK)
-    
+
 @extend_schema(
     responses={200:RetrieveRatingsSpectacular(many=True)}
 )
@@ -491,11 +500,11 @@ class ListRatingsByService(APIView):
 )
 class ListRatingsByUsername(APIView):
     def get(self , request , username):
-        try : 
+        try :
             user = NormalUser.objects.get(user__username = username)
         except NormalUser.DoesNotExist :
             return Response({"detail":"User does not exists"} , status=status.HTTP_400_BAD_REQUEST)
-        
+
         ratings = Rating.objects.filter(order_service__home_service__seller = user)
         serializer  = RatingDetailSerializer(data = ratings, many=True )
         serializer.is_valid(raise_exception=False)
@@ -513,5 +522,5 @@ class ListRatingsByUsername(APIView):
             serializer.data[index]['home_service']['title'] = rate.order_service.home_service.title
             serializer.data[index]['home_service']['category'] = str(rate.order_service.home_service.category)
             index+=1
-        
+
         return Response(serializer.data,status=status.HTTP_200_OK)

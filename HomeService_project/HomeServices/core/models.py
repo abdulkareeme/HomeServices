@@ -25,11 +25,13 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.photo:
             if self.gender == 'Male':
-                self.photo = staticfiles_storage.url('images/Male.jpg')
+                self.photo.name = "profile/Male.jpg"
+                self.photo.storage.url(self.photo.name)
             else:
-                self.photo = staticfiles_storage.url('images/Female.jpg')
+                self.photo.name = "profile/Female.jpg"
+                self.photo.storage.url(self.photo.name)
         super().save(*args, **kwargs)
-    
+
 
 
 class NormalUser(models.Model):

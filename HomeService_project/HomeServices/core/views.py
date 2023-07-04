@@ -31,7 +31,7 @@ def get_user_info(user):
 
     clients_number =0
     for service in  user.normal_user.home_services_seller.all() :
-        clients_number  += service.order_home_service.count() 
+        clients_number  += service.number_of_served_clients
     delta = average_fast_answer
     if delta is not None :
         hours, remainder = divmod(delta.seconds, 3600)

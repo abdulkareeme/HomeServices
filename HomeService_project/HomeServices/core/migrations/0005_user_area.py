@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='area',
-            field=models.ForeignKey(default='0', on_delete=django.db.models.deletion.SET_DEFAULT, to='services.area'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='services.area'),
         ),
     ]
