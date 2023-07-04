@@ -1,0 +1,34 @@
+.rates {
+    padding: 20px;
+    background-color: white;
+}
+
+.rates img {
+    width: 100px;
+}
+
+.rates a {
+    color: black;
+    text-decoration: none;
+}
+
+.rates a:hover {
+    color: #2caae2;
+}
+
+.rates .stars ion-icon {
+    font-size: 18px;
+}
+
+.rates div span ion-icon {
+    font-size: 15px;
+    color: #7777;
+}
+
+.rates p {
+    font-size: 16px;
+}
+
+.rates .row hr:last-child {
+    margin: 10px 0 !important;
+}

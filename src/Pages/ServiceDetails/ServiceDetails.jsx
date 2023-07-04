@@ -10,6 +10,7 @@ import {
   setSelectedUser,
 } from "../../Store/homeServiceSlice";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
+import Rates from "../../Components/Rates/Rates";
 
 const ServiceDetails = () => {
   const { userTotalInfo, userToken, selectedUser } = useSelector(
@@ -20,9 +21,9 @@ const ServiceDetails = () => {
     const storedselectedUser = JSON.parse(localStorage.getItem("selectedUser"));
     dispatch(setSelectedUser(storedselectedUser));
   }
-  const [serviceTotalInfo, setServiceTotalInfo] = useState(null);
   const [serviceDetails, setServiceDetails] = useState(null);
   const [serviceForm, setServiceForm] = useState(null);
+  const [serviceRates, setServiceRates] = useState(null);
   const { username, id } = useParams();
   const history = useNavigate();
   const getServiceDetails = async () => {
@@ -49,6 +50,14 @@ const ServiceDetails = () => {
       console.log(err);
     }
   };
+  const getServiceRates = async () => {
+    try {
+      const data = await fetchFromAPI(`services/ratings/service/${id}`);
+      setServiceRates(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handelClickUpdate = () => {
     dispatch(
       setSelectedServiceToUpdate({ ...serviceDetails, form: serviceForm })
@@ -58,6 +67,7 @@ const ServiceDetails = () => {
   useEffect(() => {
     getServiceDetails();
     getServiceForm();
+    getServiceRates();
   }, []);
   return (
     <section className="service-details">
@@ -97,7 +107,6 @@ const ServiceDetails = () => {
                     <Col className="stars">
                       {handleRateStars(serviceDetails?.average_ratings)}
                       <span>{`( ${serviceDetails?.number_of_served_clients} )`}</span>
-                      <span></span>
                     </Col>
                   </Row>
                   {/* <Row>
@@ -146,11 +155,7 @@ const ServiceDetails = () => {
                 </Row>
               </Col>
               {/* customer comments and rate */}
-              {/* <Col lg={7} md={12}>
-                <h2>خدماتي</h2>
-                <hr />
-                <ServicesList type="comp" />
-              </Col> */}
+              <Rates rates={serviceRates} type="comp" />
             </Row>
           </Fragment>
         ) : (

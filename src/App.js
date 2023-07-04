@@ -21,6 +21,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import { Toaster } from "react-hot-toast";
 import FilterResults from "./Pages/FilterResults/FilterResults";
 import SearchResults from "./Pages/SearchResults/SearchResults";
+import SellerRates from "./Pages/SellerRates/SellerRates";
 const Home = lazy(() => import("./Pages/Home"));
 const ConfirmEmail = lazy(() => import("./Pages/ConfirmEmail"));
 const SellerServices = lazy(() =>
@@ -60,6 +61,7 @@ function App() {
           <Route path="/confirm_email" element={<ConfirmEmail />} />
           <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/user/:username/services" element={<SellerServices />} />
+          <Route path="/user/:username/rates" element={<SellerRates />} />
           <Route path="/user/:username/balance" element={<Balance />} />
           <Route path="/service/new" element={<AddService />} />
           <Route path="/service/:id/update" element={<UpdateService />} />

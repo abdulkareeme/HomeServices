@@ -116,13 +116,19 @@ export const commonQuetionsData = [
     text: "يتم تقديم خدمات التنظيف لجميع الأماكن، بما في ذلك المنازل والمكاتب والمحلات التجارية. يمكن للمستخدمين تحديد نوع الخدمة التي يرغبون في الحصول عليها وتحديد الموقع المطلوب للتنظيف",
   },
 ];
+const statusObj = {
+  Pending: { label: "جاري الطلب", color: "yellow" },
+  Rejected: { label: "مرفوض", color: "#e20e0e" },
+  Underway: { label: "جاري التنفيذ", color: "#ffaf1d" },
+};
 
-export const handleRateStars = (avg, clients_number) => {
+export const handleRateStars = (avg) => {
+  const value = Math.round(avg);
   let stars = [];
-  for (let i = 0; i < avg; ++i) {
+  for (let i = 0; i < value; ++i) {
     stars.push(<ion-icon name="star"></ion-icon>);
   }
-  for (let i = 0; i < 5 - avg; ++i) {
+  for (let i = 0; i < 5 - value; ++i) {
     stars.push(<ion-icon name="star-outline"></ion-icon>);
   }
   return stars;
@@ -148,9 +154,61 @@ export const getUserPhoto = (photo, gender) => {
     return gender === "Male" ? Male : Female;
   } else return photo;
 };
-export const isString= (value)=> {
-  return typeof value === 'string' || value instanceof String;
-}
+export const isString = (value) => {
+  return typeof value === "string" || value instanceof String;
+};
+export const getStatus = (
+  id,
+  status,
+  is_rateable,
+  setSelectedRate,
+  setShowRateModal
+) => {
+  if (status === "Expire" && is_rateable) {
+    return (
+      <button
+        onClick={() => {
+          setSelectedRate(id);
+          setShowRateModal(true);
+        }}
+        className="have-to-rate"
+      >
+        بحاجة إلى تقييم
+        <ion-icon name="star"></ion-icon>
+      </button>
+    );
+  } else if (status === "Underway" && is_rateable) {
+    return (
+      <button
+        onClick={() => {
+          setSelectedRate(id);
+          setShowRateModal(true);
+        }}
+        className="have-to-rate"
+      >
+        تقييم وانهاء
+        <ion-icon name="star"></ion-icon>
+      </button>
+    );
+  } else if (status === "Expire" && !is_rateable) {
+    return (
+      <div className="d-flex gap-2 align-items-center">
+        <span style={{ backgroundColor: "green" }} className="circle"></span>
+        <span>تم الانتهاء</span>
+      </div>
+    );
+  } else {
+    return (
+      <div className="d-flex gap-2 align-items-center">
+        <span
+          style={{ backgroundColor: statusObj[status].color }}
+          className="circle"
+        ></span>
+        <span>{statusObj[status].label}</span>
+      </div>
+    );
+  }
+};
 export const shortInfo = {
   "نقل أثاث منزل":
     "نضمن لك نقل أثاث منزلك بأمان وجودة عالية وفي الوقت المحدد، بفريق عمل مدرب ومجهز بأحدث الأدوات والمعدات لتلبية جميع احتياجاتك",
@@ -159,3 +217,57 @@ export const shortInfo = {
   تنظيف:
     "نوفر لك خدمات تنظيف شاملة لمنزلك أو مكتبك بأعلى مستويات الجودة، بفريق عمل مدرب ومجهز بأحدث المعدات والمنظفات الآمنة، لتحصل على نتائج مثالية وتلبية جميع متطلباتك واحتياجاتك",
 };
+
+export const rates = [
+  {
+    id: 0,
+    quality_of_service: 3,
+    commitment_to_deadline: 4,
+    work_ethics: 5,
+    client_comment: "شكرا على الخدمة",
+    seller_comment: null,
+    rating_time: "2019-08-24T14:15:22Z",
+    service_name: "صيانة منزل",
+    category: "صيانة",
+    client: {
+      first_name: "عبد الكريم",
+      last_name: "ادريس",
+      username: "abd01",
+      photo: Male,
+    },
+  },
+  {
+    id: 1,
+    quality_of_service: 3,
+    commitment_to_deadline: 4,
+    work_ethics: 5,
+    client_comment: "شكرا على",
+    seller_comment: null,
+    rating_time: "2019-08-24T14:15:22Z",
+    service_name: "صيانة منزل",
+    category: "صيانة",
+    client: {
+      first_name: "عبد الكريم",
+      last_name: "ادريس",
+      username: "abd01",
+      photo: Male,
+    },
+  },
+  {
+    id: 2,
+    quality_of_service: 3,
+    commitment_to_deadline: 4,
+    work_ethics: 5,
+    client_comment: "على الخدمة",
+    seller_comment: null,
+    rating_time: "2019-08-24T14:15:22Z",
+    service_name: "صيانة منزل",
+    category: "صيانة",
+    client: {
+      first_name: "عبد الكريم",
+      last_name: "ادريس",
+      username: "abd01",
+      photo: Female,
+    },
+  },
+];

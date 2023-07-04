@@ -28,6 +28,7 @@ const MyRecieveOrders = () => {
     const storedUser = localStorage.getItem("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
+  // many stats to filter recive data depends on status
   const [myRecieveorderData, setMyRecieveOrderData] = useState(null);
   const [pendingRecieveData, setPendingRecieveData] = useState([]);
   const [underReviewRecieveData, setunderReviewRecieveData] = useState([]);
@@ -59,6 +60,7 @@ const MyRecieveOrders = () => {
       console.log(err);
     }
   };
+  // fucntion for all type of alerts using if condition
   const handleShowAlert = () => {
     if (selectedOrder.type.includes("reject")) {
       swal({

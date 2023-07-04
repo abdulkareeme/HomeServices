@@ -65,6 +65,15 @@ hr {
 /* .accordion-item .accordion-button:not(.collapsed)::after {
   background-image: black !important;
 } */
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  color: rgb(239, 239, 49);
+  padding: 0;
+  width: max-content
+}
 
 .accordion-item .accordion-header {
   border: none !important;
@@ -118,6 +127,12 @@ section.confirm-email .container {
   justify-content: center;
   align-items: center;
   font-size: 30px;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
 .form-link {

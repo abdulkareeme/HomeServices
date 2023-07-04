@@ -68,7 +68,10 @@ const UserProfileCard = () => {
           <LoaderContent />
         ) : (
           <Row>
-            <img src={selectedUser?.gender === "Male" ? Male : Female} alt="" />
+            <img
+              src={`http://abdulkareemedres.pythonanywhere.com${selectedUser?.photo}`}
+              alt=""
+            />
             <h2>
               <span>
                 {selectedUser?.first_name} {selectedUser?.last_name}
@@ -96,11 +99,11 @@ const UserProfileCard = () => {
               {moment(selectedUser?.date_joined).format("DD/MM/YYYY")}
             </div>
             {selectedUser?.username === userTotalInfo?.username ? (
-                <Link to={`/user/${userTotalInfo?.username}/update_profile`}>
+              <Link to={`/user/${userTotalInfo?.username}/update_profile`}>
                 <ion-icon name="create"></ion-icon>
                 <span>تعديل الملف الشخصي</span>
               </Link>
-              ) : null}
+            ) : null}
             {selectedUser?.mode === "seller" ? (
               <ul>
                 {sellerProfileLinks.map((item) => (

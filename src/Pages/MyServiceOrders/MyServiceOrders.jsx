@@ -1,12 +1,14 @@
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import "./my-service-orders.css";
 import { Fragment, useEffect, useLayoutEffect, useState } from "react";
-import { deleteFromAPI, fetchFromAPI } from "../../api/FetchFromAPI";
+import { deleteFromAPI, fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
-import Male from "../../Images/Male.jpg";
 import swal from "sweetalert";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
+import { BASE_API_URL, getStatus } from "../../utils/constants";
+import RatingStars from "../../Components/RatingStars/RatingStars";
+import { toast } from "react-hot-toast";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -22,8 +24,14 @@ const MyServiceOrders = () => {
   }
   const [myorderData, setMyOrderData] = useState(null);
   const [show, setShow] = useState(false);
+  const [showRateModal, setShowRateModal] = useState(false);
   const [selectedform, setSelectedForm] = useState(null);
+  const [selectedRate, setSelectedRate] = useState(null);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [qualityStars, setQualityStars] = useState(null);
+  const [deadlineStars, setDeadlineStars] = useState(null);
+  const [ethicalStars, setEthicalStars] = useState(null);
+  const [rateComment, setRateComment] = useState(null);
   const formDetails = selectedform?.map((item, index) => (
     <div key={index} className="question">
       <label htmlFor="">{item.field.title}</label>
@@ -33,6 +41,7 @@ const MyServiceOrders = () => {
   ));
 
   const handleClose = () => setShow(false);
+  const handleCloseRateModal = () => setShowRateModal(false);
   const getMyOrderData = async () => {
     try {
       const data = await fetchFromAPI("services/my_orders", {
@@ -46,11 +55,48 @@ const MyServiceOrders = () => {
       console.log(err);
     }
   };
-  const statusObj = {
-    Pending: "جاري الطلب",
-    Rejected: "مرفوض",
-    Underway: "جاري التنفيذ",
-    Expire: "تم الانتهاء بحاجة الى تقييم",
+  const makeRate = async (id) => {
+    const payload = {
+      quality_of_service: qualityStars,
+      commitment_to_deadline: deadlineStars,
+      work_ethics: ethicalStars,
+      client_comment: rateComment,
+    };
+    try {
+      toast("يتم الآن اضافة التقييم", {
+        duration: 3000,
+        position: "top-center",
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
+      });
+      await postToAPI(`services/make_rating/${id}`, payload, {
+        headers: {
+          Authorization: `token ${userToken}`,
+        },
+      });
+      toast.success("تم اضافة التقييم بنجاح", {
+        duration: 3000,
+        position: "top-center",
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
+      });
+    } catch (err) {
+      if (err.responce.data?.detail === "You have already rated this service") {
+        toast.wrong("لقد قمت مسبقا باضافة تقييم", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+      }
+      console.log(err);
+    }
   };
   useEffect(() => {
     getMyOrderData();
@@ -105,6 +151,38 @@ const MyServiceOrders = () => {
           <form action="">{formDetails}</form>
         </Modal.Body>
       </Modal>
+      <Modal show={showRateModal} onHide={handleCloseRateModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>أضف تقييم للخدمة</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="rate">
+          <Row className="d-flex justify-content-between">
+            <h6 className="w-max">جودة الخدمة</h6>
+            <RatingStars setValue={setQualityStars} />
+          </Row>
+          <Row className="d-flex justify-content-between my-3">
+            <h6 className="w-max">التسليم بالموعد</h6>
+            <RatingStars setValue={setDeadlineStars} />
+          </Row>
+          <Row className="d-flex justify-content-between">
+            <h6 className="w-max">أخلاقيات العمل</h6>
+            <RatingStars setValue={setEthicalStars} />
+          </Row>
+          <Row className="mt-3 d-flex align-items-center gap-2 px-2">
+            <input
+              placeholder="أضف تعليق على الخدمة"
+              type="text"
+              onChange={(e) => setRateComment(e.target.value)}
+            />
+            <button
+              onClick={() => makeRate(selectedRate)}
+              className="my-btn add-rate"
+            >
+              اضافة
+            </button>
+          </Row>
+        </Modal.Body>
+      </Modal>
       <Container>
         {!myorderData ? <LoaderContent /> : null}
         {myorderData?.length === 0 ? (
@@ -119,7 +197,7 @@ const MyServiceOrders = () => {
                   <div className="card my-3 bg-white shadow-sm border-0 rounded">
                     <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                       <div className="image-holder mt-4">
-                        <img src={order.photo ? order.photo : Male} alt="" />
+                        <img src={BASE_API_URL + order?.photo} alt="" />
                       </div>
                       <div className="d-flex text-center flex-column gap-2">
                         <h5 className="m-0">{order.home_service.seller}</h5>
@@ -139,10 +217,13 @@ const MyServiceOrders = () => {
                           الفورم المرفق
                         </span>
                       </div>
-                      <div className="d-flex gap-2">
-                        <span className="circle"></span>
-                        <span>{statusObj[order.status]}</span>
-                      </div>
+                      {getStatus(
+                        order.id,
+                        order.status,
+                        order.is_rateable,
+                        setSelectedRate,
+                        setShowRateModal
+                      )}
                       <div className="d-flex flex-column align-items-end gap-4">
                         <div className="date text-muted w-max">
                           {order?.create_date}
