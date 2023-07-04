@@ -20,6 +20,7 @@ urlpatterns = [
     path('finish_order/<int:order_id>', views.FinishOrder.as_view()),
     path('make_rating/<int:order_id>',views.MakeRateAndComment.as_view()),
     path('make_seller_comment/<int:rating_id>' , views.SellerComment.as_view()),
-    path('ratings/<int:service_id>',views.ListRating.as_view()),
+    path('ratings/service/<int:service_id>',views.ListRatingsByService.as_view()),
+    path('ratings/username/<str:username>',views.ListRatingsByUsername.as_view()),
 
 ]

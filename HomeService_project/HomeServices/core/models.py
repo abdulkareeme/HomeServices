@@ -33,7 +33,7 @@ class User(AbstractUser):
 
 
 class NormalUser(models.Model):
-    bio = models.CharField( max_length=1000,default="")
+    bio = models.CharField( max_length=1000,default="" , blank=True)
     user= models.OneToOneField("User", on_delete=models.CASCADE , related_name='normal_user')
     average_fast_answer = models.DurationField(blank=True , null= True)
 

@@ -15,6 +15,7 @@ from django_q.tasks import async_task
 from datetime import datetime, timedelta
 from django_q.tasks import schedule
 from django_q.models import Schedule
+from core.models import NormalUser
 import arrow
 
 @transaction.atomic
@@ -129,14 +130,14 @@ class ListHomeServices(generics.ListAPIView):
         else:
             area = [self.request.user.area]
         if 'username' in self.request.GET:
-            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).order_by('-average_ratings')
+            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
         if 'category' in self.request.GET and 'title' in self.request.GET:
-            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),category__name = self.request.GET.get('category'),service_area__in =area ).order_by('-average_ratings')
+            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),category__name = self.request.GET.get('category'),service_area__in =area ).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
         if 'title' in self.request.GET :
-            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),service_area__in =area).order_by('-average_ratings')
+            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),service_area__in =area).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
         if 'category' in self.request.GET:
-            return HomeService.objects.filter(category__name = self.request.GET.get('category'),service_area__in =area).order_by('-average_ratings')
-        return HomeService.objects.filter(service_area__in =area).order_by('-average_ratings')
+            return HomeService.objects.filter(category__name = self.request.GET.get('category'),service_area__in =area).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
+        return HomeService.objects.filter(service_area__in =area).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
 
 @extend_schema(
     responses={200:RetrieveHomeServices}
@@ -469,12 +470,48 @@ class SellerComment(APIView):
 @extend_schema(
     responses={200:RetrieveRatingsSpectacular(many=True)}
 )
-class ListRating(APIView):
+class ListRatingsByService(APIView):
     def get(self , request , service_id ):
         ratings= Rating.objects.filter(order_service__home_service__id = service_id)
         serializer  = RatingDetailSerializer(data = ratings, many=True )
         serializer.is_valid(raise_exception=False)
+
         index = 0
         for rate in ratings:
-            serializer.data[index]['client'] = rate.order_service.client.user.username
+            serializer.data[index]['client'] = dict()
+            serializer.data[index]['client']['first_name'] = rate.order_service.client.user.first_name
+            serializer.data[index]['client']['last_name'] = rate.order_service.client.user.last_name
+            serializer.data[index]['client']['username'] = rate.order_service.client.user.username
+            serializer.data[index]['client']['photo'] = rate.order_service.client.user.photo.url
+            index+=1
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+@extend_schema(
+    responses={200:RetrieveRatingsSpectacular(many=True)}
+)
+class ListRatingsByUsername(APIView):
+    def get(self , request , username):
+        try : 
+            user = NormalUser.objects.get(user__username = username)
+        except NormalUser.DoesNotExist :
+            return Response({"detail":"User does not exists"} , status=status.HTTP_400_BAD_REQUEST)
+        
+        ratings = Rating.objects.filter(order_service__home_service__seller = user)
+        serializer  = RatingDetailSerializer(data = ratings, many=True )
+        serializer.is_valid(raise_exception=False)
+
+        index = 0
+        for rate in ratings:
+            serializer.data[index]['client'] = dict()
+            serializer.data[index]['client']['first_name'] = rate.order_service.client.user.first_name
+            serializer.data[index]['client']['last_name'] = rate.order_service.client.user.last_name
+            serializer.data[index]['client']['username'] = rate.order_service.client.user.username
+            serializer.data[index]['client']['photo'] = rate.order_service.client.user.photo.url
+
+            serializer.data[index]['home_service'] = dict()
+            serializer.data[index]['home_service']['id'] = rate.order_service.home_service.id
+            serializer.data[index]['home_service']['title'] = rate.order_service.home_service.title
+            serializer.data[index]['home_service']['category'] = str(rate.order_service.home_service.category)
+            index+=1
+        
         return Response(serializer.data,status=status.HTTP_200_OK)
