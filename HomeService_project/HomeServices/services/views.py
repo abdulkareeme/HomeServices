@@ -256,10 +256,11 @@ class MakeOrderService(APIView):
         if 'expected_time_by_day_to_finish' not in request.data :
             return Response({"expected_time_by_day_to_finish":"This field is required"},status = status.HTTP_400_BAD_REQUEST)
         if home_service.seller == request.user.normal_user :
-            return Response({"detail":"You can't order service from yourself"})
-        rateable_services = OrderService.objects.filter(is_rateable = True)
+            return Response({"detail":"You can't order service from yourself"},status = status.HTTP_400_BAD_REQUEST)
+        rateable_services = OrderService.objects.filter(client= request.user.normal_user , is_rateable = True)
+
         if rateable_services.count() >0 :
-            return Response({"detail":"You have unrated services please rate it and order again"})
+            return Response({"detail":"You have unrated services please rate it and order again"},status = status.HTTP_400_BAD_REQUEST)
         check_sended_orders = OrderService.objects.filter(client = request.user.normal_user , home_service = home_service , status = "Pending" )
         if check_sended_orders.count()>0:
             return Response({"detail":"you have already ordered this service"} , status=status.HTTP_400_BAD_REQUEST)

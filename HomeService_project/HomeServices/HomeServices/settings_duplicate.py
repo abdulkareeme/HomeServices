@@ -87,23 +87,10 @@ WSGI_APPLICATION = 'HomeServices.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'abdulkareemedres$home_service',
-        'USER': 'abdulkareemedres',
-        'PASSWORD': 'abdabdabd111222333',
-        'HOST': 'abdulkareemedres.mysql.pythonanywhere-services.com',
-         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'testing.sqlite3',
     }
 }
 
@@ -143,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'knox.auth.TokenAuthentication',
-
+        
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
@@ -190,54 +177,53 @@ import os
 # BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Q_CLUSTER = {
-#     'name': 'HomeServices',
-#     'workers': 4,
-#     'timeout': 60,
-#     'retry': 90,
-#     'queue_limit': 50,
-#     'bulk': 10,
-#     'orm': 'default',
-# }
-
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': 'redis://redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com:18985/0',
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#             'PASSWORD': 'O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5',
-#         }
-#     }
-# }
-
 Q_CLUSTER = {
-    'name': 'myproject',
+    'name': 'HomeServices',
     'workers': 4,
     'timeout': 60,
     'retry': 90,
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default',
-    'store': 'django_db',
 }
+
+# Q_CLUSTER = {
+#     'name': 'HomeServices',
+#     'workers': 4,
+#     'timeout': 60,
+#     'retry': 120,
+#     'queue_limit': 50,
+#     'bulk': 10,
+#     'orm': 'default',
+#     'store': 'django_db',
+#     'database': 'default',
+# }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.sqlite3',
+#         'LOCATION': BASE_DIR / 'cache.sqlite3',
+#     }
+# }
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'mycache_table',
-        'TIMEOUT': 3600,
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com:18985/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': config('DATABASE_REDIS_PASSWORD'),
+        }
     }
 }
 
 
-# Q_CLUSTER['redis'] = {
-#     'host': 'redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com',
-#     'port': 18985,
-#     'password': 'O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5',
-#     'db': 0,
-#     'socket_timeout': 3,
-#     'retry_on_timeout': True,
-# }
+Q_CLUSTER['redis'] = {
+    'host': 'redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com',
+    'port': 18985,
+    'password': config('DATABASE_REDIS_PASSWORD'),
+    'db': 0,
+    'socket_timeout': 3,
+    'retry_on_timeout': True,
+}
 # redis-cli -u redis://default:O7U6j1qyVpMagE3uHBQtlZhIPq4qR5o5@redis-18985.c302.asia-northeast1-1.gce.cloud.redislabs.com:18985
-

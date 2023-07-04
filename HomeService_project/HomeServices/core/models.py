@@ -1,8 +1,9 @@
+from typing import Iterable, Optional
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.staticfiles.storage import staticfiles_storage
 
-
-gender_choices = [('Male','M') , ('Female','F') ]
+gender_choices = [('Male','Male') , ('Female','Female') ]
 mode_choices = [('client','buyer') , ('seller' , 'seller_buyer')]
 
 class User(AbstractUser):
@@ -21,10 +22,20 @@ class User(AbstractUser):
 
     forget_password_code = models.CharField(blank=True , null=True, max_length=6)
 
+    def save(self, *args, **kwargs):
+        if not self.photo:
+            if self.gender == 'Male':
+                self.photo.name = "profile/Male.jpg"
+                self.photo.storage.url(self.photo.name)
+            else:
+                self.photo.name = "profile/Female.jpg"
+                self.photo.storage.url(self.photo.name)
+        super().save(*args, **kwargs)
+
 
 
 class NormalUser(models.Model):
-    bio = models.CharField( max_length=1000,default="")
+    bio = models.CharField( max_length=1000,default="" , blank=True)
     user= models.OneToOneField("User", on_delete=models.CASCADE , related_name='normal_user')
     average_fast_answer = models.DurationField(blank=True , null= True)
 

@@ -14,7 +14,7 @@ from services.serializers import CategorySerializer
 import random
 from datetime import timedelta
 from services.serializers import AreaSerializer
-gender_choices = [('Male', 'M'), ('Female', 'F')]
+gender_choices = [('Male', 'Male'), ('Female', 'Female')]
 mode_choices = [('client', 'buyer'), ('seller', 'seller_buyer')]
 
 class UserConfirmEmailSerializer(serializers.Serializer):
@@ -55,6 +55,7 @@ class ListUsersSerializer(serializers.ModelSerializer):
 
 class  RetrieveUserSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(max_length = 1000)
+    date_joined = serializers.DateTimeField(format = '%Y-%m-%d %H:%M:%S')
     class Meta :
         model = User
         fields = ['id','username','email','first_name','last_name','mode','photo','birth_date','date_joined','gender','bio']
@@ -92,7 +93,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     birth_date = serializers.DateField(required=False)
     gender = serializers.ChoiceField(choices=gender_choices, required=True)
-    photo = serializers.ImageField(max_length=100, use_url=True, required=False)
+    photo = serializers.ImageField(max_length=100, use_url=True, required=False , allow_null= True)
     mode = serializers.ChoiceField(choices=mode_choices, required=True)
 
     class Meta:
@@ -143,7 +144,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 class UpdateNormalUser(serializers.ModelSerializer):
     user = UpdateUserSerializer()
-    photo = serializers.ImageField(max_length = 100 , required=False)
+    photo = serializers.ImageField(max_length = 128 , required=False)
+    bio = serializers.CharField(max_length = 512 , required= False , allow_blank=True)
     class Meta :
         model = NormalUser
         fields = ['photo','bio','user']
@@ -162,7 +164,7 @@ class UpdateNormalUser(serializers.ModelSerializer):
 
         if photo is not None :
             instance.photo.save(photo.name , photo , save=False)
-        if validated_data.get('bio' , None) is not None :
+        if validated_data.get('bio' , None) is not None:
             instance.normal_user.bio = validated_data['bio']
 
         instance.save()
