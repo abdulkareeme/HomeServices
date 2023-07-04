@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Sign%20up/Widget/get_area_list.dart';
-import 'Home Page/home_page.dart';
 import 'Log In /Widget/Log_In_page.dart';
 import 'Log In /Widget/check_if_user_logged_in.dart';
-import 'Sign up/Widget/code_verification_page.dart';
-import 'Sign up/Widget/first_page_of_signup.dart';
 void main() {
   runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   String error = "";

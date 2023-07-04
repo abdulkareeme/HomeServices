@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'package:home_services/Main%20Classes/field.dart';
+import 'package:home_services/Main%20Classes/order.dart';
 import 'package:home_services/server/api_url.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Main Classes/form.dart';
 import '../../Main Classes/service.dart';
 import '../../Main Classes/category.dart';
 import '../../Main Classes/area.dart';
@@ -102,6 +106,7 @@ class ProfileApi {
       print("no such image");
     }
   }
+
   Future<List?> getCategories() async{
 
     try{
@@ -127,7 +132,6 @@ class ProfileApi {
       print(e);
     }
   }
-
 
   Future<List?> createServeice(var titleController , var descriptionController, var priceController , var type, var areaList, var formList,var user )async{
     try{
@@ -226,6 +230,7 @@ class ProfileApi {
       print(e);
     }
   }
+
   Future<List?> myServiceDetail(int id) async {
     try{
       Response response = await get(Uri.parse('${Server.host}${Server.serviceDetails}$id'));
@@ -268,6 +273,7 @@ class ProfileApi {
        print(e);
       }
   }
+
   Future <List?> deleteService(int id,var user) async{
     try{
       Response response = await delete(Uri.parse("${Server.host}${Server.deleteService}$id"),headers: {
@@ -391,5 +397,185 @@ class ProfileApi {
     }
   }
 
+  Future<List<Order?>> getMySentOrder(var user)async{
+    try{
+      Response response = await get(Uri.parse(Server.host+Server.mySentOrder),
+        headers: {
+          "Authorization" : 'token ${user.token}'
+        });
+      if(response.statusCode == 200){
+        var info = jsonDecode(response.body);
+        List<Order?> finalData =[];
+        List os = info;
+        for(int i=0;i<os.length;i++){
+          List<Area> serviceArea=[];
+          Category category = Category(
+              info[i]["home_service"]["category"]["id"],
+              utf8.decode(info[i]["home_service"]["category"]["name"].toString().codeUnits));
+          for(int j=0;j<info[i]["home_service"]["service_area"].length;j++){
+            Area o = Area(
+                info[i]["home_service"]["service_area"][j]['id'],
+                utf8.decode(info[i]["home_service"]["service_area"][j]['name'].toString().codeUnits),
+            );
+            serviceArea.add(o);
+          }
+          Service homeService = Service.orderService(
+              utf8.decode(info[i]["home_service"]["title"].toString().codeUnits),
+              info[i]["home_service"]["seller"],
+              category,
+              info[i]["home_service"]["average_price_per_hour"],
+              serviceArea
+          );
+          List<Form1> orderForm = [];
+          for(int j=0;j<info[i]["form"].length;j++){
+            Field o = Field(
+              utf8.decode(info[i]['form'][j]['field']['note'].toString().codeUnits),
+              utf8.decode(info[i]['form'][j]['field']['title'].toString().codeUnits),
+              info[i]['form'][j]['field']["field_type"]);
+            Form1 oo = Form1(
+                o,
+                utf8.decode(info[i]['form'][j]["content"].toString().codeUnits)
+            );
+            orderForm.add(oo);
+          }
+          Order order = Order(
+              info[i]['id'],
+              DateFormat('yyyy-MM-dd').format(DateTime.parse(info[i]["create_date"])),
+              info[i]["status"],
+              homeService,
+              info[i]["client"],
+              orderForm,
+              "",
+              (info[i]["is_rateable"] == null)?false:info[i]["is_rateable"],
+              info[i]["expected_time_by_day_to_finish"]);
+          finalData.add(order);
+        }
+        return finalData;
+      } else {
+        print('fuck');
+        print (response.statusCode);
+        print(jsonDecode(response.body));
+        List <Order?>op = [];
+        return op;
+      }
+    } catch(e){
+      print(e);
+      List<Order?> op =[];
+      return op;
+    }
+  }
+
+  Future<List?> cancelOrder(int id,var user) async{
+    try{
+      Response response = await delete(Uri.parse('${Server.host}${Server.deleteOrder}$id'),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      if(response.statusCode == 204){
+        print(response.statusCode);
+        List op = ['done'];
+        return op;
+      } else {
+        print(response.statusCode);
+        List op = [];
+        return op;
+      }
+    }catch(e){
+
+    }
+
+  }
+
+
+  Future<List<Order?>> receivedOrder(var user)async{
+    try{
+      Response response = await get(Uri.parse(Server.host+Server.myReceivedOrder),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          });
+      if(response.statusCode == 200){
+        var info = jsonDecode(response.body);
+        List<Order?> finalData =[];
+        List os = info;
+        for(int i=0;i<os.length;i++){
+          List<Area> serviceArea=[];
+          Category category = Category(
+              info[i]["home_service"]["category"]["id"],
+              utf8.decode(info[i]["home_service"]["category"]["name"].toString().codeUnits));
+          for(int j=0;j<info[i]["home_service"]["service_area"].length;j++){
+            Area o = Area(
+              info[i]["home_service"]["service_area"][j]['id'],
+              utf8.decode(info[i]["home_service"]["service_area"][j]['name'].toString().codeUnits),
+            );
+            serviceArea.add(o);
+          }
+          Service homeService = Service.orderService(
+              utf8.decode(info[i]["home_service"]["title"].toString().codeUnits),
+              info[i]["home_service"]["seller"],
+              category,
+              info[i]["home_service"]["average_price_per_hour"],
+              serviceArea
+          );
+          List<Form1> orderForm = [];
+          for(int j=0;j<info[i]["form"].length;j++){
+            Field o = Field(
+                utf8.decode(info[i]['form'][j]['field']['note'].toString().codeUnits),
+                utf8.decode(info[i]['form'][j]['field']['title'].toString().codeUnits),
+                info[i]['form'][j]['field']["field_type"]);
+            Form1 oo = Form1(
+                o,
+                utf8.decode(info[i]['form'][j]["content"].toString().codeUnits)
+            );
+            orderForm.add(oo);
+          }
+          Order order = Order(
+              info[i]['id'],
+              DateFormat('yyyy-MM-dd').format(DateTime.parse(info[i]["create_date"])),
+              info[i]["status"],
+              homeService,
+              info[i]["client"],
+              orderForm,
+              "",
+              (info[i]["is_rateable"] == null)?false:info[i]["is_rateable"],
+              info[i]["expected_time_by_day_to_finish"]);
+          finalData.add(order);
+        }
+        return finalData;
+      } else {
+        print('fuck');
+        print (response.statusCode);
+        print(jsonDecode(response.body));
+        List <Order?>op = [];
+        return op;
+      }
+    } catch(e){
+      print(e);
+      List<Order?> op =[];
+      return op;
+    }
+  }
+
+  Future<List?> firstReject(int id,var user) async{
+    try{
+      Response response = await put(Uri.parse('${Server.host}${Server.firstRejectForOrder}$id'),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      if(response.statusCode == 204){
+        print(response.statusCode);
+        List op = ['done'];
+        return op;
+      } else {
+        print(response.statusCode);
+        List op = [];
+        return op;
+      }
+    }catch(e){
+
+    }
+
+  }
 
 }

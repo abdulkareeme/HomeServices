@@ -36,7 +36,7 @@ class GetListArea extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return GetServiceForm(service: service, areaList: snapshot.data!, user: user);
+                  return GetServiceForm(service: service, areaList: snapshot.data!, user: user,);
                 }
               } else {
                 return AlertDialog(

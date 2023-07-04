@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Drawer/Widget/drawer_components.dart';
+import 'package:home_services/Home%20Page/Widget/multi_level_drop_down_menu.dart';
+import 'package:home_services/Log%20out/Widget/log_out.dart';
 
 import '../../../user_profile/user_profile.dart';
-import '../../multi_level_drop_down_menu.dart';
 
 
 // ignore: camel_case_types, must_be_immutable
 class Drawer_ extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   var user;
   List category;
   Drawer_({
@@ -73,7 +75,7 @@ class DrawerState extends State<Drawer_> {
                 padding:const EdgeInsets.only(right: 15),
                 child: Drawer_component(
                   onTap: (){
-
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LogOut(user: widget.user)));
                   },
                   text: "تسجيل خروج",
                   iconColor: Colors.blue,

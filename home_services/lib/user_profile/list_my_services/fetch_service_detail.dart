@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
 import 'package:home_services/user_profile/list_my_services/seller_details_page.dart';
 
-import '../../Home Page/user_options_for_service.dart';
+import '../../Home Page/Widget/user_options_for_service.dart';
+
 // ignore: must_be_immutable
 class FetchServiceDetails extends StatelessWidget {
   int id;

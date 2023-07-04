@@ -186,4 +186,87 @@ class HomePageApi{
       return o;
     }
   }
+
+  Future<List?> getOrderedServiceForm (int id,var user) async {
+    try{
+      Response response = await get(Uri.parse("${Server.host}${Server.orderServiceForm}$id"),
+        headers: {
+          "Authorization": 'token ${user.token}',
+        }
+      );
+      if(response.statusCode == 200){
+        var info = jsonDecode(response.body);
+        List os = info;
+        List op = [];
+        for(int i=0;i<os.length;i++){
+          List o = [];
+          o.add(info[i]['id']);
+          o.add(utf8.decode(info[i]['title'].toString().codeUnits));
+          o.add(info[i]['field_type']);
+          o.add(utf8.decode(info[i]['note'].toString().codeUnits));
+          op.add(o);
+        }
+        return op;
+      } else {
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+        List op = [];
+        return op;
+      }
+    } catch(e) {
+      print (e);
+      List op = [];
+      return op;
+    }
+  }
+  Future<List?> postOrder(int serviceId,var user,List formAnswer) async{
+    try{
+      var days ;
+      List<Map<String,dynamic>> toJson(List op){
+        List<Map<String,dynamic>> data = [];
+        for(int i=0;i<op.length;i++){
+          if(i == 3){
+            days = op[i][1].text;
+          }
+          data.add({
+            "field": op[i][0],
+            "content":op[i][1].text,
+          });
+        }
+        return data;
+      }
+      print(days);
+      var ops = toJson(formAnswer);
+      Map<String,dynamic> finalBody (){
+        return ({
+          "expected_time_by_day_to_finish":days,
+          "form_data": ops,
+        });
+      }
+      final body = jsonEncode(finalBody());
+      print(body);
+      Response response = await post(Uri.parse("${Server.host}${Server.makeOrder}$serviceId"),
+        headers: {
+          "Authorization": 'token ${user.token}',
+          'Content-Type': 'application/json',
+        },
+        body:body,
+      );
+      if(response.statusCode == 200){
+        print(200);
+        print(jsonDecode(response.body));
+        List op = ['done'];
+        return op;
+      } else {
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+        List op = [];
+        return op;
+      }
+    } catch (e){
+      print(e);
+      List op = [];
+      return op;
+    }
+  }
 }

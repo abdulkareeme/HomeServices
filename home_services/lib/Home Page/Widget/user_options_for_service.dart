@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Home%20Page/get_user_details.dart';
-import '../Main Classes/service.dart';
-import '../style/service_details_style.dart';
+import 'package:home_services/Home%20Page/Order%20Service/get_ordered_service_forms.dart';
+import 'package:home_services/Home%20Page/Widget/get_user_details.dart';
+import 'package:home_services/Main%20Classes/service.dart';
+import 'package:home_services/style/service_details_style.dart';
+
 
 class UserOptionForService extends StatelessWidget {
   ServiceDetails service;
@@ -159,7 +161,10 @@ class UserOptionForService extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                   onPressed: (){
-
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetOrderedServiceForm(
+                      user:user,
+                      id: service.id,
+                    )));
                   },
                   child: const Text("شراء الخدمة",style: TextStyle(
                       fontSize: 17

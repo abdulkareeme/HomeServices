@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Api/home_page_api.dart';
-import 'package:home_services/Home%20Page/user_details.dart';
+import 'package:home_services/Home%20Page/Widget/user_details.dart';
+
 
 class GetUserDetails extends StatelessWidget {
   String username;

@@ -15,4 +15,10 @@ class Server{
   static const String updateServiceMainData= "services/retrieve_update_home_service/";
   static const String updateServiceForm= "services/update_form_home_service/";
   static const String getUserDetails = "api/user/";
+  static const String makeOrder= "services/order_service/";
+  static const String orderServiceForm = "services/order_service/";
+  static const String mySentOrder = "services/my_orders";
+  static const String myReceivedOrder = "services/received_orders";
+  static const String deleteOrder = "services/cancel_order/";
+  static const String firstRejectForOrder = "services/reject_order/";
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/user_profile/list_my_services/fetch_service_detail.dart';
 import 'package:home_services/user_profile/list_my_services/service_item.dart';
 
-import '../user_profile/list_my_services/fetch_service_detail.dart';
 // ignore: must_be_immutable
 class Services extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables

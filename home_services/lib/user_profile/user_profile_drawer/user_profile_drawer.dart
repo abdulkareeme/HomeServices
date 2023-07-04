@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/user_profile/Received%20Orders/get_my_received_orders.dart';
+import 'package:home_services/user_profile/Sent%20Orders/get_my_sent_order.dart';
 import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 import 'package:home_services/user_profile/list_my_services/fetch_data.dart';
 import 'package:home_services/user_profile/update_profile/get_area_list.dart';
 import '../../Home Page/Drawer/Widget/drawer_components.dart';
-import '../my_services_requests/my_requests.dart';
 
 // ignore: must_be_immutable
 class UserProfileDrawer extends StatefulWidget{
@@ -93,6 +94,20 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
           ),
         ),
         Visibility(
+          visible: true,
+          child: Padding(
+            padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
+            child:Drawer_component(
+                text: "الطلبات المرسلة",
+                color: Colors.black,
+                icon: Icons.send,
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetMySentOrder(user: widget.user)));
+                },
+                iconColor: Colors.blueGrey),
+          ),
+        ),
+        Visibility(
           visible: (widget.user.mode == "client")? false :true,
           child: Padding(
             padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
@@ -101,7 +116,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 color: Colors.black,
                 icon: Icons.local_offer,
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyRequests()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetMyReceivedOrder(user: widget.user)));
                 },
                 iconColor: Colors.blueGrey),
           ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Api/home_page_api.dart';
+import 'package:home_services/Home%20Page/Widget/services.dart';
 
 import '../../../user_profile/list_my_services/my_services_page.dart';
-import '../../services.dart';
 
 // ignore: must_be_immutable
 class GetThisCategoryServices extends StatelessWidget {

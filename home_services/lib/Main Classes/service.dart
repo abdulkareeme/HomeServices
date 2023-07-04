@@ -18,6 +18,14 @@ class Service{
       this.category,
       this.areaList,
       );
+  factory Service.orderService(
+      String title,seller,
+      Category category,
+      int hourPrice,
+      List<Area>areaList,
+      ){
+    return Service(0, title, 0.0, "", "", seller, hourPrice, category, areaList);
+  }
 }
 class ServiceDetails extends Service{
   late int numberOfClients;
