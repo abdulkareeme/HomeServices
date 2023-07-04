@@ -51,7 +51,7 @@ class HomeServiceSimpleSpectacular(serializers.Serializer):
     title = serializers.CharField()
     category = serializers.CharField()
 
-class RetrieveRatingsSpectacular(serializers.Serializer):
+class RetrieveRatingsSpectacularForUsername(serializers.Serializer):
     id = serializers.IntegerField()
     quality_of_service = serializers.FloatField(required=True)
     commitment_to_deadline = serializers.FloatField(required=True)

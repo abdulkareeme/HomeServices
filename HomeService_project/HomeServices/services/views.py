@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.db.models import Q ,Avg ,F , Sum
 from django.db import transaction
 from datetime import datetime , timedelta
-from .spectacular import ListOrdersSpectacular ,MakeOrderSpectacular ,SellerCommentSpectacular , RetrieveRatingsSpectacular
+from .spectacular import ListOrdersSpectacular ,MakeOrderSpectacular ,SellerCommentSpectacular , RetrieveRatingsSpectacular ,RetrieveRatingsSpectacularForUsername
 from django_q.tasks import async_task
 from datetime import datetime, timedelta
 from django_q.tasks import schedule
@@ -130,14 +130,14 @@ class ListHomeServices(generics.ListAPIView):
         else:
             area = [self.request.user.area]
         if 'username' in self.request.GET:
-            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
+            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).order_by('-average_ratings')
         if 'category' in self.request.GET and 'title' in self.request.GET:
-            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),category__name = self.request.GET.get('category'),service_area__in =area ).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
+            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),category__name = self.request.GET.get('category'),service_area__in =area ).order_by('-average_ratings')
         if 'title' in self.request.GET :
-            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),service_area__in =area).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
+            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),service_area__in =area).order_by('-average_ratings')
         if 'category' in self.request.GET:
-            return HomeService.objects.filter(category__name = self.request.GET.get('category'),service_area__in =area).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
-        return HomeService.objects.filter(service_area__in =area).exclude(seller = self.request.user.normal_user).order_by('-average_ratings')
+            return HomeService.objects.filter(category__name = self.request.GET.get('category'),service_area__in =area).order_by('-average_ratings')
+        return HomeService.objects.filter(service_area__in =area).order_by('-average_ratings')
 
 @extend_schema(
     responses={200:RetrieveHomeServices}
@@ -487,7 +487,7 @@ class ListRatingsByService(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
 @extend_schema(
-    responses={200:RetrieveRatingsSpectacular(many=True)}
+    responses={200:RetrieveRatingsSpectacularForUsername(many=True)}
 )
 class ListRatingsByUsername(APIView):
     def get(self , request , username):
