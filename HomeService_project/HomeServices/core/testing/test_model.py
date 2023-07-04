@@ -25,4 +25,4 @@ class TestUserModel(TestCase):
         response_female = User.objects.last()
 
         assert response_male.photo.url == '/media/profile/Male.jpg'
-        assert response_female.photo.url == '/media/profile/Male.jpg'
+        assert response_female.photo.url == '/media/profile/Female.jpg'
