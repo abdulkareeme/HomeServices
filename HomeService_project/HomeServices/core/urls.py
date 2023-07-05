@@ -18,4 +18,5 @@ urlpatterns = [
     path('my_balance', views.RetrieverMyBalance.as_view() ),
     path('send_forget_password_code' , views.SendForgetPasswordCode.as_view() ),
     path('forget_password_reset', views.ForgetPasswordReset.as_view()),
+    path('check_forget_password_code',views.CheckForgetPasswordCode.as_view()),
 ]

@@ -20,6 +20,8 @@ class User(AbstractUser):
     resend_tries = models.IntegerField(default=3 , blank=True)
     next_confirmation_code_sent = models.DateTimeField(blank=True , null=True)
 
+    forget_confirmation_tries = models.IntegerField(default=3 ,blank=True)
+    forget_next_confirm_try = models.DateTimeField(blank=True , null=True)
     forget_password_code = models.CharField(blank=True , null=True, max_length=6)
 
     def save(self, *args, **kwargs):

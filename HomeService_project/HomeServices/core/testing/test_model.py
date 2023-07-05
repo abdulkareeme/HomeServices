@@ -15,7 +15,7 @@ class TestUserModel(TestCase):
     def test_create_user(self , username):
         user = mixer.blend(User , username= username)
         response = User.objects.last()
-        assert response.username == user.username
+        assert response.username == username
     
     def test_photo(self):
         mixer.blend(User , gender = 'Male')
@@ -26,3 +26,7 @@ class TestUserModel(TestCase):
 
         assert response_male.photo.url == '/media/profile/Male.jpg'
         assert response_female.photo.url == '/media/profile/Female.jpg'
+    
+# class TestNormalUserModel(TestCase):
+#     def test_create_normal_user(self):
+        
