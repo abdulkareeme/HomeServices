@@ -8,7 +8,7 @@ from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import status , generics ,permissions
 from .models import Balance
-from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular,ForgetPasswordResetSpectacular
+from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular,ForgetPasswordResetSpectacular ,CheckForgetPasswordSpectacular
 from .models import NormalUser ,User
 from services.serializers import Area,AreaSerializer
 from django.contrib.auth.hashers import make_password
@@ -403,7 +403,10 @@ class ForgetPasswordReset(APIView):
         user.forget_password_code=None
         user.save()
         return Response({'message': 'Password updated successfully.'}, status=status.HTTP_200_OK)
-
+@extend_schema(
+    request=CheckForgetPasswordSpectacular,
+    responses={200:None , 400:None , 404:None}
+)
 class CheckForgetPasswordCode(APIView):
     serializer_class = CheckForgetPasswordSerializer
     def post(self, request):
