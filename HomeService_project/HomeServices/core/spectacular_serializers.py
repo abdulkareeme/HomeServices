@@ -49,3 +49,7 @@ class ForgetPasswordResetSpectacular(serializers.Serializer):
     forget_password_code = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
     new_password2= serializers.CharField(required=True)
+
+class CheckForgetPasswordSpectacular(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    forget_password_code = serializers.CharField(required=True)
