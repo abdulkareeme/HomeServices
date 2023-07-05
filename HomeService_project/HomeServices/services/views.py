@@ -296,7 +296,7 @@ class MakeOrderService(APIView):
         return Response("Success", status=status.HTTP_200_OK)
 
 class CancelOrder(APIView):
-    parser_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
         responses={401:None , 204:None ,404:None , 403:None}
     )

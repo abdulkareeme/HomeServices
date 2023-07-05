@@ -184,10 +184,50 @@ class ForgetPasswordResetSerializer(serializers.Serializer):
         return value
     def validate_forget_password_code(self, value):
         user = self.context['user']
-        if user.forget_password_code is None or user.forget_password_code != value :
-            raise serializers.ValidationError("Wrong code please try again")
-        return value
+        if user.forget_next_confirm_try is None or user.forget_next_confirm_try <= timezone.now() :
+            user.forget_confirmation_tries = 3
+            user.forget_next_confirm_try = timezone.now() + timedelta(hours=24)
+            user.save()
+
+        if user.forget_confirmation_tries == 0 :
+            raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
+
+        else :
+            if user.forget_password_code is not None and user.forget_password_code == value :
+                return value
+            user.forget_confirmation_tries -=1
+            user.save()
+            if user.forget_confirmation_tries ==0 :
+                user.forget_next_confirm_try = timezone.now() + timedelta(hours=24)
+                user.save()
+                raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
+            raise serializers.ValidationError("Wrong code please try again 🙃")
+        
     def validate(self, attrs):
-        if attrs['new_password'] != attrs['new_password2'] :
+        if 'new_password' not in attrs or 'new_password2' not in attrs or attrs['new_password'] != attrs['new_password2'] :
             raise serializers.ValidationError({"password": "New password fields didn't match."})
         return super().validate(attrs)
+
+class CheckForgetPasswordSerializer(serializers.Serializer):
+    forget_password_code = serializers.CharField(required=True)
+
+    def validate_forget_password_code(self, value):
+        user = self.context['user']
+        if user.forget_next_confirm_try is None or user.forget_next_confirm_try <= timezone.now() :
+            user.forget_confirmation_tries = 3
+            user.forget_next_confirm_try = timezone.now() + timedelta(hours=24)
+            user.save()
+
+        if user.forget_confirmation_tries == 0 :
+            raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
+
+        else :
+            if user.forget_password_code is not None and user.forget_password_code == value :
+                return value
+            user.forget_confirmation_tries -=1
+            user.save()
+            if user.forget_confirmation_tries ==0 :
+                user.forget_next_confirm_try = timezone.now() + timedelta(hours=24)
+                user.save()
+                raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
+            raise serializers.ValidationError("Wrong code please try again 🙃")

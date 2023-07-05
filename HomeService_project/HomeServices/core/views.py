@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken
-from .serializers import RegisterSerializer, UserConfirmEmailSerializer , NormalUserSerializer , ListUsersSerializer , PasswordResetSerializer ,UpdateNormalUser ,ForgetPasswordResetSerializer
+from .serializers import RegisterSerializer, UserConfirmEmailSerializer , NormalUserSerializer , ListUsersSerializer , PasswordResetSerializer ,UpdateNormalUser ,ForgetPasswordResetSerializer ,CheckForgetPasswordSerializer
 from rest_framework.views import APIView
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
@@ -335,19 +335,33 @@ class RetrieverMyBalance(APIView):
         return Response({"total_balance": request.user.normal_user.balance.total_balance})
 
 def send_process_forget_password(user):
-    user.forget_password_code = str(random.randint(100000, 999999))
-    user.save()
 
+
+    if user.next_confirmation_code_sent is None or user.next_confirmation_code_sent <= timezone.now() :
+        user.resend_tries = 3
+        user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
+        user.save()
+
+    if user.resend_tries == 0 :
+        return Response({"detail":f"Can't send , try again after {user.next_confirmation_code_sent - timezone.now()}"} ,status=status.HTTP_400_BAD_REQUEST)
+
+
+    user.resend_tries -=1
+    user.forget_password_code = str(random.randint(100000, 999999))
+    user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
+    user.save()
     subject = 'Reset your password'
     message = f'Please use the following 6-digit code to reset your password: {user.forget_password_code}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [user.email,]
     send_mail(subject, message, email_from, recipient_list)
     return Response({"detail":"Code sent successfully , Please check your email inbox"} , status=status.HTTP_200_OK)
+
 @extend_schema(
     request=ResendCodeEmailSpectacular,
     responses={200:None , 400:None , 404: None , 500:None}
 )
+
 class SendForgetPasswordCode(APIView):
     def post(self , request):
         if 'email' not in request.data :
@@ -389,3 +403,25 @@ class ForgetPasswordReset(APIView):
         user.forget_password_code=None
         user.save()
         return Response({'message': 'Password updated successfully.'}, status=status.HTTP_200_OK)
+
+class CheckForgetPasswordCode(APIView):
+    serializer_class = CheckForgetPasswordSerializer
+    def post(self, request):
+        if 'email' not in request.data :
+            return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        try:
+            validate_email( request.data['email'] )
+        except ValidationError:
+            return Response({"email":["Please input a valid email"]} , status=status.HTTP_400_BAD_REQUEST)
+        try :
+            user= User.objects.get(email= request.data['email'])
+        except User.DoesNotExist :
+            return Response({"detail":"Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data, context={'user': user})
+
+        serializer.is_valid(raise_exception=True)
+        return Response("👍")
+        
+
