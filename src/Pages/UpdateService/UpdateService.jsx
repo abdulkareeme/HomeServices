@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./update-service.css";
 import { deleteFromAPI, putToAPI } from "../../api/FetchFromAPI";
 import { setUserTotalInfo } from "../../Store/homeServiceSlice";
+import swal from "sweetalert";
 const updateServicSchema = Yup.object().shape({
   title: Yup.string()
     .required("لم تدخل عنوان الخدمة بعد")
@@ -132,15 +133,23 @@ const UpdateService = () => {
       console.log(err);
     }
   };
+  const handleShowAlert = () => {
+    swal({
+      title: "هل تريد حذف الخدمة",
+      text: "سيؤدي حذف الخدمة إلى حذف كافة المعلومات المرتبطة بها. هل أنت متأكد من رغبتك في الاستمرار في عملية الحذف؟",
+      icon: "warning",
+      buttons: ["إلغاء", "تأكيد"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        deleteHandler();
+      }
+    });
+  };
   const deleteHandler = async () => {
     setIsSubmitting(1);
-    toast("يتم الآن حذف الخدمة", {
-      duration: 3000,
-      position: "top-center",
-      ariaProps: {
-        role: "status",
-        "aria-live": "polite",
-      },
+    swal({
+      title: "الرجاء الانتظار بينما يتم حذف الخدمة",
     });
     try {
       let bearer = `token ${userToken}`;
@@ -149,14 +158,9 @@ const UpdateService = () => {
           Authorization: bearer,
         },
       });
-      updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
-      toast("تم حذف الخدمة بنجاح", {
-        duration: 3000,
-        position: "top-center",
-        ariaProps: {
-          role: "status",
-          "aria-live": "polite",
-        },
+      await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
+      swal("تم حذف الخدمة بنجاح", {
+        icon: "success",
       });
       setIsSubmitting(0);
       setTimeout(() => {
@@ -171,7 +175,7 @@ const UpdateService = () => {
           <h3>تعديل الخدمة</h3>
           <button
             hidden={isSubmitting}
-            onClick={() => deleteHandler()}
+            onClick={() => handleShowAlert()}
             className="delete"
           >
             حذف الخدمة
@@ -194,7 +198,7 @@ const UpdateService = () => {
           initialValues={initialValues}
           validationSchema={updateServicSchema}
         >
-          {({ values, handleChange, setSubmitting, errors, touched }) => (
+          {({ values, handleChange, errors, touched }) => (
             <Container>
               <form
                 className={`add-service`}
@@ -345,7 +349,7 @@ const UpdateService = () => {
                       </Fragment>
                     );
                 })}
-                {formDataList.length <= 10 ? (
+                {formDataList.length < 10 ? (
                   <div
                     className="add"
                     type="submit"

@@ -86,18 +86,56 @@ section.confirm-email {
 }
 
 section.confirm-email .container {
-  /* height: 100vh; */
   text-align: center;
 }
 
 .resend-code {
   font-size: 15px;
-  /* transform: translateX(100%); */
 }
 
 .resend-code span {
   cursor: pointer;
   color: #2caae2;
+}
+
+input {
+  border: 1px solid #aaafb9;
+  font-size: 15px;
+  width: 100%;
+  background-color: #f7f9fc;
+  line-height: 1.25;
+  padding: 10px 15px;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input+p, textarea+p {
+  color: #e20e0e;
+  font-size: 12px;
+  margin: 5px 0;
+}
+
+.error {
+  border: 1px solid #e20e0e !important;
+}
+
+label {
+  font-size: 17px;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 15px;
+}
+
+label span {
+  color: #e20e0e;
 }
 
 .my-btn {
@@ -114,6 +152,12 @@ section.confirm-email .container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.disable {
+  user-select: none;
+  cursor: not-allowed !important;
+  background-color: #2cabe25d !important;
 }
 
 .swal-text {

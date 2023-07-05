@@ -19,7 +19,6 @@ const ConfirmEmail = () => {
       }, 3000);
   }, []);
   const resendCode = () => {
-    console.log(userInputValue.email);
     setIsSubmitting(true);
     toast("يتم اعادة ارسال رمز التخقق بنجاح", {
       duration: 3000,
@@ -56,8 +55,8 @@ const ConfirmEmail = () => {
           <h3>شكراً لتسجيلك في موقعنا</h3>
           <p className="fs-5">
             {" "}
-            يرجى التحقق من صندوق البريد الوارد والعثور على بريدنا الإلكتروني
-            الذي يحتوي على رمز التحقق
+            يرجى التحقق من صندوق البريد الوارد والعثور على بريدك الإلكتروني الذي
+            يحتوي على رمز التحقق
           </p>
           <VerificationCodeInput />
           <div className="resend-code d-flex gap-1">

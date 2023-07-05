@@ -1,5 +1,5 @@
 import { ErrorMessage, Formik } from "formik";
-import { Fragment, useState } from "react";
+import { Fragment, memo, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import * as Yup from "yup";
 import CategorySelect from "../../Components/CategorySelect";
@@ -17,20 +17,17 @@ const addServicSchema = Yup.object().shape({
   title: Yup.string()
     .required("لم تدخل عنوان الخدمة بعد")
     .matches(
-      /^[\u0621-\u064A]+$/,
+      /^[\u0621-\u064A\s]+$/,
       "أدخل عنوان باللغة العربية ولا يحوي رموز أو أرقام"
     ),
   description: Yup.string()
     .required("لم تدخل وصف الخدمة بعد")
     .matches(
-      /^[\u0621-\u064A]+$/,
-      "أدخل الوصف باللغة العربية ولا يحوي رموز أو أرقام"
+      /^[\u0621-\u064A\s.,!?()-]+$/,
+      "أدخل وصف باللغة العربية ولا يحوي رموز أو أرقام"
     )
     .min(10, "الوصف الذي أدخلته قصير جدا")
     .max(500, "الوصف الذي أدخلته كبير جدا"),
-  // areas: Yup.array()
-  //   .required("Array is required")
-  //   .min(1, "Array must have at least 1 item"),
   average_price_per_hour: Yup.string().required("لم تدخل سعر الخدمة بعد"),
 });
 const AddService = () => {
@@ -48,8 +45,8 @@ const AddService = () => {
   }
   const history = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(0);
-  const [areasServiceList, setAreasServiceList] = useState(0);
-  const [categoryService, setCategoryService] = useState(0);
+  const [areasServiceList, setAreasServiceList] = useState([]);
+  const [categoryService, setCategoryService] = useState(null);
   const [page, setPage] = useState(0);
   const [formDataList, setFormDataList] = useState([
     {
@@ -113,12 +110,13 @@ const AddService = () => {
     };
     let bearer = `token ${userToken}`;
     try {
-      const res = await postToAPI("services/create_service", values, {
+      setIsSubmitting(0);
+      await postToAPI("services/create_service", values, {
         headers: {
           Authorization: bearer,
         },
       });
-      console.log(res);
+      setIsSubmitting(1);
       updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
       toast.success("تم اضافة الخدمة بنجاح", {
         duration: 3000,
@@ -138,7 +136,7 @@ const AddService = () => {
     <section className="add-service d-flex justify-content-center align-items-center">
       <Toaster />
       <Formik initialValues={initialValues} validationSchema={addServicSchema}>
-        {({ values, handleChange, setSubmitting, errors, touched }) => (
+        {({ values, handleChange, handleBlur, isValid, errors, touched }) => (
           <Container className="d-flex justify-content-center align-items-center">
             <form
               className={`add-service ${page === 1 ? "hidden" : ""}`}
@@ -157,6 +155,7 @@ const AddService = () => {
                   name="title"
                   type="text"
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   value={values.title}
                 />
                 <p>
@@ -186,13 +185,20 @@ const AddService = () => {
                   <span>*</span>
                 </label>
                 <textarea
+                  className={`${
+                    touched.description && errors.description ? "error " : null
+                  }`}
                   name="description"
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   id=""
                   rows="9"
                 >
                   {values.description}
                 </textarea>
+                <p>
+                  <ErrorMessage name="description" />
+                </p>
               </div>
               <div className="price">
                 <label>
@@ -209,10 +215,31 @@ const AddService = () => {
                   name="average_price_per_hour"
                   type="number"
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   value={values.average_price_per_hour}
                 />
+                <p>
+                  <ErrorMessage name="average_price_per_hour" />
+                </p>
               </div>
-              <div className="next" onClick={() => setPage(1)}>
+              <div
+                className={
+                  !isValid ||
+                  (!touched.title &&
+                    !touched.description &&
+                    !touched.average_price_per_hour)
+                    ? "next disable"
+                    : "next"
+                }
+                onClick={() => {
+                  !isValid ||
+                  (!touched.title &&
+                    !touched.description &&
+                    !touched.average_price_per_hour)
+                    ? setPage(0)
+                    : setPage(1);
+                }}
+              >
                 التالي
               </div>
             </form>
@@ -345,4 +372,4 @@ const AddService = () => {
   );
 };
 
-export default AddService;
+export default memo(AddService);

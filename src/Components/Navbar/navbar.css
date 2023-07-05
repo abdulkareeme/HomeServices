@@ -11,12 +11,29 @@
   width: 100vw;
   left: 0;
   top: 0;
-  z-index: 666;
+  z-index: 222;
 }
 
 .navbar-container {
   display: flex;
   justify-content: space-between !important;
+}
+
+.navbar .container .nav-item ul button {
+  border: 1px solid white;
+  padding: 10px;
+  background-color: transparent;
+  color: white;
+  transition: 0.4s;
+}
+
+.navbar .container .nav-item ul button ion-icon {
+  font-size: 20px;
+}
+
+.navbar .container .nav-item ul button:hover {
+  background-color: white;
+  color: #444444;
 }
 
 .navbar-brand>ion-icon {
@@ -26,8 +43,16 @@
 }
 
 .offcanvas {
-  margin-top: 60px !important;
   width: 280px !important;
+}
+
+.offcanvas .head {
+  padding: 20px;
+}
+
+.offcanvas .head ion-icon {
+  font-size: 30px;
+  cursor: pointer;
 }
 
 .offcanvas-backdrop {

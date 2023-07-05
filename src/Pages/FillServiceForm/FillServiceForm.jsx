@@ -86,6 +86,36 @@ const FillServiceForm = () => {
     } catch (err) {
       setIsSubmitting(0);
       console.log(err);
+      if (err.response.data?.expected_time_by_day_to_finish) {
+        toast.error("الرجاء ادخال قيمة مدة الانتهاء بين 1 و 90 يوم", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+      } else if (err.response.data?.length > 0) {
+        toast.error("الرجاء ملئ جميع الحقول", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+      } else if (
+        err.response.data.detail === "you have already ordered this service"
+      ) {
+        toast.error("لقد طلبت هذه الخدمة سابقا راجع قسم الطلبات المرسلة", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+      }
     }
     console.log(answerData);
   };
@@ -100,7 +130,11 @@ const FillServiceForm = () => {
               {formQuestions?.map((item, index) => (
                 <div key={index} className="question">
                   <label htmlFor="">{item.title}</label>
-                  <input ref={inputRefs[index]} type={item.field_type} />
+                  <input
+                    required
+                    ref={inputRefs[index]}
+                    type={item.field_type}
+                  />
                   {item.note.length > 0 ? <p>{item.note}</p> : null}
                 </div>
               ))}

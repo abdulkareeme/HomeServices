@@ -120,6 +120,7 @@ const statusObj = {
   Pending: { label: "جاري الطلب", color: "yellow" },
   Rejected: { label: "مرفوض", color: "#e20e0e" },
   Underway: { label: "جاري التنفيذ", color: "#ffaf1d" },
+  "Under review": { label: "قيد المراجعة", color: "#ffaf1d" },
 };
 
 export const handleRateStars = (avg) => {

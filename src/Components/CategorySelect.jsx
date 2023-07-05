@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchFromAPI } from "../api/FetchFromAPI";
@@ -53,7 +52,7 @@ const CategorySelect = ({ read = false, value = null, setCategoryService }) => {
   return (
     <Select
       isDisabled={read}
-      value={defaultValue}
+      defaultValue={defaultValue}
       options={options}
       placeholder="اختر تصنيف"
       styles={customStyles}

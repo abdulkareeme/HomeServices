@@ -42,9 +42,6 @@ form.register-1 input:focus {
     outline: none;
 }
 
-.error {
-    border: 1px solid #e20e0e;
-}
 
 form.register-1 input+p,
 form.register-1 div+p {
@@ -86,12 +83,6 @@ form.register-2 .prev {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-form.register-1 .next.disable {
-    cursor: not-allowed;
-    background-color: #2cabe25d;
-
 }
 
 form.register-1 .next {

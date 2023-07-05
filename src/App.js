@@ -22,6 +22,9 @@ import { Toaster } from "react-hot-toast";
 import FilterResults from "./Pages/FilterResults/FilterResults";
 import SearchResults from "./Pages/SearchResults/SearchResults";
 import SellerRates from "./Pages/SellerRates/SellerRates";
+import ForgetPassword from "./Pages/ForgetPassword/ForgetPassword";
+import VerificationEmail from "./Pages/VerificationEmail/VerificationEmail";
+import ResetPassword from "./Pages/ResetPassword/ResetPassord";
 const Home = lazy(() => import("./Pages/Home"));
 const ConfirmEmail = lazy(() => import("./Pages/ConfirmEmail"));
 const SellerServices = lazy(() =>
@@ -57,6 +60,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/loader" element={<Loader />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forget_password" element={<ForgetPassword />} />
+          <Route
+            path="/forget_password/confirm"
+            element={<VerificationEmail />}
+          />
+          <Route path="/forget_password/reset" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/confirm_email" element={<ConfirmEmail />} />
           <Route path="/user/:username" element={<UserProfile />} />

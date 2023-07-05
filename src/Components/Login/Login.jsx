@@ -1,12 +1,12 @@
 import { ErrorMessage, Formik } from "formik";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { ClipLoader } from "react-spinners";
 import { Toaster, toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setUserInputValue,
   setUserToken,
@@ -28,9 +28,6 @@ const SignInSchema = Yup.object().shape({
 const Login = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
-  // const { userTotalInfo, userToken } = useSelector(
-  //   (state) => state.homeService
-  // );
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(0);
   const initialValues = { email: "", password: "" };
@@ -169,12 +166,17 @@ const Login = () => {
                 data-testid="loader"
               />
             </button>
-            <span>
-              لا تملك حساب ؟
-              <Link className="text-decoration-none" to="/register">
-                سجل الآن
+            <div className="d-flex justify-content-between align-items-center">
+              <Link className="text-decoration-none" to="/forget_password">
+                نسيت كلمة المرور ؟
               </Link>
-            </span>
+              <span>
+                لا تملك حساب ؟
+                <Link className="text-decoration-none" to="/register">
+                  سجل الآن
+                </Link>
+              </span>
+            </div>
           </form>
         )}
       </Formik>

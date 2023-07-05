@@ -27,7 +27,6 @@ const NavBar = () => {
   );
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const handleToggle = () => setShow(!show);
   useEffect(() => {
     const storedUser = localStorage.getItem("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
@@ -41,8 +40,6 @@ const NavBar = () => {
       });
     }
   }, [dispatch]);
-  //! doesn't work yet
-  // when I submit a search word this function will fire to close Offcanvas
   useEffect(() => {
     if (flagToClose) setShow(false);
   }, [flagToClose]);
@@ -56,7 +53,7 @@ const NavBar = () => {
       <Container className="d-flex justify-content-between">
         <Navbar.Brand className="d-flex gap-3" to="/">
           <ion-icon
-            onClick={handleToggle}
+            onClick={() => setShow(true)}
             className="menu-icon"
             name="menu"
           ></ion-icon>
@@ -73,7 +70,7 @@ const NavBar = () => {
                   onClick={() => setShow(false)}
                   to={navItem.link}
                 >
-                  <button className="my-btn d-flex gap-2 align-items-center">
+                  <button className="d-flex gap-2 align-items-center">
                     {navItem.icon}
                     <span className="fs-6">{navItem.label}</span>
                   </button>
@@ -84,6 +81,15 @@ const NavBar = () => {
         </ul>
       </Container>
       <Offcanvas placement="end" show={show}>
+        <div className="head d-flex gap-3">
+          <ion-icon
+            onClick={() => setShow(false)}
+            className="menu-icon"
+            name="menu"
+          ></ion-icon>
+          <h1 className="m-0 fs-4">منزلي</h1>
+        </div>
+        <hr />
         <Offcanvas.Body>
           <SearchBar type="outlined" goto="page" />
           <hr />
@@ -117,6 +123,7 @@ const NavBar = () => {
                     className="text-decoration-none text-black d-flex gap-2 align-items-center"
                     onClick={() => setShow(false)}
                     key={index}
+                    to={canvasItem.link}
                   >
                     {canvasItem.icon}
                     <span>{canvasItem.label}</span>

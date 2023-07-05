@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
 import "./verification-code-input.css";
 import { postToAPI } from "../../api/FetchFromAPI";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { setUserTotalInfo } from "../../Store/homeServiceSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 const VerificationCodeInput = () => {
   const { userInputValue } = useSelector((state) => state.homeService);
-  const dispatch = useDispatch();
+  const [forgetPassEmail, setForgetPassEmail] = useState(false);
   const history = useNavigate();
+  const { pathname } = useLocation();
   const inputRefs = [
     useRef(null),
     useRef(null),
@@ -130,11 +131,85 @@ const VerificationCodeInput = () => {
       alert("Wrong fill!");
     }
   };
+  const handleSubmitForForgetPassword = (e) => {
+    e.preventDefault();
+    if (checkFields()) {
+      console.log(getCode());
+      const confirmData = {
+        forget_password_code: getCode(),
+        email: forgetPassEmail,
+      };
+      toast("الرجاء الانتظار بينما يتم التحقق من الكود", {
+        duration: 3000,
+        position: "top-center",
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
+      });
+      postToAPI("api/check_forget_password_code", confirmData)
+        .then((res) => {
+          toast.success(
+            "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى صفحة تعيين كلمة المرور",
+            {
+              duration: 5000,
+              position: "top-center",
+              ariaProps: {
+                role: "status",
+                "aria-live": "polite",
+              },
+            }
+          );
+          history("/forget_password/reset");
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.data.detail === "Wrong code please try again") {
+            toast.error("رمز التحقق غير صحيح", {
+              duration: 3000,
+              position: "top-center",
+              ariaProps: {
+                role: "status",
+                "aria-live": "polite",
+              },
+            });
+          } else if (err.response.data.detail === "Email already verified") {
+            toast.error("هذا البريد مفعل مسبقا", {
+              duration: 3000,
+              position: "top-center",
+              ariaProps: {
+                role: "status",
+                "aria-live": "polite",
+              },
+            });
+          } else if (err.response.data.detail.includes("Try again")) {
+            toast.error("حاول مجددا بعد 24 ساعة", {
+              duration: 3000,
+              position: "top-center",
+              ariaProps: {
+                role: "status",
+                "aria-live": "polite",
+              },
+            });
+          }
+        });
+    } else {
+      alert("Wrong fill!");
+    }
+  };
   useEffect(() => {
+    setForgetPassEmail(localStorage.getItem("forgetPassEmail"));
     inputRefs[inputRefs.length - 1].current.focus();
   }, []);
   return (
-    <form className="verification-code-form" onSubmit={handleSubmit}>
+    <form
+      className="verification-code-form"
+      onSubmit={(e) => {
+        pathname.includes("forget_password")
+          ? handleSubmitForForgetPassword(e)
+          : handleSubmit(e);
+      }}
+    >
       <div className="verification-code-input">{inputFields}</div>
       <button type="submit">ارسال</button>
     </form>
