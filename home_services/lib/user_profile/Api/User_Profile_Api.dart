@@ -405,6 +405,7 @@ class ProfileApi {
         });
       if(response.statusCode == 200){
         var info = jsonDecode(response.body);
+        print(response.statusCode);
         List<Order?> finalData =[];
         List os = info;
         for(int i=0;i<os.length;i++){
@@ -564,6 +565,108 @@ class ProfileApi {
           }
       );
       if(response.statusCode == 204){
+        print(response.statusCode);
+        List op = ['done'];
+        return op;
+      } else {
+        print(response.statusCode);
+        List op = [];
+        return op;
+      }
+    }catch(e){
+
+    }
+
+  }
+
+  Future<List<Form1>> firstAccept(int id,var user) async{
+    try{
+      Response response = await put(Uri.parse('${Server.host}${Server.firstAcceptanceForOrder}$id'),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        List <Form1> op = [];
+        var info = jsonDecode(response.body);
+        List o = info;
+        for(int i=0;i<o.length;i++){
+          Field ob = Field(
+              (info[i]["field"]["note"] !=null)?utf8.decode(info[i]["field"]["note"].toString().codeUnits):"",
+              (info[i]["field"]["note"] !=null)?utf8.decode(info[i]["field"]["title"].toString().codeUnits):"",
+              info[i]["field"]["field_type"]);
+          Form1 ob1 = Form1(ob, (info[i]["content"] !=null)?utf8.decode(info[i]["content"].toString().codeUnits):"",);
+          op.add(ob1);
+        }
+        return op;
+      } else {
+        print(response.statusCode);
+        List<Form1> op = [];
+        return op;
+      }
+    }catch(e){
+      print(e);
+      List<Form1> op = [];
+      return op;
+    }
+
+  }
+
+  Future<List?> rejectAfterReview(int id,var user) async{
+    try{
+      Response response = await put(Uri.parse('${Server.host}${Server.rejectOrderAfterReview}$id'),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        List op = ['done'];
+        return op;
+      } else {
+        print(response.statusCode);
+        List op = [];
+        return op;
+      }
+    }catch(e){
+
+    }
+
+  }
+
+  Future<List?> acceptAfterReview(int id,var user) async{
+    try{
+      Response response = await put(Uri.parse('${Server.host}${Server.acceptOrderAfterReview}$id'),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        List op = ['done'];
+        return op;
+      } else {
+        print(response.statusCode);
+        List op = [];
+        return op;
+      }
+    }catch(e){
+      print(e);
+      List op = [];
+      return op;
+    }
+
+  }
+
+  Future<List?> finishOrder(int id,var user) async{
+    try{
+      Response response = await put(Uri.parse('${Server.host}${Server.finishOrder}$id'),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      if(response.statusCode == 200){
         print(response.statusCode);
         List op = ['done'];
         return op;

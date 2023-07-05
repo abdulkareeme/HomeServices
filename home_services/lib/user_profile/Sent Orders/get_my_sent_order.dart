@@ -21,7 +21,6 @@ class GetMySentOrder extends StatelessWidget {
               return MySentOrder(
                 orders: snapshot.data!,
                 user: user,
-                isItReceive: false,
               );
             } else {
               return  AlertDialog(

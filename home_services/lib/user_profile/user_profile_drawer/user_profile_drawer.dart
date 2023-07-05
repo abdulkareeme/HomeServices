@@ -116,10 +116,25 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 color: Colors.black,
                 icon: Icons.local_offer,
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetMyReceivedOrder(user: widget.user)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetMyReceivedOrder(user: widget.user,isItUnderWay: false,)));
                 },
                 iconColor: Colors.blueGrey),
           ),
+        ),
+        Visibility(
+          visible: (widget.user.mode == "client")? false :true,
+          child: Padding(
+            padding: EdgeInsets.only(right:constWidth/20 ,bottom: constHeight/60 ,top: constHeight/60),
+            child:Drawer_component(
+                text: "الطلبات قيد التنفيذ",
+                color: Colors.black,
+                icon: Icons.approval_sharp,
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetMyReceivedOrder(user: widget.user,isItUnderWay: true,)));
+                },
+                iconColor: Colors.blueGrey),
+          ),
+
         ),
         const Divider(
           thickness: 0.5,

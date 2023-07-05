@@ -13,20 +13,23 @@ class OrderItem extends StatefulWidget {
   Order? order;
   List<Form1> forms;
   var user;
-  bool isItReceive;
-  OrderItem({Key? key,required this.order,required this.forms,required this.user,required this.isItReceive}) : super(key: key);
+  var reviceOrderForm;
+
+  OrderItem({Key? key,required this.order,required this.forms,required this.user,this.reviceOrderForm}) : super(key: key);
 
   @override
   State<OrderItem> createState() => _OrderItemState();
+  bool acceptReceiveOrder = true;
+  bool receivedOrderForm = false;
 }
 
 class _OrderItemState extends State<OrderItem> {
   @override
   Widget build(BuildContext context) {
-    for(int i=0;i<widget.forms.length;i++){
+    /*for(int i=0;i<widget.forms.length;i++){
       print(widget.forms[i].field.title);
       print(widget.forms[i].content);
-    }
+    }*/
     return Card(
       elevation: 5,
       child:Row(
@@ -43,13 +46,10 @@ class _OrderItemState extends State<OrderItem> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 20,top: 6),
-                child: (widget.isItReceive == false)? Text(widget.order!.homeService.creatorUserName,style: const TextStyle(
+                child: Text(widget.order!.homeService.creatorUserName,style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500
-                    ),) : Text(widget.order!.clientName,style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500
-                ),),
+                    ),)
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 20,top: 4),
@@ -76,42 +76,23 @@ class _OrderItemState extends State<OrderItem> {
                 onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FormReviewPage(forms: widget.forms)));
               }, child:const Text("مراجعة فورم الطلب")),
-              const SizedBox(height: 5,),
-              (widget.isItReceive == true)? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                      ),
-                      onPressed: (){
 
-                      },
-                      child: const Text("قبول الطلب")),
-                  const SizedBox(width: 10,),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red
-                      ),
-                      onPressed: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder:(context)=> SendFirstReject(user: widget.user, orderId: widget.order!.id)));
-                      },
-                      child: const Text("رفض الطلب")),
-                ],
-              ) :(widget.order!.status != "Rejected")? ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary:Colors.red,
+              const SizedBox(height: 5,),
+              (widget.order!.status != "Rejected")? ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary:Colors.red,
+                    ),
+                    onPressed:(){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CancelOrder(user: widget.user, orderId: widget.order!.id)));
+                    }, child:const Text("التراجع عن الطلب"))
+                  : IgnorePointer(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.grey
+                    ),
+                    onPressed: null , child:const Text("التراجع عن الطلب"),
                   ),
-                  onPressed:(){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CancelOrder(user: widget.user, orderId: widget.order!.id)));
-                  }, child:const Text("التراجع عن الطلب")):IgnorePointer(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.grey
-                  ),
-                  onPressed: null , child:const Text("التراجع عن الطلب"),
                 ),
-              ),
 
             ],
           )

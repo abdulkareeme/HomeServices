@@ -7,8 +7,7 @@ import '../../Main Classes/order.dart';
 class MySentOrder extends StatefulWidget {
   List<Order?> orders;
   var user;
-  bool isItReceive;
-  MySentOrder({Key? key,required this.orders,required this.user,required this.isItReceive}) : super(key: key);
+  MySentOrder({Key? key,required this.orders,required this.user}) : super(key: key);
 
   @override
   State<MySentOrder> createState() => _MySentOrderState();
@@ -22,10 +21,12 @@ class _MySentOrderState extends State<MySentOrder> {
       child: Scaffold(
         body: Directionality(
           textDirection: TextDirection.rtl,
-          child:Column(
-            children: [
-              for(int i=0;i<widget.orders.length;i++)OrderItem(order: widget.orders[i],forms: widget.orders[i]!.formList,user: widget.user,isItReceive: widget.isItReceive),
-            ],
+          child:SingleChildScrollView(
+            child: Column(
+              children: [
+                for(int i=0;i<widget.orders.length;i++)OrderItem(order: widget.orders[i],forms: widget.orders[i]!.formList,user: widget.user),
+              ],
+            ),
           )
         ),
       ),

@@ -47,7 +47,7 @@ class LogInApis {
             'services_number', info['user_info']['services_number'])
         : await pref.setInt('services_number', 0);
     (info['user_info']['average_rating'] != null)
-        ? await pref.setDouble('rating', info['user_info']['average_rating'])
+        ? await pref.setDouble('rating', info['user_info']['average_rating'].toDouble())
         : await pref.setDouble('rating', 0.0);
     await pref.setString('area_name',utf8.decode(info['user_info']['area_name'].toString().codeUnits));
     //print(info['user_info']['area_name']);
@@ -66,6 +66,7 @@ class LogInApis {
       if (response.statusCode == 200) {
         var info = jsonDecode(response.body);
         //print(info);
+        print(info['user_info']['average_rating'].runtimeType);
         if(info['user_info']['mode'] != "client"){
           Seller seller = Seller.noPhoto(
               (info['user_info']['services_number'] != null)
@@ -91,8 +92,8 @@ class LogInApis {
               utf8.decode(info['user_info']["area_name"].toString().codeUnits),
               info['user_info']["bio"],
               (info['user_info']['average_rating'] != null)
-                  ? info['user_info']['average_rating']
-                  : 0);
+                  ? info['user_info']['average_rating'].toDouble()
+                  : 0.0);
           list.add(seller);
         } else {
           User user = User.noPhoto(
@@ -115,6 +116,7 @@ class LogInApis {
         }
         setData(info);
       } else {
+        print(response.statusCode);
         print(jsonDecode(response.body));
         print(response.statusCode);
       }

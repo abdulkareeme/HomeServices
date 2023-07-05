@@ -21,4 +21,8 @@ class Server{
   static const String myReceivedOrder = "services/received_orders";
   static const String deleteOrder = "services/cancel_order/";
   static const String firstRejectForOrder = "services/reject_order/";
+  static const String firstAcceptanceForOrder = "services/accept_order/";
+  static const String rejectOrderAfterReview = "services/reject_after_review/";
+  static const String acceptOrderAfterReview = "services/accept_after_review/";
+  static const String finishOrder = "services/finish_order/";
 }

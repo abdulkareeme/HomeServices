@@ -20,6 +20,8 @@ class LogOutApi{
       );
       if(response.statusCode == 200){
         print(200);
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.clear();
         List op = ['done'];
         return op;
       } else {
