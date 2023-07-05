@@ -130,6 +130,12 @@ def login_api(request):
     data ['username'] = request.data.get('username','')
     data ['password'] = request.data.get('password','')
     if  'username' not in request.data and  'email' in request.data:
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        try:
+            validate_email( request.data['email'] )
+        except ValidationError:
+            return Response({"email":["Please input a valid email"]} , status=status.HTTP_400_BAD_REQUEST)
         try :
             username = User.objects.get(email = request.data['email'])
         except User.DoesNotExist :
@@ -258,7 +264,12 @@ class UserConfirmMessage(APIView):
     def post(self , request):
         if 'email' not in request.data :
             return Response({"email":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
-
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        try:
+            validate_email( request.data['email'] )
+        except ValidationError:
+            return Response({"email":["Please input a valid email"]} , status=status.HTTP_400_BAD_REQUEST)
         if 'confirmation_code' not in request.data:
             return Response({"confirmation_code":["This field is required"]}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -277,6 +288,12 @@ class ResendEmailMessage(APIView):
     def post(self , request):
         if 'email' not in request.data :
             return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        try:
+            validate_email( request.data['email'] )
+        except ValidationError:
+            return Response({"email":["Please input a valid email"]} , status=status.HTTP_400_BAD_REQUEST)
         try :
             user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
@@ -335,6 +352,12 @@ class SendForgetPasswordCode(APIView):
     def post(self , request):
         if 'email' not in request.data :
             return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        try:
+            validate_email( request.data['email'] )
+        except ValidationError:
+            return Response({"email":["Please input a valid email"]} , status=status.HTTP_400_BAD_REQUEST)
         try :
             user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
@@ -350,6 +373,12 @@ class ForgetPasswordReset(APIView):
     def post(self, request):
         if 'email' not in request.data :
             return Response({"email":["This field is required"]} , status=status.HTTP_400_BAD_REQUEST)
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        try:
+            validate_email( request.data['email'] )
+        except ValidationError:
+            return Response({"email":["Please input a valid email"]} , status=status.HTTP_400_BAD_REQUEST)
         try :
             user= User.objects.get(email= request.data['email'])
         except User.DoesNotExist :
