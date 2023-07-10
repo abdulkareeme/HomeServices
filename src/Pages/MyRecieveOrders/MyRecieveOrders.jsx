@@ -7,8 +7,8 @@ import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import swal from "sweetalert";
 import { Toaster, toast } from "react-hot-toast";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
-import Male from "../../Images/Male.jpg";
-
+import moment from "moment";
+import "moment/locale/ar";
 const MyRecieveOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -256,7 +256,7 @@ const MyRecieveOrders = () => {
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4">
-                          <img src={order.photo ? order.photo : Male} alt="" />
+                          <img src={order.photo} alt="profile" />
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
                           <h5 className="m-0">{order.client}</h5>
@@ -290,7 +290,7 @@ const MyRecieveOrders = () => {
                         </div>
                       </div>
                       <div className="date text-muted w-max">
-                        {order.create_date}
+                        {moment(order.create_date).locale("ar").fromNow()}
                       </div>
                     </div>
                   </Col>
@@ -307,7 +307,7 @@ const MyRecieveOrders = () => {
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
-                          <img src={order.photo ? order.photo : Male} alt="" />
+                          <img src={order.photo} alt="profile" />
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
                           <h5 className="m-0">{order.client}</h5>
@@ -351,7 +351,7 @@ const MyRecieveOrders = () => {
                         </div>
                       </div>
                       <div className="date text-muted w-max">
-                        {order.create_date}
+                        {moment(order.create_date).locale("ar").fromNow()}
                       </div>
                     </div>
                   </Col>
@@ -368,7 +368,7 @@ const MyRecieveOrders = () => {
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
-                          <img src={order.photo ? order.photo : Male} alt="" />
+                          <img src={order.photo} alt="profile" />
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
                           <h5 className="m-0">{order.client}</h5>
@@ -407,7 +407,7 @@ const MyRecieveOrders = () => {
                         </div>
                       </div>
                       <div className="date text-muted w-max">
-                        {order.create_date}
+                        {moment(order.create_date).locale("ar").fromNow()}
                       </div>
                     </div>
                   </Col>
@@ -424,7 +424,7 @@ const MyRecieveOrders = () => {
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
-                          <img src={order.photo ? order.photo : Male} alt="" />
+                          <img src={order.photo} alt="profile" />
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
                           <h5 className="m-0">{order.client}</h5>
@@ -448,7 +448,7 @@ const MyRecieveOrders = () => {
                         </div>
                       </div>
                       <div className="date text-muted w-max">
-                        {order.create_date}
+                        {moment(order.create_date).locale("ar").fromNow()}
                       </div>
                     </div>
                   </Col>

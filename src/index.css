@@ -107,7 +107,13 @@ input {
   padding: 10px 15px;
 }
 
-input:focus {
+textarea {
+  width: 100%;
+  background-color: #f7f9fc;
+  border: 1px solid #aaafb9;
+}
+
+input:focus, textarea:focus {
   outline: none;
 }
 
@@ -117,7 +123,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-input+p, textarea+p {
+input+p, textarea+p, div.password div+p, div.password2 div+p {
   color: #e20e0e;
   font-size: 12px;
   margin: 5px 0;
@@ -152,6 +158,28 @@ label span {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.my-btn.disable {
+  opacity: 0.9 !important;
+  cursor: default !important;
+}
+
+button.eye {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button.eye ion-icon {
+  font-size: 25px;
 }
 
 .disable {

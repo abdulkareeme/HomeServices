@@ -9,15 +9,15 @@ import { useDispatch, useSelector } from "react-redux";
 import "./update-profile.css";
 import { format } from "date-fns";
 import { Container, ListGroup } from "react-bootstrap";
-import { fetchFromAPI, putToAPI } from "../../api/FetchFromAPI";
+import { putToAPI } from "../../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import {
-  getUserPhoto,
   isString,
   updateUserTotalInfo,
 } from "../../utils/constants";
 import { useNavigate, useParams } from "react-router-dom";
+import LoaderButton from "../../Components/LoaderButton";
 
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -51,6 +51,7 @@ const UpdateProfile = () => {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(0);
   const fileInputRef = useRef(null);
   const initialValues = {
     first_name: userTotalInfo?.first_name,
@@ -78,6 +79,7 @@ const UpdateProfile = () => {
       },
     };
     console.log(user);
+    setIsSubmitting(1);
     toast("يتم الآن تحديث المعلومات", {
       duration: 3000,
       position: "top-center",
@@ -101,11 +103,13 @@ const UpdateProfile = () => {
             "aria-live": "polite",
           },
         });
+        setIsSubmitting(0);
         setTimeout(() => {
           history(`/user/${username}`);
         }, 3000);
       })
       .catch((err) => {
+        setIsSubmitting(0);
         console.log(err);
       });
   };
@@ -135,10 +139,7 @@ const UpdateProfile = () => {
             >
               <h3>المعلومات الشخصية</h3>
               <div className="image-holder">
-                <img
-                  src={getUserPhoto(imageUrl, userTotalInfo?.gender)}
-                  alt=""
-                />
+                <img src={userTotalInfo?.photo} alt="profile" />
                 <div className="overlay">
                   <ion-icon
                     name="camera"
@@ -261,9 +262,14 @@ const UpdateProfile = () => {
                   </textarea>
                 </div>
               ) : null}
-              <button onClick={() => handleSubmit(values)}>
+              <button
+                className="my-btn"
+                hidden={isSubmitting}
+                onClick={() => handleSubmit(values)}
+              >
                 حفظ التعديلات
               </button>
+              <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
             </form>
           </Container>
         )}

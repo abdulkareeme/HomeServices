@@ -44,9 +44,9 @@ const VerificationEmail = () => {
   return (
     <section className="verification-email mt-6 d-flex justify-content-center align-items-center">
       <Toaster />
-      <Container className="w-100 d-flex flex-column gap-2">
+      <Container className="d-flex flex-column gap-2">
         <h1 className="w-max mx-auto">اعادة تعيين كلمة المرور</h1>
-        <p className="fs-5 w-max mx-auto">
+        <p className="fs-5 w-fit text-center mx-auto">
           {" "}
           يرجى التحقق من صندوق البريد الوارد والعثور على بريدك الإلكتروني الذي
           يحتوي على رمز التحقق

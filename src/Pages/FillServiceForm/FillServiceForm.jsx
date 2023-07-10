@@ -5,13 +5,11 @@ import "./fill-service-form.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Toaster, toast } from "react-hot-toast";
-import { ClipLoader } from "react-spinners";
 import { Fragment } from "react";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
+import LoaderButton from "../../Components/LoaderButton";
 const FillServiceForm = () => {
-  const { userTotalInfo, userToken } = useSelector(
-    (state) => state.homeService
-  );
+  const { userToken } = useSelector((state) => state.homeService);
   console.log(userToken);
   const { id } = useParams();
   const history = useNavigate();
@@ -115,6 +113,21 @@ const FillServiceForm = () => {
             "aria-live": "polite",
           },
         });
+      } else if (
+        err.response.data?.detail ===
+        "You have unrated services please rate it and order again"
+      ) {
+        toast.error("لا يمكنك الشراء لديك خدمة بحاجة الى تقييم أولا", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+        setTimeout(() => {
+          history("/my_order");
+        }, 3000);
       }
     }
     console.log(answerData);
@@ -141,18 +154,7 @@ const FillServiceForm = () => {
               <button hidden={isSubmitting} onClick={() => handleSubmit()}>
                 تقديم الفورم
               </button>
-              <button
-                className="submit"
-                disabled={isSubmitting}
-                hidden={!isSubmitting}
-              >
-                <ClipLoader
-                  color="white"
-                  size={30}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              </button>
+              <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
             </form>
           </Fragment>
         ) : (

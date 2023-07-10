@@ -68,10 +68,7 @@ const UserProfileCard = () => {
           <LoaderContent />
         ) : (
           <Row>
-            <img
-              src={`http://abdulkareemedres.pythonanywhere.com${selectedUser?.photo}`}
-              alt=""
-            />
+            <img src={selectedUser?.photo} alt="profile" />
             <h2>
               <span>
                 {selectedUser?.first_name} {selectedUser?.last_name}

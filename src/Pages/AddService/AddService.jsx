@@ -1,18 +1,18 @@
 import { ErrorMessage, Formik } from "formik";
-import { Fragment, memo, useEffect, useState } from "react";
-import { ClipLoader } from "react-spinners";
+import { Fragment, memo, useState } from "react";
 import * as Yup from "yup";
 import CategorySelect from "../../Components/CategorySelect";
 import "./add-service.css";
 import MultiAreaSelect from "../../Components/MultiAreaSelect";
 import { Container } from "react-bootstrap";
 import TypeSelect from "../../Components/TypeSelect";
-import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
+import { postToAPI } from "../../api/FetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { updateUserTotalInfo } from "../../utils/constants";
+import LoaderButton from "../../Components/LoaderButton";
 const addServicSchema = Yup.object().shape({
   title: Yup.string()
     .required("لم تدخل عنوان الخدمة بعد")
@@ -351,18 +351,7 @@ const AddService = () => {
                 >
                   أضف الخدمة
                 </button>
-                <button
-                  className="submit"
-                  disabled={isSubmitting}
-                  hidden={!isSubmitting}
-                >
-                  <ClipLoader
-                    color="white"
-                    size={30}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                </button>
+                <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
               </div>
             </form>
           </Container>

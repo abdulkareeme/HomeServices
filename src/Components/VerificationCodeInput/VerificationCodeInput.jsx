@@ -133,10 +133,11 @@ const VerificationCodeInput = () => {
   };
   const handleSubmitForForgetPassword = (e) => {
     e.preventDefault();
+    const code = getCode();
     if (checkFields()) {
-      console.log(getCode());
+      console.log(code);
       const confirmData = {
-        forget_password_code: getCode(),
+        forget_password_code: code,
         email: forgetPassEmail,
       };
       toast("الرجاء الانتظار بينما يتم التحقق من الكود", {
@@ -160,21 +161,18 @@ const VerificationCodeInput = () => {
               },
             }
           );
-          history("/forget_password/reset");
+          localStorage.setItem("forgetPassCode", code);
+          setTimeout(() => {
+            history("/forget_password/reset");
+          }, 1000);
         })
         .catch((err) => {
           console.log(err);
-          if (err.response.data.detail === "Wrong code please try again") {
+          if (
+            err.response.data?.forget_password_code[0] ===
+            "Wrong code please try again 🙃"
+          ) {
             toast.error("رمز التحقق غير صحيح", {
-              duration: 3000,
-              position: "top-center",
-              ariaProps: {
-                role: "status",
-                "aria-live": "polite",
-              },
-            });
-          } else if (err.response.data.detail === "Email already verified") {
-            toast.error("هذا البريد مفعل مسبقا", {
               duration: 3000,
               position: "top-center",
               ariaProps: {

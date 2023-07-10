@@ -4,19 +4,6 @@ import NavBar from "./Components/Navbar/Navbar";
 import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import Loader from "./Components/Loader/Loader";
-// import Home from "./Pages/Home";
-// import ConfirmEmail from "./Pages/ConfirmEmail";
-// import SellerServices from "./Pages/SellerServices/SellerServices";
-// import UserProfile from "./Pages/UserProfile/UserProfile";
-// import UpdateProfile from "./Pages/UpdateProfile/UpdateProfile";
-// import Balance from "./Pages/Balance/Balance";
-// import AddService from "./Pages/AddService/AddService";
-// import ServiceDetails from "./Pages/ServiceDetails/ServiceDetails";
-// import UpdateService from "./Pages/UpdateService/UpdateService";
-// import MyServiceOrders from "./Pages/MyServiceOrders/MyServiceOrders";
-// import FillServiceForm from "./Pages/FillServiceForm/FillServiceForm";
-// import ServiceListPage from "./Pages/ServiceListPage/ServiceListPage";
-// import MyRecieveOrders from "./Pages/MyRecieveOrders/MyRecieveOrders";
 import "react-tooltip/dist/react-tooltip.css";
 import { Toaster } from "react-hot-toast";
 import FilterResults from "./Pages/FilterResults/FilterResults";
@@ -24,7 +11,7 @@ import SearchResults from "./Pages/SearchResults/SearchResults";
 import SellerRates from "./Pages/SellerRates/SellerRates";
 import ForgetPassword from "./Pages/ForgetPassword/ForgetPassword";
 import VerificationEmail from "./Pages/VerificationEmail/VerificationEmail";
-import ResetPassword from "./Pages/ResetPassword/ResetPassord";
+import NewPassword from "./Pages/NewPassword/NewPassword";
 const Home = lazy(() => import("./Pages/Home"));
 const ConfirmEmail = lazy(() => import("./Pages/ConfirmEmail"));
 const SellerServices = lazy(() =>
@@ -65,7 +52,7 @@ function App() {
             path="/forget_password/confirm"
             element={<VerificationEmail />}
           />
-          <Route path="/forget_password/reset" element={<ResetPassword />} />
+          <Route path="/forget_password/reset" element={<NewPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/confirm_email" element={<ConfirmEmail />} />
           <Route path="/user/:username" element={<UserProfile />} />

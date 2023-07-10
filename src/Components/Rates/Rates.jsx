@@ -1,9 +1,12 @@
 import { Col, Row } from "react-bootstrap";
-import { BASE_API_URL, handleRateStars } from "../../utils/constants";
+import { handleRateStars } from "../../utils/constants";
 import "./rates.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import LoaderContent from "../LoaderContent/LoaderContent";
+import moment from "moment";
+import "moment/locale/ar";
 const Rates = ({ rates, type }) => {
+  const { username } = useParams();
   return (
     <Col className="rates" lg={type === "page" ? 9 : 7} md={12} xs={12}>
       <h5 className="mb-3">آراء المشترين</h5>
@@ -14,7 +17,11 @@ const Rates = ({ rates, type }) => {
             {type === "page" ? (
               <Row className="mb-3 mt-2">
                 <h5>
-                  <Link to={"/"}>{rate.home_service.title}</Link>
+                  <Link
+                    to={`/user/${username}/services/${rate.home_service.id}`}
+                  >
+                    {rate.home_service.title}
+                  </Link>
                 </h5>
                 <span className="text-muted d-flex gap-2 align-items-center w-max">
                   <ion-icon name="cube"></ion-icon>
@@ -40,7 +47,7 @@ const Rates = ({ rates, type }) => {
             </Row>
             <Row className="mt-3 mb-4 d-flex align-items-center gap-1">
               <Link to={`/user/${rate.client.username}`} className="w-max">
-                <img src={BASE_API_URL + rate.client.photo} alt="" />
+                <img src={rate.client.photo} alt="profile" />
               </Link>
               <div className="info d-flex flex-column w-max gap-2">
                 <Link to={`/user/${rate.client.username}`}>
@@ -53,7 +60,7 @@ const Rates = ({ rates, type }) => {
                   </span>
                   <span className="d-flex align-items-center gap-2 text-muted">
                     <ion-icon name="time"></ion-icon>
-                    {rate.rating_time}
+                    {moment(rate.rating_time).locale("ar").fromNow()}
                   </span>
                 </div>
               </div>

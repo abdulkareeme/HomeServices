@@ -4,8 +4,9 @@ import "./user-profile.css";
 import UserProfileLayout from "../../Components/UserProfileLayout";
 import ServicesList from "../../Components/ServicesList/ServicesList";
 import { handleRateStars } from "../../utils/constants";
-import { useEffect } from "react";
 import { setSelectedUser } from "../../Store/homeServiceSlice";
+import moment from "moment";
+import "moment/locale/ar";
 const UserProfile = () => {
   const { selectedUser } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();

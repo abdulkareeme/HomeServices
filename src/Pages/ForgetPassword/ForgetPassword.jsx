@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Spinner } from "react-bootstrap";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import "./forget-password.css";
 import { ErrorMessage, Formik } from "formik";
+import LoaderButton from "../../Components/LoaderButton";
 
 const EmailSchema = Yup.object().shape({
   email: Yup.string()
@@ -17,7 +17,6 @@ const ForgetPassword = () => {
   const history = useNavigate();
   const initialValues = { email: "" };
   const submitHandler = async (values) => {
-    console.log(values.email);
     try {
       toast("الرجاء الانتظار", {
         duration: 3000,
@@ -78,6 +77,17 @@ const ForgetPassword = () => {
             "aria-live": "polite",
           },
         });
+      } else if (
+        err.response?.data?.detail.includes("Can't send , try again after")
+      ) {
+        toast.error("نفذ العدد المسموح للمحاولات الرجاء المحاولة لاحقا", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
       } else if (err.response.status === 500) {
         toast.error("حصل خطأ غير متوقع الرجاء اعادة المحاولة", {
           duration: 3000,
@@ -121,24 +131,12 @@ const ForgetPassword = () => {
             <button
               className="my-btn"
               type="submit"
-              //   disable={touched.email && errors.email}
               hidden={isSubmitting}
               onClick={() => submitHandler(values)}
             >
               ارسال
             </button>
-            <button
-              className="my-btn"
-              disabled={isSubmitting}
-              hidden={!isSubmitting}
-            >
-              <Spinner
-                as="span"
-                animation="border"
-                role="status"
-                aria-hidden="true"
-              />
-            </button>
+            <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
           </form>
         )}
       </Formik>

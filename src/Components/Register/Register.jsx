@@ -1,5 +1,5 @@
 import { ErrorMessage, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import "./regsiter.css";
@@ -8,13 +8,13 @@ import DatePicker from "react-date-picker";
 import { format } from "date-fns";
 import { postToAPI } from "../../api/FetchFromAPI";
 import AreaSelect from "../AreaSelect";
-import { ClipLoader } from "react-spinners";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
   setIsRegistered,
   setUserInputValue,
 } from "../../Store/homeServiceSlice";
+import LoaderButton from "../LoaderButton";
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
     .required("لم تدخل اسمك بعد")
@@ -377,18 +377,7 @@ const Register = () => {
                 >
                   انضم الى منزلي
                 </button>
-                <button
-                  className="submit"
-                  disabled={isSubmitting}
-                  hidden={!isSubmitting}
-                >
-                  <ClipLoader
-                    color="white"
-                    size={30}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                </button>
+                <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
               </div>
             </form>
           </Container>

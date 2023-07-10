@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import swal from "sweetalert";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
-import { BASE_API_URL, getStatus } from "../../utils/constants";
+import { getStatus } from "../../utils/constants";
 import RatingStars from "../../Components/RatingStars/RatingStars";
 import { toast } from "react-hot-toast";
+import moment from "moment";
+import "moment/locale/ar";
+import LoaderButton from "../../Components/LoaderButton";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -32,6 +35,7 @@ const MyServiceOrders = () => {
   const [deadlineStars, setDeadlineStars] = useState(null);
   const [ethicalStars, setEthicalStars] = useState(null);
   const [rateComment, setRateComment] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(0);
   const formDetails = selectedform?.map((item, index) => (
     <div key={index} className="question">
       <label htmlFor="">{item.field.title}</label>
@@ -62,7 +66,9 @@ const MyServiceOrders = () => {
       work_ethics: ethicalStars,
       client_comment: rateComment,
     };
+    console.log(payload);
     try {
+      setIsSubmitting(1);
       toast("يتم الآن اضافة التقييم", {
         duration: 3000,
         position: "top-center",
@@ -76,6 +82,7 @@ const MyServiceOrders = () => {
           Authorization: `token ${userToken}`,
         },
       });
+      setIsSubmitting(0);
       toast.success("تم اضافة التقييم بنجاح", {
         duration: 3000,
         position: "top-center",
@@ -84,7 +91,11 @@ const MyServiceOrders = () => {
           "aria-live": "polite",
         },
       });
+      setTimeout(() => {
+        handleCloseRateModal();
+      }, 3000);
     } catch (err) {
+      setIsSubmitting(0);
       if (err.responce.data?.detail === "You have already rated this service") {
         toast.wrong("لقد قمت مسبقا باضافة تقييم", {
           duration: 3000,
@@ -164,23 +175,28 @@ const MyServiceOrders = () => {
             <h6 className="w-max">التسليم بالموعد</h6>
             <RatingStars setValue={setDeadlineStars} />
           </Row>
-          <Row className="d-flex justify-content-between">
+          <Row className="d-flex justify-content-between mb-3">
             <h6 className="w-max">أخلاقيات العمل</h6>
             <RatingStars setValue={setEthicalStars} />
           </Row>
-          <Row className="mt-3 d-flex align-items-center gap-2 px-2">
-            <input
-              placeholder="أضف تعليق على الخدمة"
-              type="text"
-              onChange={(e) => setRateComment(e.target.value)}
-            />
+          <textarea
+            placeholder="أضف تعليق على الخدمة"
+            name=""
+            id=""
+            cols="30"
+            rows="5"
+            onChange={(e) => setRateComment(e.target.value)}
+          ></textarea>
+          <div className="d-flex justify-content-end">
             <button
+              hidden={isSubmitting}
               onClick={() => makeRate(selectedRate)}
               className="my-btn add-rate"
             >
               اضافة
             </button>
-          </Row>
+            <LoaderButton isSubmitting={isSubmitting} color="my-btn add-rate" />
+          </div>
         </Modal.Body>
       </Modal>
       <Container>
@@ -197,7 +213,7 @@ const MyServiceOrders = () => {
                   <div className="card my-3 bg-white shadow-sm border-0 rounded">
                     <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                       <div className="image-holder mt-4">
-                        <img src={BASE_API_URL + order?.photo} alt="" />
+                        <img src={order?.photo} alt="" />
                       </div>
                       <div className="d-flex text-center flex-column gap-2">
                         <h5 className="m-0">{order.home_service.seller}</h5>
@@ -226,7 +242,7 @@ const MyServiceOrders = () => {
                       )}
                       <div className="d-flex flex-column align-items-end gap-4">
                         <div className="date text-muted w-max">
-                          {order?.create_date}
+                          {moment(order?.create_date).locale("ar").fromNow()}
                         </div>
                         {order.status === "Pending" ? (
                           <button

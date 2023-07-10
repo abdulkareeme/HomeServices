@@ -19,7 +19,7 @@
   justify-content: space-between !important;
 }
 
-.navbar .container .nav-item ul button {
+.navbar .container ul .nav-item button {
   border: 1px solid white;
   padding: 10px;
   background-color: transparent;
@@ -27,11 +27,11 @@
   transition: 0.4s;
 }
 
-.navbar .container .nav-item ul button ion-icon {
+.navbar .container ul .nav-item button ion-icon {
   font-size: 20px;
 }
 
-.navbar .container .nav-item ul button:hover {
+.navbar .container ul .nav-item button:hover {
   background-color: white;
   color: #444444;
 }

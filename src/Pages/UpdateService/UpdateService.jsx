@@ -1,5 +1,4 @@
-import { Container } from "react-bootstrap";
-import { ClipLoader } from "react-spinners";
+import { Container, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import CategorySelect from "../../Components/CategorySelect";
 import { ErrorMessage, Formik } from "formik";
@@ -14,6 +13,7 @@ import "./update-service.css";
 import { deleteFromAPI, putToAPI } from "../../api/FetchFromAPI";
 import { setUserTotalInfo } from "../../Store/homeServiceSlice";
 import swal from "sweetalert";
+import LoaderButton from "../../Components/LoaderButton";
 const updateServicSchema = Yup.object().shape({
   title: Yup.string()
     .required("لم تدخل عنوان الخدمة بعد")
@@ -180,18 +180,7 @@ const UpdateService = () => {
           >
             حذف الخدمة
           </button>
-          <button
-            className="delete"
-            disabled={isSubmitting}
-            hidden={!isSubmitting}
-          >
-            <ClipLoader
-              color="white"
-              size={30}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          </button>
+          <LoaderButton isSubmitting={isSubmitting} color="delete" />
         </div>
         <Toaster />
         <Formik
@@ -376,18 +365,7 @@ const UpdateService = () => {
                 >
                   حفظ التعديلات
                 </button>
-                <button
-                  className="submit"
-                  disabled={isSubmitting}
-                  hidden={!isSubmitting}
-                >
-                  <ClipLoader
-                    color="white"
-                    size={30}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                </button>
+                <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
               </form>
             </Container>
           )}

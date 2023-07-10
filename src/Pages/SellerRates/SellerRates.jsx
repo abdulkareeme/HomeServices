@@ -19,6 +19,7 @@ const SellerRates = () => {
     try {
       const data = await fetchFromAPI(`services/ratings/username/${username}`);
       setUserRates(data);
+      console.log(data);
     } catch (err) {
       console.log(err);
     }

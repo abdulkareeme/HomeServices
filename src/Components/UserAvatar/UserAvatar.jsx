@@ -1,5 +1,3 @@
-import Male from "../../Images/Male.jpg";
-import Female from "../../Images/Female.jpg";
 import { useState } from "react";
 import "./user-avatar.css";
 import { ListGroup } from "react-bootstrap";
@@ -7,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import { useNavigate } from "react-router-dom";
 import { postToAPI } from "../../api/FetchFromAPI";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 const UserAvatar = () => {
   const [showList, setShowList] = useState(false);
   const dispatch = useDispatch();
@@ -65,20 +63,30 @@ const UserAvatar = () => {
 
   return (
     <div className="user">
-      {/* <Toaster /> */}
       <img
         onClick={() => setShowList(!showList)}
-        src={userTotalInfo.gender === "Male" ? Male : Female}
-        alt=""
+        src={userTotalInfo?.photo}
+        alt="profile"
       />
       <ListGroup hidden={!showList}>
         {avatarList.map((item, index) => (
-          <ListGroup.Item key={index} action href={item.link}>
+          <ListGroup.Item
+            onClick={() => setShowList(false)}
+            key={index}
+            action
+            href={item.link}
+          >
             {item.icon}
             <span className="w-max">{item.label}</span>
           </ListGroup.Item>
         ))}
-        <ListGroup.Item action onClick={() => handleLogout()}>
+        <ListGroup.Item
+          action
+          onClick={() => {
+            setShowList(false);
+            handleLogout();
+          }}
+        >
           <ion-icon name="log-out-outline"></ion-icon>
           <span className="w-max">تسجيل الخروج</span>
         </ListGroup.Item>

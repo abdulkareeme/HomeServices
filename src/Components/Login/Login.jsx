@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
 import { postToAPI } from "../../api/FetchFromAPI";
-import { ClipLoader } from "react-spinners";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
@@ -12,6 +11,7 @@ import {
   setUserToken,
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
+import LoaderButton from "../LoaderButton";
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
     .email("أدخل بريد الكتروني صالح")
@@ -154,18 +154,7 @@ const Login = () => {
             >
               دخول
             </button>
-            <button
-              className="submit"
-              disabled={isSubmitting}
-              hidden={!isSubmitting}
-            >
-              <ClipLoader
-                color="white"
-                size={30}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-            </button>
+            <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
             <div className="d-flex justify-content-between align-items-center">
               <Link className="text-decoration-none" to="/forget_password">
                 نسيت كلمة المرور ؟

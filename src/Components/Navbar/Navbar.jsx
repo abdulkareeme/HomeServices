@@ -1,6 +1,13 @@
 import Male from "../../Images/Male.jpg";
 import Female from "../../Images/Female.jpg";
-import { Accordion, Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
+import {
+  Accordion,
+  Container,
+  Nav,
+  Navbar,
+  Offcanvas,
+  Spinner,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import {
   accountLinks,
@@ -139,19 +146,31 @@ const NavBar = () => {
                     </div>
                   </Accordion.Header>
                   <Accordion.Body>
-                    {categories?.map((cate) => (
-                      <Link
-                        className="mb-2 text-decoration-none text-black d-flex gap-2 align-items-center"
-                        key={cate.id}
-                        onClick={() => {
-                          handleCategClick(cate.name);
-                          setShow(false);
-                        }}
-                        to={`/services/${getCategoryLink(cate.name)}`}
-                      >
-                        <span>{cate.name}</span>
-                      </Link>
-                    ))}
+                    {categories ? (
+                      categories.map((cate) => (
+                        <Link
+                          className="mb-2 text-decoration-none text-black d-flex gap-2 align-items-center"
+                          key={cate.id}
+                          onClick={() => {
+                            handleCategClick(cate.name);
+                            setShow(false);
+                          }}
+                          to={`/services/${getCategoryLink(cate.name)}`}
+                        >
+                          <span>{cate.name}</span>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="d-flex align-items-center justify-content-center mt-2">
+                        <Spinner
+                          size="sm"
+                          as="span"
+                          animation="border"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                   </Accordion.Body>
                 </Accordion.Item>
               ))}

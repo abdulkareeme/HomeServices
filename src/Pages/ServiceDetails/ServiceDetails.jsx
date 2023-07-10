@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserPhoto, handleRateStars } from "../../utils/constants";
+import { handleRateStars } from "../../utils/constants";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -140,12 +140,8 @@ const ServiceDetails = () => {
                   <div className="user-card d-flex align-items-center gap-2">
                     <img
                       onClick={() => history(`/user/${username}`)}
-                      src={getUserPhoto(
-                        serviceDetails?.seller.user.photo,
-                        selectedUser?.gender
-                      )}
-                      // src={serviceDetails?.seller.user.photo}
-                      alt=""
+                      src={serviceDetails?.seller.user.photo}
+                      alt="profile"
                     />
                     <span onClick={() => history(`/user/${username}`)}>
                       {serviceDetails?.seller.user.first_name}{" "}

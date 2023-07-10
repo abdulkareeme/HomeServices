@@ -95,17 +95,4 @@ section.update-profile form textarea {
 
 section.update-profile form textarea:focus {
     outline: none;
-
-}
-
-section.update-profile form>button {
-    border: none;
-    outline: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: 500;
-    color: white;
-    margin: 10px 0;
-    background-color: #2caae2;
 }

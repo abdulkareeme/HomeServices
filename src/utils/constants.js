@@ -178,6 +178,13 @@ export const getStatus = (
         <ion-icon name="star"></ion-icon>
       </button>
     );
+  } else if (status === "Expire" && !is_rateable) {
+    return (
+      <div className="d-flex gap-2 align-items-center">
+        <span style={{ backgroundColor: "green" }} className="circle"></span>
+        <span>تم الانتهاء</span>
+      </div>
+    );
   } else if (status === "Underway" && is_rateable) {
     return (
       <button
@@ -190,13 +197,6 @@ export const getStatus = (
         تقييم وانهاء
         <ion-icon name="star"></ion-icon>
       </button>
-    );
-  } else if (status === "Expire" && !is_rateable) {
-    return (
-      <div className="d-flex gap-2 align-items-center">
-        <span style={{ backgroundColor: "green" }} className="circle"></span>
-        <span>تم الانتهاء</span>
-      </div>
     );
   } else {
     return (
