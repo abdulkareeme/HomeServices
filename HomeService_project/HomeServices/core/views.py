@@ -224,7 +224,10 @@ class ListUsers(APIView):
                         category = dict()
                         category['id'] = home_service.category.id
                         category['name'] = home_service.category.name
-                        category['photo'] = request.get_host() + home_service.category.photo.url
+                        if home_service.category.photo :
+                            category['photo'] = request.get_host() + home_service.category.photo.url
+                        else :
+                            category['photo'] = None
                         result['categories'].append(category)
 
             data.append(result)

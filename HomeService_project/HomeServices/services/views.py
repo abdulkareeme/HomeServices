@@ -82,7 +82,7 @@ class MyOrders(APIView):
             serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
             photo = None
             if order.client.user.photo :
-                photo = request.get_host() +order.client.user.photo.url
+                photo = 'http://' + request.get_host() +order.client.user.photo.url
             serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
@@ -110,7 +110,7 @@ class ReceivedOrders(APIView):
             serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
             photo = None
             if order.client.user.photo :
-                photo = request.get_host() +order.client.user.photo.url
+                photo = 'http://' + request.get_host() +order.client.user.photo.url
             serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
@@ -505,7 +505,7 @@ class ListRatingsByService(APIView):
             serializer.data[index]['client']['first_name'] = rate.order_service.client.user.first_name
             serializer.data[index]['client']['last_name'] = rate.order_service.client.user.last_name
             serializer.data[index]['client']['username'] = rate.order_service.client.user.username
-            serializer.data[index]['client']['photo'] = request.get_host() +rate.order_service.client.user.photo.url
+            serializer.data[index]['client']['photo'] = 'http://' + request.get_host() +rate.order_service.client.user.photo.url
             index+=1
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -529,7 +529,7 @@ class ListRatingsByUsername(APIView):
             serializer.data[index]['client']['first_name'] = rate.order_service.client.user.first_name
             serializer.data[index]['client']['last_name'] = rate.order_service.client.user.last_name
             serializer.data[index]['client']['username'] = rate.order_service.client.user.username
-            serializer.data[index]['client']['photo'] = request.get_host() +rate.order_service.client.user.photo.url
+            serializer.data[index]['client']['photo'] = 'http://' + request.get_host() +rate.order_service.client.user.photo.url
 
             serializer.data[index]['home_service'] = dict()
             serializer.data[index]['home_service']['id'] = rate.order_service.home_service.id
