@@ -42,11 +42,14 @@ def get_user_info(user):
         average_fast_answer = f"{days_string}{time_string}"
 
     average_rating =0
+    number_of_rated_services = 0
     if user.normal_user.home_services_seller.count() > 0 :
         for service in user.normal_user.home_services_seller.all():
-            average_rating += service.average_ratings
-        if user.normal_user.home_services_seller.count():
-            average_rating /= user.normal_user.home_services_seller.count()
+            if service.average_ratings != 0 :
+                average_rating += service.average_ratings
+                number_of_rated_services+=1
+        if number_of_rated_services > 0:
+            average_rating /= number_of_rated_services
 
     return {
         'id': user.id,
@@ -426,6 +429,6 @@ class CheckForgetPasswordCode(APIView):
 
         serializer.is_valid(raise_exception=True)
         return Response("👍")
-    
-        
+
+
 
