@@ -27,6 +27,14 @@ class TestUserModel(TestCase):
         assert response_male.photo.url == '/media/profile/Male.jpg'
         assert response_female.photo.url == '/media/profile/Female.jpg'
     
-# class TestNormalUserModel(TestCase):
-#     def test_create_normal_user(self):
-        
+class TestNormalUserModel(TestCase):
+    def test_create_normal_user(self):
+        mixer.blend(NormalUser , bio="test test")
+        response = NormalUser.objects.last()
+        assert response.bio == "test test"
+
+class TestBalanceModel(TestCase):
+    def test_create_balance(self):
+        mixer.blend(Balance , total_balance = 1000 )
+        response  = Balance.objects.last()
+        assert response.total_balance == 1000

@@ -81,6 +81,7 @@ class InputField(models.Model):
     field_type  = models.CharField(max_length=50  , choices=input_choices , default='TEXT')
     note = models.CharField( max_length=100 , default='' , blank=True)
     home_service = models.ForeignKey("HomeService", on_delete=models.CASCADE , related_name='field') 
+    is_newest = models.BooleanField(default=True)
     def __str__(self) :
         return self.title + ' : '+self.field_type
 
