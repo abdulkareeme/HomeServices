@@ -28,7 +28,7 @@ def taking_money(user , required_balance, order, general_services):
         Earnings.objects.create(order = order, earnings  = beneficiary.price ,beneficiary=beneficiary.beneficiary)
     return True
 
-def get_from_data(order):
+def get_form_data(order):
     serializer = RetrieveInputDataSerializer(data = order.input_data_set , many=True)
     serializer.is_valid(raise_exception=False)
     return serializer.data
@@ -60,6 +60,8 @@ def is_rateable(order):
         expected_finish_time = None
     if order.status != 'Pending' and rateable is None and (order.is_rateable or (expected_finish_time is not None and (timezone.now() > expected_finish_time))):
         rateable = True
+    if rateable is None :
+        rateable = False
     return rateable
 
 class MyOrders(APIView):
@@ -75,12 +77,12 @@ class MyOrders(APIView):
         for order in queryset :
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
-            serializer.data[i]['form'] = get_from_data(order=order)
+            serializer.data[i]['form'] = get_form_data(order=order)
             serializer.data[i]['is_rateable'] = is_rateable(order=order)
             serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
             photo = None
             if order.client.user.photo :
-                photo = order.client.user.photo.url
+                photo = request.get_host() +order.client.user.photo.url
             serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
@@ -108,7 +110,7 @@ class ReceivedOrders(APIView):
             serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
             photo = None
             if order.client.user.photo :
-                photo = order.client.user.photo.url
+                photo = request.get_host() +order.client.user.photo.url
             serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
@@ -180,8 +182,15 @@ class DeleteHomeService(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated , IsOwner]
     lookup_url_kwarg = 'home_service_id'
 
-def delete_data(data):
-    data.delete()
+#this function looks at the previous form and delete it if there is no data connected to it , it will be deleted
+def delete_or_update_form(last_newest_input_fields):
+    #check if any one of the previous form fields is connected to data  (its enough to check one filed)
+    if last_newest_input_fields[0].field_data.count() == 0 :
+        last_newest_input_fields.delete()
+        return True
+    for input_field in last_newest_input_fields :
+        input_field.is_newest = False
+        input_field.save()
     return True
 
 
@@ -198,10 +207,11 @@ class UpdateFormHomeService(APIView):
 
         if home_service.seller != request.user.normal_user :
             return Response({"detail" : "403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
-        queryset= InputField.objects.filter(home_service= home_service , home_service__seller = request.user.normal_user)
+        queryset= InputField.objects.filter(home_service= home_service , home_service__seller = request.user.normal_user , is_newest = True)
         serializer = InputFieldSerializer(data = queryset ,  many=True)
         serializer.is_valid(raise_exception=False)
         return Response(serializer.data , status=status.HTTP_200_OK)
+    
     @extend_schema(
     request=InputFieldSerializer(many=True),
     responses={200:InputFieldSerializer(many=True) , 400 : None , 403 : None , 401 : None}
@@ -214,14 +224,18 @@ class UpdateFormHomeService(APIView):
 
         if home_service.seller != request.user.normal_user :
             return Response({"detail" : "403 FORBIDDEN"} , status=status.HTTP_403_FORBIDDEN)
-
-        queryset= InputField.objects.filter(home_service = home_service, home_service__seller = request.user.normal_user)
+        #TODO edit all the querysets to use is_newest field for filtering
+        last_newest_input_fields= InputField.objects.filter(home_service = home_service, home_service__seller = request.user.normal_user, is_newest = True)
         serializer  = InputFieldSerializer(data= request.data , many=True)
         serializer.is_valid(raise_exception=True)
         if len(serializer.validated_data) < 3 or len(serializer.validated_data) >10 :
             return Response({'detail':["Number of fields must be between 3 and 10"]}, status=status.HTTP_400_BAD_REQUEST)
 
-        delete_data(queryset)
+        delete_or_update_form(last_newest_input_fields) # i made this function because django dose not run the query until we need to 
+                              # display the data or returns it , so the data will not be deleted after the (put) function end
+                              # and all the old data and the created data will be deleted ,so if we didn't make (delete_data function) 
+                              # the (queryset) will not run the query until the (put) function end and all old data 
+                              # and created data will appear when the query run , so it delete all of it
         serializer.save(home_service= home_service)
         return Response(serializer.data ,status=status.HTTP_200_OK )
 
@@ -365,7 +379,7 @@ class AcceptOrder(APIView):
         order.save()
         order.home_service.seller.save()
         schedule('services.tasks.update_status_to_Underway',order.id ,schedule_type=Schedule.ONCE, minutes=15,next_run=arrow.utcnow().shift(minutes=15).datetime)
-        return Response(get_from_data(order=order),status=status.HTTP_200_OK)
+        return Response(get_form_data(order=order),status=status.HTTP_200_OK)
 
 @extend_schema(
     responses={200:None,400:None,401:None,404:None,403:None}
@@ -491,7 +505,7 @@ class ListRatingsByService(APIView):
             serializer.data[index]['client']['first_name'] = rate.order_service.client.user.first_name
             serializer.data[index]['client']['last_name'] = rate.order_service.client.user.last_name
             serializer.data[index]['client']['username'] = rate.order_service.client.user.username
-            serializer.data[index]['client']['photo'] = rate.order_service.client.user.photo.url
+            serializer.data[index]['client']['photo'] = request.get_host() +rate.order_service.client.user.photo.url
             index+=1
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -515,7 +529,7 @@ class ListRatingsByUsername(APIView):
             serializer.data[index]['client']['first_name'] = rate.order_service.client.user.first_name
             serializer.data[index]['client']['last_name'] = rate.order_service.client.user.last_name
             serializer.data[index]['client']['username'] = rate.order_service.client.user.username
-            serializer.data[index]['client']['photo'] = rate.order_service.client.user.photo.url
+            serializer.data[index]['client']['photo'] = request.get_host() +rate.order_service.client.user.photo.url
 
             serializer.data[index]['home_service'] = dict()
             serializer.data[index]['home_service']['id'] = rate.order_service.home_service.id

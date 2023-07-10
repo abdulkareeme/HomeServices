@@ -10,7 +10,7 @@ from rest_framework import status , generics ,permissions
 from .models import Balance
 from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular,ForgetPasswordResetSpectacular ,CheckForgetPasswordSpectacular
 from .models import NormalUser ,User
-from services.serializers import Area,AreaSerializer
+from services.serializers import Area,AreaSerializer , CategorySerializer
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
@@ -18,11 +18,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 
-def get_user_info(user):
+def get_user_info(user , host):
     if not user.photo:
             photo  =None
     else :
-        photo = user.photo.url
+        photo = host+user.photo.url
 
     if user.normal_user.average_fast_answer :
         average_fast_answer = user.normal_user.average_fast_answer
@@ -154,12 +154,13 @@ def login_api(request):
         if not current_user.is_active :
             return Response({"email":["Email must be confirmed"]}, status=status.HTTP_400_BAD_REQUEST)
     serializer = AuthTokenSerializer(data=data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        return Response({"detail":serializer.errors , "data":data } ,status=status.HTTP_400_BAD_REQUEST)
     user = serializer.validated_data['user']
     _, token = AuthToken.objects.create(user)
-
+    host = request.get_host()
     return Response({
-        'user_info': get_user_info(user),
+        'user_info': get_user_info(user , host),
         'token': {token}
     })
 
@@ -187,7 +188,6 @@ class RegisterUser(APIView):
         user = serializer.save()
         normal_user = normal_user.save(user=user)
         Balance.objects.create(user=normal_user)
-        # _, token = AuthToken.objects.create(user)
         return Response({'detail': 'account registered please confirm your email.'} , status=status.HTTP_201_CREATED)
 
 class UserConfirmEmailView(APIView):
@@ -211,7 +211,7 @@ class ListUsers(APIView):
             result['username']= user.user.username
             result['first_name'] = user.user.first_name
             result['last_name']=user.user.last_name
-            result['photo']=user.user.photo
+            result['photo']=request.get_host()+ user.user.photo.url
             result['average_rating'] =0
             for service in user.home_services_seller.all():
                 result['average_rating'] += service.average_ratings
@@ -221,13 +221,17 @@ class ListUsers(APIView):
             if user.home_services_seller:
                 for home_service in user.home_services_seller.all() :
                     if home_service.category :
-                        result['categories'].append(home_service.category)
+                        category = dict()
+                        category['id'] = home_service.category.id
+                        category['name'] = home_service.category.name
+                        category['photo'] = request.get_host() + home_service.category.photo.url
+                        result['categories'].append(category)
 
             data.append(result)
         print(data)
-        serializer = ListUsersSerializer(data=data , many=True)
-        serializer.is_valid(raise_exception=False)
-        return Response(serializer.data , status=status.HTTP_200_OK)
+        # serializer = ListUsersSerializer(data=data , many=True)
+        # serializer.is_valid(raise_exception=False)
+        return Response(data , status=status.HTTP_200_OK)
 
 class RetrieveUser(APIView):
     @extend_schema(
@@ -241,8 +245,8 @@ class RetrieveUser(APIView):
 
         if user.is_superuser :
             return Response('Error 404 Not Found' , status=status.HTTP_404_NOT_FOUND)
-
-        return Response( get_user_info(user) , status=status.HTTP_200_OK)
+        host = request.get_host()
+        return Response( get_user_info(user , host) , status=status.HTTP_200_OK)
 
 @extend_schema(
     request=PasswordResetSerializer,
@@ -314,7 +318,8 @@ class UpdateUser(APIView):
     )
     def get (self , request):
         user = request.user
-        context = get_user_info(user)
+        host = request.get_host()
+        context = get_user_info(user , host)
         area = Area.objects.all()
         area = AreaSerializer(data=area ,many = True)
         area.is_valid()
@@ -329,7 +334,8 @@ class UpdateUser(APIView):
         serializer = UpdateNormalUser(data=request.data , instance=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(get_user_info(user) , status=status.HTTP_200_OK)
+        host = request.get_host()
+        return Response(get_user_info(user , host) , status=status.HTTP_200_OK)
 @extend_schema(
     responses={200:MyBalanceSpectacular}
 )
