@@ -17,4 +17,5 @@ urlpatterns = [
     path('send_forget_password_code' , views.SendForgetPasswordCode.as_view() , name = 'send_forget_password_code' ),
     path('forget_password_reset', views.ForgetPasswordReset.as_view() , name='forget_password_reset' ),
     path('check_forget_password_code',views.CheckForgetPasswordCode.as_view() , name  ='check_forget_password_code'),
+    path('update_user_photo', views.UpdateUserPhoto.as_view()),
 ]

@@ -6,7 +6,7 @@ from .serializers import RegisterSerializer, UserConfirmEmailSerializer , Normal
 from rest_framework.views import APIView
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
-from rest_framework import status , generics ,permissions
+from rest_framework import status , generics ,permissions , parsers
 from .models import Balance
 from .spectacular_serializers import LoginSpectacular ,UpdateProfileSpectacular , ConfirmCodeSpectacular , ResendCodeEmailSpectacular ,MyBalanceSpectacular,ForgetPasswordResetSpectacular ,CheckForgetPasswordSpectacular , UpdateNormalUserSpectacular
 from .models import NormalUser ,User
@@ -314,6 +314,7 @@ class ResendEmailMessage(APIView):
 
 class UpdateUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.JSONParser , parsers.MultiPartParser]
     @extend_schema(
             responses={200:UpdateProfileSpectacular , 401:None},
             description="Note : The area is all area in the database "
@@ -329,19 +330,29 @@ class UpdateUser(APIView):
         context['area'] = area.data
         return Response(context , status=status.HTTP_200_OK)
     @extend_schema(
-            request=UpdateNormalUserSpectacular ,
+            request=UpdateNormalUser ,
             responses={200:LoginSpectacular , 400: None , 401:None}
     )
     def put(self , request):
         user = request.user
         serializer = UpdateNormalUser(data=request.data , instance=user)
-        photo_serializer = UpdateUserPhoto(data=request.data , instance=user)
         serializer.is_valid(raise_exception=True)
-        photo_serializer.is_valid(raise_exception=True)
         serializer.save()
-        photo_serializer.save()
         host = 'http://' + request.get_host()
         return Response(get_user_info(user , host) , status=status.HTTP_200_OK)
+class UpdateUserPhoto(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.JSONParser , parsers.MultiPartParser]
+    @extend_schema(
+            request=UpdateUserPhoto,
+            responses={200:None , 400:None , 401 : None}
+    )
+    def put(self , request):
+        user = request.user
+        photo_serializer = UpdateUserPhoto(data=request.data , instance=user)
+        photo_serializer.is_valid(raise_exception=True)
+        photo_serializer.save()
+        return Response("Photo Updated Successfully" , status=status.HTTP_200_OK)
 @extend_schema(
     responses={200:MyBalanceSpectacular , 401:None }
 )

@@ -93,12 +93,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     birth_date = serializers.DateField(required=False)
     gender = serializers.ChoiceField(choices=gender_choices, required=True)
-    photo = serializers.ImageField(max_length=100, use_url=True, required=False , allow_null= True)
     mode = serializers.ChoiceField(choices=mode_choices, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name', 'birth_date', 'gender', 'photo', 'mode', 'area')
+        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name', 'birth_date', 'gender', 'mode', 'area')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
@@ -119,7 +118,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data['last_name'],
             birth_date=validated_data.get('birth_date', None),
             gender=validated_data['gender'],
-            photo=validated_data.get('photo', None),
             mode=validated_data['mode'],
             area=validated_data['area']
         )
