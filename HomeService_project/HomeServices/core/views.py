@@ -22,7 +22,7 @@ def get_user_info(user , host):
     if not user.photo:
             photo  =None
     else :
-        photo = host+user.photo.url
+        photo ='http://'+ host+user.photo.url
 
     if user.normal_user.average_fast_answer :
         average_fast_answer = user.normal_user.average_fast_answer
@@ -36,9 +36,9 @@ def get_user_info(user , host):
     if delta is not None :
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
-        time_string = f"{hours:02} hours , {minutes:02} minutes"
+        time_string = f"{hours:02}:{minutes:02}"
 
-        days_string = f"{delta.days} days , " if delta.days else ""
+        days_string = f"{delta.days} أيام " if delta.days else ""
         average_fast_answer = f"{days_string}{time_string}"
 
     average_rating =0
@@ -211,7 +211,7 @@ class ListUsers(APIView):
             result['username']= user.user.username
             result['first_name'] = user.user.first_name
             result['last_name']=user.user.last_name
-            result['photo']=request.get_host()+ user.user.photo.url
+            result['photo']='http://'+request.get_host()+ user.user.photo.url
             result['average_rating'] =0
             for service in user.home_services_seller.all():
                 result['average_rating'] += service.average_ratings
@@ -225,7 +225,7 @@ class ListUsers(APIView):
                         category['id'] = home_service.category.id
                         category['name'] = home_service.category.name
                         if home_service.category.photo :
-                            category['photo'] = request.get_host() + home_service.category.photo.url
+                            category['photo'] = 'http://'+request.get_host() + home_service.category.photo.url
                         else :
                             category['photo'] = None
                         result['categories'].append(category)

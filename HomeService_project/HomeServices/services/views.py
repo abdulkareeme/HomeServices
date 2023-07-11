@@ -103,7 +103,7 @@ class ReceivedOrders(APIView):
             serializer.data[i]['client']=order.client.user.username
             serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
             if order.status != 'Pending':
-                serializer.data[i]['form'] = get_from_data(order=order)
+                serializer.data[i]['form'] = get_form_data(order=order)
             else :
                 serializer.data[i]['form'] = []
             serializer.data[i]['is_rateable'] = is_rateable(order=order)
@@ -211,7 +211,7 @@ class UpdateFormHomeService(APIView):
         serializer = InputFieldSerializer(data = queryset ,  many=True)
         serializer.is_valid(raise_exception=False)
         return Response(serializer.data , status=status.HTTP_200_OK)
-    
+
     @extend_schema(
     request=InputFieldSerializer(many=True),
     responses={200:InputFieldSerializer(many=True) , 400 : None , 403 : None , 401 : None}
@@ -231,10 +231,10 @@ class UpdateFormHomeService(APIView):
         if len(serializer.validated_data) < 3 or len(serializer.validated_data) >10 :
             return Response({'detail':["Number of fields must be between 3 and 10"]}, status=status.HTTP_400_BAD_REQUEST)
 
-        delete_or_update_form(last_newest_input_fields) # i made this function because django dose not run the query until we need to 
+        delete_or_update_form(last_newest_input_fields) # i made this function because django dose not run the query until we need to
                               # display the data or returns it , so the data will not be deleted after the (put) function end
-                              # and all the old data and the created data will be deleted ,so if we didn't make (delete_data function) 
-                              # the (queryset) will not run the query until the (put) function end and all old data 
+                              # and all the old data and the created data will be deleted ,so if we didn't make (delete_data function)
+                              # the (queryset) will not run the query until the (put) function end and all old data
                               # and created data will appear when the query run , so it delete all of it
         serializer.save(home_service= home_service)
         return Response(serializer.data ,status=status.HTTP_200_OK )
