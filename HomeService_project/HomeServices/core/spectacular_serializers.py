@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User , Balance
+from .models import User , Balance ,NormalUser
 
 class  LoginSpectacular(serializers.ModelSerializer):
     bio = serializers.CharField(max_length = 1000)
@@ -53,3 +53,16 @@ class ForgetPasswordResetSpectacular(serializers.Serializer):
 class CheckForgetPasswordSpectacular(serializers.Serializer):
     email = serializers.EmailField(required=True)
     forget_password_code = serializers.CharField(required=True)
+
+class UpdateUserSpectacular(serializers.ModelSerializer):
+    class Meta :
+        model = User
+        fields = ['first_name','last_name','birth_date','area']
+
+class UpdateNormalUserSpectacular(serializers.ModelSerializer):
+    user = UpdateUserSpectacular()
+    photo = serializers.ImageField(max_length = 128 , required=False)
+    bio = serializers.CharField(max_length = 512 , required= False , allow_blank=True)
+    class Meta :
+        model = NormalUser
+        fields = ['photo','bio','user']
