@@ -162,21 +162,21 @@ class TestCoreAPIViews(TestCase):
         assert len(response.json()['area']) >0 
 
     # @given(strategies.characters() , strategies.characters(), strategies.characters())
-    def test_update_profile_put_request(self ):
+    def test_update_profile_put_request(self , bio = 'bio', first_name = 'first_name', last_name = 'last_name' ):
         data = {
-        "bio": 'bio',
+        "bio": bio,
         "user": {
-            "first_name": 'first_name',
-            "last_name": 'last_name',
+            "first_name": first_name,
+            "last_name": last_name,
             "birth_date": "2019-08-24",
             "area": 1
             }
         }
         url = reverse_lazy('update_profile')
-        response = self.client.put(url, data=data)
+        response = self.client.put(url, data=data , format='json')
         self.global_user=NormalUser.objects.get(user = self.global_user.user)
         assert response.status_code==200
         assert response.json() != None 
         assert self.global_user.bio == data['bio']
         assert self.global_user.user.first_name == data['user']['first_name']
-        assert self.global_user.user.first_name == data['user']['last_name']
+        assert self.global_user.user.last_name == data['user']['last_name']

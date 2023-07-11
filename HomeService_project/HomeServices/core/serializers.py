@@ -202,7 +202,7 @@ class ForgetPasswordResetSerializer(serializers.Serializer):
                 user.save()
                 raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
             raise serializers.ValidationError("Wrong code please try again 🙃")
-        
+
     def validate(self, attrs):
         if 'new_password' not in attrs or 'new_password2' not in attrs or attrs['new_password'] != attrs['new_password2'] :
             raise serializers.ValidationError({"password": "New password fields didn't match."})
