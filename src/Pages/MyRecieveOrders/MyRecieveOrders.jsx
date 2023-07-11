@@ -9,6 +9,8 @@ import { Toaster, toast } from "react-hot-toast";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import moment from "moment";
 import "moment/locale/ar";
+import { getBalance } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
 const MyRecieveOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -20,6 +22,7 @@ const MyRecieveOrders = () => {
   const handleClose = () => setShow(false);
 
   const dispatch = useDispatch();
+  const history =useNavigate();
   if (userToken === null) {
     const storedToken = localStorage.getItem("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
@@ -145,6 +148,7 @@ const MyRecieveOrders = () => {
           Authorization: `token ${userToken}`,
         },
       });
+      // await getBalance();
       setPendingRecieveData(
         pendingRecieveData.filter((item) => item.id !== order.id)
       );
@@ -230,6 +234,10 @@ const MyRecieveOrders = () => {
     setSelectedOrder(null);
     getMyRecieveOrderData();
   }, []);
+  // protect path from client
+  useEffect(()=> {
+    if(userTotalInfo.mode!=="seller") history(-1);
+  },[])
   return (
     <section className="my-recieve-orders">
       <Toaster />
@@ -274,7 +282,6 @@ const MyRecieveOrders = () => {
                                 type: "accept",
                               });
                             }}
-                            // onClick={() => handleAccept(order)}
                             name="checkmark"
                           ></ion-icon>
                           <ion-icon

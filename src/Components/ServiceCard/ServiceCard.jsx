@@ -1,8 +1,7 @@
-import { BASE_API_URL, handleRateStars } from "../../utils/constants";
+import { handleRateStars } from "../../utils/constants";
 import "./service-card.css";
 import { Tooltip } from "react-tooltip";
 import { useNavigate } from "react-router-dom";
-import Male from "../../Images/Male.jpg";
 const ServiceCard = ({ serviceData, id }) => {
   const history = useNavigate();
   return (
@@ -15,7 +14,7 @@ const ServiceCard = ({ serviceData, id }) => {
         <img
           onClick={() => history(`/user/${serviceData?.seller.user.username}`)}
           className={`image-${id}`}
-          src={BASE_API_URL + serviceData?.seller.user.photo}
+          src={serviceData?.seller.user.photo}
           alt="profile"
         />
         <div className="stars d-flex gap-2">

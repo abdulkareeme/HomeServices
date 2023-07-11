@@ -1,5 +1,5 @@
 import { ErrorMessage, Formik } from "formik";
-import { Fragment, memo, useState } from "react";
+import { Fragment, memo, useEffect, useState } from "react";
 import * as Yup from "yup";
 import CategorySelect from "../../Components/CategorySelect";
 import "./add-service.css";
@@ -79,6 +79,10 @@ const AddService = () => {
     description: "",
     average_price_per_hour: "",
   };
+  // protect path from client
+  useEffect(()=> {
+    if(userTotalInfo.mode!=="seller") history(-1);
+  },[])
   const updateFormDataList = (field, value, id) => {
     setFormDataList((prevList) => {
       return prevList.map((item) => {

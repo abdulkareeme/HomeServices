@@ -3,10 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import "./user-profile.css";
 import UserProfileLayout from "../../Components/UserProfileLayout";
 import ServicesList from "../../Components/ServicesList/ServicesList";
-import { handleRateStars } from "../../utils/constants";
+import { getTimeofSeconds, handleRateStars } from "../../utils/constants";
 import { setSelectedUser } from "../../Store/homeServiceSlice";
-import moment from "moment";
-import "moment/locale/ar";
 const UserProfile = () => {
   const { selectedUser } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();
@@ -54,7 +52,7 @@ const UserProfile = () => {
                     <Col>متوسط سرعة الرد</Col>
                     <Col>
                       {selectedUser?.average_fast_answer
-                        ? selectedUser?.average_fast_answer
+                        ? getTimeofSeconds(selectedUser?.average_fast_answer)
                         : "لم يحسب بعد"}
                     </Col>
                   </Row>

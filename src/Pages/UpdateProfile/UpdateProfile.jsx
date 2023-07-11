@@ -1,10 +1,9 @@
-import Male from "../../Images/Male.jpg";
-import Female from "../../Images/Female.jpg";
+import UserPhoto from "../../Images/user.png";
 import { ErrorMessage, Formik } from "formik";
 import DatePicker from "react-date-picker";
 import * as Yup from "yup";
 import AreaSelect from "../../Components/AreaSelect";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./update-profile.css";
 import { format } from "date-fns";
@@ -12,12 +11,10 @@ import { Container, ListGroup } from "react-bootstrap";
 import { putToAPI } from "../../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
-import {
-  isString,
-  updateUserTotalInfo,
-} from "../../utils/constants";
+import { isString, updateUserTotalInfo } from "../../utils/constants";
 import { useNavigate, useParams } from "react-router-dom";
 import LoaderButton from "../../Components/LoaderButton";
+import Cookies from "js-cookie";
 
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -49,22 +46,39 @@ const UpdateProfile = () => {
   const [areaSelected, setAreaSelected] = useState(userTotalInfo?.area_name);
   const [showList, setShowList] = useState(false);
   const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState(userTotalInfo?.photo);
   const [isSubmitting, setIsSubmitting] = useState(0);
+  const [uploadImage, setUploadImage] = useState(false);
   const fileInputRef = useRef(null);
   const initialValues = {
     first_name: userTotalInfo?.first_name,
     last_name: userTotalInfo?.last_name,
   };
-  const handleSubmit = (values) => {
-    const imageData = new FormData();
-    imageData.append("file", file);
-    // const fileData = new FormData();
-    // fileData.append("file", imageData);
-    for (const pair of imageData.entries()) {
-      setImageFile(pair[1]);
+  // useEffect(()=> {
+  //   Cookies.set('name', 'value')
+
+  // },[])
+  const putImageToApi = async () => {
+    let bearer = `token ${userToken}`;
+    try {
+      await putToAPI(
+        "api/update_user_photo",
+        {
+          photo: file,
+        },
+        {
+          headers: {
+            Authorization: bearer,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
+  };
+  const handleSubmit = async (values) => {
+    console.log(file);
     let bearer = `token ${userToken}`;
     console.log("submit");
     const user = {
@@ -88,12 +102,30 @@ const UpdateProfile = () => {
         "aria-live": "polite",
       },
     });
-    putToAPI("api/update_profile", user, {
-      headers: {
-        Authorization: bearer,
-      },
-    })
-      .then(async (res) => {
+    try {
+      await putToAPI("api/update_profile", user, {
+        headers: {
+          Authorization: bearer,
+        },
+      });
+    } catch (err) {
+      setIsSubmitting(0);
+      console.log(err);
+    }
+    if (uploadImage) {
+      try {
+        await putToAPI(
+          "api/update_user_photo",
+          {
+            photo: file,
+          },
+          {
+            headers: {
+              Authorization: bearer,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
         toast.success("تم تحديث المعلومات بنجاح", {
           duration: 3000,
@@ -107,19 +139,32 @@ const UpdateProfile = () => {
         setTimeout(() => {
           history(`/user/${username}`);
         }, 3000);
-      })
-      .catch((err) => {
-        setIsSubmitting(0);
+      } catch (err) {
         console.log(err);
+        setIsSubmitting(0);
+      }
+    } else {
+      await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
+      toast.success("تم تحديث المعلومات بنجاح", {
+        duration: 3000,
+        position: "top-center",
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
       });
+      setIsSubmitting(0);
+      setTimeout(() => {
+        history(`/user/${username}`);
+      }, 3000);
+    }
   };
   const handleFileInputChange = (e) => {
-    console.log(e.target.files[0]);
+    setUploadImage(true);
     setFile(e.target.files[0]);
     const reader = new FileReader();
     reader.onload = (event) => {
       setImageUrl(event.target.result);
-      console.log(event.target.result);
     };
     reader.readAsDataURL(e.target.files[0]);
   };
@@ -135,11 +180,11 @@ const UpdateProfile = () => {
             <form
               onSubmit={(e) => e.preventDefault()}
               action=""
-              encType="multipart/form-data"
+              // encType="multipart/form-data"
             >
               <h3>المعلومات الشخصية</h3>
               <div className="image-holder">
-                <img src={userTotalInfo?.photo} alt="profile" />
+                <img src={imageUrl} alt="profile" />
                 <div className="overlay">
                   <ion-icon
                     name="camera"
@@ -169,9 +214,10 @@ const UpdateProfile = () => {
                   <ListGroup.Item
                     action
                     onClick={() => {
+                      setUploadImage(true);
                       fileInputRef.current.value = "";
                       setFile(null);
-                      setImageUrl(null);
+                      setImageUrl(UserPhoto);
                       setShowList(0);
                     }}
                   >

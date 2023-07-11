@@ -2,7 +2,11 @@ import { useState } from "react";
 import "./user-avatar.css";
 import { ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
+import {
+  setBalance,
+  setUserToken,
+  setUserTotalInfo,
+} from "../../Store/homeServiceSlice";
 import { useNavigate } from "react-router-dom";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { toast } from "react-hot-toast";
@@ -10,7 +14,7 @@ const UserAvatar = () => {
   const [showList, setShowList] = useState(false);
   const dispatch = useDispatch();
   const history = useNavigate();
-  const { userTotalInfo, userToken } = useSelector(
+  const { userTotalInfo, userToken, balance } = useSelector(
     (state) => state.homeService
   );
   if (userTotalInfo === null) {
@@ -21,16 +25,12 @@ const UserAvatar = () => {
     const storedToken = localStorage.getItem("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
   }
+  balance === null && dispatch(setBalance(localStorage.getItem("balance")));
   const avatarList = [
     {
       label: userTotalInfo?.username,
       icon: <ion-icon name="person"></ion-icon>,
       link: `/user/${userTotalInfo?.username}`,
-    },
-    {
-      label: "الرصيد",
-      icon: <ion-icon name="cash-outline"></ion-icon>,
-      link: `/user/${userTotalInfo?.username}/balance`,
     },
     {
       label: "تعديل الحساب",
@@ -56,6 +56,7 @@ const UserAvatar = () => {
       history("/");
       localStorage.setItem("userTotalInfo", null);
       localStorage.setItem("userToken", null);
+      localStorage.setItem("balance", null);
       dispatch(setUserTotalInfo(null));
       dispatch(setUserToken(null));
     });
@@ -80,6 +81,15 @@ const UserAvatar = () => {
             <span className="w-max">{item.label}</span>
           </ListGroup.Item>
         ))}
+        {userTotalInfo.mode === "seller" ? (
+          <ListGroup.Item action>
+            <ion-icon name="cash-outline"></ion-icon>
+            <div className="d-flex gap-1 align-items-center">
+              <span>{balance}</span>
+              <span>نقطة</span>
+            </div>
+          </ListGroup.Item>
+        ) : null}
         <ListGroup.Item
           action
           onClick={() => {

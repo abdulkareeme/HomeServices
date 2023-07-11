@@ -13,6 +13,7 @@ import {
 import { useEffect } from "react";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import LoaderContent from "../LoaderContent/LoaderContent";
+// import "../../Images/"
 const UserProfileCard = () => {
   const { userTotalInfo, isSelected, selectedUser } = useSelector(
     (state) => state.homeService

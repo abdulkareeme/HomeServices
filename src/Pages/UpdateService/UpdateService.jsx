@@ -56,6 +56,10 @@ const UpdateService = () => {
       })
     );
   }, []);
+  // protect path from client
+  useEffect(() => {
+    if (userTotalInfo.mode !== "seller") history(-1);
+  }, []);
   const initialValues = {
     title: selectedServiceToUpdate.title,
     description: selectedServiceToUpdate.description,

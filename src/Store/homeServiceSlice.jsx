@@ -3,11 +3,12 @@ import { fetchFromAPI } from "../api/FetchFromAPI";
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
 const initialState = {
-  isRegistered: true,
+  isRegistered: false,
   userInputValue: { email: "", password: "" },
   isSelected: 1,
   areasList: null,
   userTotalInfo: null,
+  balance: null,
   selectedUser: null,
   userToken: null,
   categories: null,
@@ -47,6 +48,9 @@ const homeServiceSlice = createSlice({
     setUserTotalInfo: (state, action) => {
       state.userTotalInfo = action.payload;
     },
+    setBalance: (state, action) => {
+      state.balance = action.payload;
+    },
     setSelectedUser: (state, action) => {
       state.selectedUser = action.payload;
     },
@@ -79,6 +83,7 @@ export const {
   setUserInputValue,
   setIsSelected,
   setUserTotalInfo,
+  setBalance,
   setSelectedUser,
   setUserToken,
   setCategories,

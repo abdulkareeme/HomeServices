@@ -33,7 +33,6 @@ const NewPassword = () => {
   const submitHandler = async (values) => {
     const code = localStorage.getItem("forgetPassCode");
     const email = localStorage.getItem("forgetPassEmail");
-    console.log(values, code, email);
     const payload = {
       email: email,
       forget_password_code: code,

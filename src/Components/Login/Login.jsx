@@ -3,15 +3,18 @@ import { memo, useState } from "react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-import { postToAPI } from "../../api/FetchFromAPI";
+import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
+  setBalance,
+  setIsRegistered,
   setUserInputValue,
   setUserToken,
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
 import LoaderButton from "../LoaderButton";
+import { getBalance } from "../../utils/constants";
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
     .email("أدخل بريد الكتروني صالح")
@@ -34,12 +37,14 @@ const Login = () => {
   const submitHandler = (values) => {
     setIsSubmitting(1);
     postToAPI("api/login/", values)
-      .then((res) => {
+      .then(async (res) => {
         console.log(res);
         setIsSubmitting(0);
-        // console.log(res);
         dispatch(setUserTotalInfo(res?.user_info));
         dispatch(setUserToken(res?.token[0]));
+        dispatch(setIsRegistered(false));
+        res?.user_info.mode === "seller" &&
+          (await getBalance(dispatch, setBalance, res?.token[0]));
         localStorage.setItem("userTotalInfo", JSON.stringify(res?.user_info));
         localStorage.setItem("userToken", JSON.stringify(res?.token[0]));
         history("/");

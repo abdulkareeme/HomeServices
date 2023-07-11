@@ -11,6 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import {
   accountLinks,
+  getBalance,
   getCategoryLink,
   normalUserLinks,
   offcanvasAccordion,

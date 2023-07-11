@@ -4,6 +4,7 @@ import recieve from "../Images/recieve-service.png";
 import { fetchFromAPI } from "../api/FetchFromAPI";
 import Male from "../Images/Male.jpg";
 import Female from "../Images/Female.jpg";
+import moment from "moment";
 
 export const BASE_API_URL = "http://abdulkareemedres.pythonanywhere.com";
 export const navbarLinks = [
@@ -150,10 +151,40 @@ export const updateUserTotalInfo = async (
     console.log(err);
   }
 };
+export const getBalance = async (dispatch, setBalance, token) => {
+  try {
+    const res = await fetchFromAPI("api/my_balance", {
+      headers: {
+        Authorization: `token ${token}`,
+      },
+    });
+    console.log(res);
+    localStorage.setItem("balance", res.total_balance);
+    dispatch(setBalance(res.total_balance));
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const getUserPhoto = (photo, gender) => {
   if (photo === null) {
     return gender === "Male" ? Male : Female;
   } else return photo;
+};
+export const getTimeofSeconds = (seconds) => {
+  const duration = moment.duration(seconds, "seconds");
+
+  const days = Math.floor(duration.asDays());
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+
+  const dayString =
+    days > 0 ? `${days} ${days > 2 && days < 11 ? "ايام" : "يوم"}, ` : "";
+  const hourString =
+    hours > 0 ? `${hours} ${hours > 2 && hours < 11 ? "ساعات" : "ساعة"}, ` : "";
+  const minuteString = `${minutes} ${
+    minutes > 2 && minutes < 11 ? "دقائق" : "دقيقة"
+  }`;
+  return dayString + hourString + minuteString;
 };
 export const isString = (value) => {
   return typeof value === "string" || value instanceof String;

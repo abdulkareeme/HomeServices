@@ -30,13 +30,9 @@ const MyServiceOrders = lazy(() =>
 const FillServiceForm = lazy(() =>
   import("./Pages/FillServiceForm/FillServiceForm")
 );
-const ServiceListPage = lazy(() =>
-  import("./Pages/ServiceListPage/ServiceListPage")
-);
 const MyRecieveOrders = lazy(() =>
   import("./Pages/MyRecieveOrders/MyRecieveOrders")
 );
-const Balance = lazy(() => import("./Pages/Balance/Balance"));
 function App() {
   return (
     <Suspense fallback={<Loader />}>
@@ -58,7 +54,6 @@ function App() {
           <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/user/:username/services" element={<SellerServices />} />
           <Route path="/user/:username/rates" element={<SellerRates />} />
-          <Route path="/user/:username/balance" element={<Balance />} />
           <Route path="/service/new" element={<AddService />} />
           <Route path="/service/:id/update" element={<UpdateService />} />
           <Route
@@ -69,7 +64,6 @@ function App() {
             path="/user/:username/update_profile"
             element={<UpdateProfile />}
           />
-          <Route path="/service/:id/update" element={<UpdateService />} />
           <Route path="/service/:id/fill_form" element={<FillServiceForm />} />
           <Route path="/my_order" element={<MyServiceOrders />} />
           <Route path="/my_recieve_order" element={<MyRecieveOrders />} />
