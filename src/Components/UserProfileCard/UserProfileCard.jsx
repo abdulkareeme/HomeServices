@@ -1,5 +1,3 @@
-import Male from "../../Images/Male.jpg";
-import Female from "../../Images/Female.jpg";
 import { Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import "./user-profile-card.css";
@@ -13,7 +11,7 @@ import {
 import { useEffect } from "react";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import LoaderContent from "../LoaderContent/LoaderContent";
-// import "../../Images/"
+import Cookies from "js-cookie";
 const UserProfileCard = () => {
   const { userTotalInfo, isSelected, selectedUser } = useSelector(
     (state) => state.homeService
@@ -21,7 +19,7 @@ const UserProfileCard = () => {
   const dispatch = useDispatch();
   const { username } = useParams();
   if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
+    const storedUser = Cookies.get("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   const getUserPageInfo = async () => {
@@ -29,18 +27,16 @@ const UserProfileCard = () => {
       try {
         const data = await fetchFromAPI(`api/user/${username}`);
         dispatch(setSelectedUser(data));
-        localStorage.setItem("selectedUser", JSON.stringify(data));
       } catch (err) {
         console.log(err);
       }
     } else {
       dispatch(setSelectedUser(userTotalInfo));
-      localStorage.setItem("selectedUser", JSON.stringify(userTotalInfo));
     }
   };
   useEffect(() => {
-    userTotalInfo && localStorage.setItem("selectedUser", null);
-    userTotalInfo && getUserPageInfo();
+    getUserPageInfo();
+    // Cookies.add
   }, [username]);
   const sellerProfileLinks = [
     {
@@ -69,7 +65,13 @@ const UserProfileCard = () => {
           <LoaderContent />
         ) : (
           <Row>
-            <img src={selectedUser?.photo} alt="profile" />
+            <div className="image-holder">
+              {selectedUser?.photo ? (
+                <img src={selectedUser?.photo} alt="profile" />
+              ) : (
+                <div className="image-skelton"></div>
+              )}
+            </div>
             <h2>
               <span>
                 {selectedUser?.first_name} {selectedUser?.last_name}

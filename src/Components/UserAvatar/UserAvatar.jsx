@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
 const UserAvatar = () => {
   const [showList, setShowList] = useState(false);
   const dispatch = useDispatch();
@@ -18,14 +19,14 @@ const UserAvatar = () => {
     (state) => state.homeService
   );
   if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
+    const storedUser = Cookies.get("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   if (userToken === null) {
-    const storedToken = localStorage.getItem("userToken");
+    const storedToken = Cookies.get("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
   }
-  balance === null && dispatch(setBalance(localStorage.getItem("balance")));
+  balance === null && dispatch(setBalance(Cookies.get("balance")));
   const avatarList = [
     {
       label: userTotalInfo?.username,
@@ -54,9 +55,9 @@ const UserAvatar = () => {
       },
     }).then(() => {
       history("/");
-      localStorage.setItem("userTotalInfo", null);
-      localStorage.setItem("userToken", null);
-      localStorage.setItem("balance", null);
+      Cookies.remove("userTotalInfo");
+      Cookies.remove("userToken");
+      Cookies.remove("balance");
       dispatch(setUserTotalInfo(null));
       dispatch(setUserToken(null));
     });
@@ -64,11 +65,17 @@ const UserAvatar = () => {
 
   return (
     <div className="user">
-      <img
-        onClick={() => setShowList(!showList)}
-        src={userTotalInfo?.photo}
-        alt="profile"
-      />
+      <div className="image-holder">
+        {userTotalInfo?.photo ? (
+          <img
+            onClick={() => setShowList(!showList)}
+            src={userTotalInfo?.photo}
+            alt="profile"
+          />
+        ) : (
+          <div className="image-skelton"></div>
+        )}
+      </div>
       <ListGroup hidden={!showList}>
         {avatarList.map((item, index) => (
           <ListGroup.Item

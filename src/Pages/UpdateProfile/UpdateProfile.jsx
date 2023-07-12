@@ -34,11 +34,11 @@ const UpdateProfile = () => {
   const history = useNavigate();
   const { username } = useParams();
   if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
+    const storedUser = Cookies.get("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   if (userToken === null) {
-    const storedToken = localStorage.getItem("userToken");
+    const storedToken = Cookies.get("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
   }
   const [dateValue, setDateValue] = useState(userTotalInfo?.birth_date);
@@ -53,29 +53,6 @@ const UpdateProfile = () => {
   const initialValues = {
     first_name: userTotalInfo?.first_name,
     last_name: userTotalInfo?.last_name,
-  };
-  // useEffect(()=> {
-  //   Cookies.set('name', 'value')
-
-  // },[])
-  const putImageToApi = async () => {
-    let bearer = `token ${userToken}`;
-    try {
-      await putToAPI(
-        "api/update_user_photo",
-        {
-          photo: file,
-        },
-        {
-          headers: {
-            Authorization: bearer,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
   };
   const handleSubmit = async (values) => {
     console.log(file);
@@ -102,17 +79,31 @@ const UpdateProfile = () => {
         "aria-live": "polite",
       },
     });
-    try {
-      await putToAPI("api/update_profile", user, {
-        headers: {
-          Authorization: bearer,
-        },
-      });
-    } catch (err) {
-      setIsSubmitting(0);
-      console.log(err);
-    }
+
     if (uploadImage) {
+      try {
+        await putToAPI("api/update_profile", user, {
+          headers: {
+            Authorization: bearer,
+          },
+        });
+      } catch (err) {
+        if (
+          err.response.data?.detail ===
+          "Authentication credentials were not provided."
+        ) {
+          toast.error("الرجاء تسجيل الدخول", {
+            duration: 3000,
+            position: "top-center",
+            ariaProps: {
+              role: "status",
+              "aria-live": "polite",
+            },
+          });
+        }
+        setIsSubmitting(0);
+        console.log(err);
+      }
       try {
         await putToAPI(
           "api/update_user_photo",
@@ -138,25 +129,48 @@ const UpdateProfile = () => {
         setIsSubmitting(0);
         setTimeout(() => {
           history(`/user/${username}`);
-        }, 3000);
+        }, 2000);
       } catch (err) {
         console.log(err);
         setIsSubmitting(0);
       }
     } else {
-      await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
-      toast.success("تم تحديث المعلومات بنجاح", {
-        duration: 3000,
-        position: "top-center",
-        ariaProps: {
-          role: "status",
-          "aria-live": "polite",
-        },
-      });
-      setIsSubmitting(0);
-      setTimeout(() => {
-        history(`/user/${username}`);
-      }, 3000);
+      try {
+        await putToAPI("api/update_profile", user, {
+          headers: {
+            Authorization: bearer,
+          },
+        });
+        await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
+        toast.success("تم تحديث المعلومات بنجاح", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+        setIsSubmitting(0);
+        setTimeout(() => {
+          history(`/user/${username}`);
+        }, 2000);
+      } catch (err) {
+        setIsSubmitting(0);
+        console.log(err);
+        if (
+          err.response.data?.detail ===
+          "Authentication credentials were not provided."
+        ) {
+          toast.error("الرجاء تسجيل الدخول", {
+            duration: 3000,
+            position: "top-center",
+            ariaProps: {
+              role: "status",
+              "aria-live": "polite",
+            },
+          });
+        }
+      }
     }
   };
   const handleFileInputChange = (e) => {
@@ -177,11 +191,7 @@ const UpdateProfile = () => {
       <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, handleChange, handleBlur, errors, touched }) => (
           <Container className="d-flex justify-content-center align-items-center">
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              action=""
-              // encType="multipart/form-data"
-            >
+            <form onSubmit={(e) => e.preventDefault()} action="">
               <h3>المعلومات الشخصية</h3>
               <div className="image-holder">
                 <img src={imageUrl} alt="profile" />

@@ -1,23 +1,16 @@
 import { Col, Container, Row } from "react-bootstrap";
 import "./services-list.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import { useNavigate, useParams } from "react-router-dom";
-import { setSelectedUser } from "../../Store/homeServiceSlice";
 import LoaderContent from "../LoaderContent/LoaderContent";
 
 const ServicesList = ({ type }) => {
   const { selectedUser } = useSelector((state) => state.homeService);
   const [serviceList, setServiceList] = useState(null);
   const history = useNavigate();
-  const dispatch = useDispatch();
   const { username } = useParams();
-  if (selectedUser === null) {
-    const storedselectedUser = JSON.parse(localStorage.getItem("selectedUser"));
-    dispatch(setSelectedUser(storedselectedUser));
-  }
-  // dispatch(setSelectedUser())
   const getServiceList = async () => {
     try {
       const serviceData = await fetchFromAPI(

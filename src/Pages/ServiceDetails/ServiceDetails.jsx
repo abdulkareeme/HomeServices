@@ -11,6 +11,7 @@ import {
 } from "../../Store/homeServiceSlice";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import Rates from "../../Components/Rates/Rates";
+import Cookies from "js-cookie";
 
 const ServiceDetails = () => {
   const { userTotalInfo, userToken, selectedUser } = useSelector(
@@ -18,7 +19,7 @@ const ServiceDetails = () => {
   );
   const dispatch = useDispatch();
   if (selectedUser === null) {
-    const storedselectedUser = JSON.parse(localStorage.getItem("selectedUser"));
+    const storedselectedUser = JSON.parse(Cookies.get("selectedUser"));
     dispatch(setSelectedUser(storedselectedUser));
   }
   const [serviceDetails, setServiceDetails] = useState(null);

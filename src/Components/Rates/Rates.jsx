@@ -46,7 +46,10 @@ const Rates = ({ rates, type }) => {
               <div className="stars">{handleRateStars(rate.work_ethics)}</div>
             </Row>
             <Row className="mt-3 mb-4 d-flex align-items-center gap-1">
-              <Link to={`/user/${rate.client.username}`} className="w-max">
+              <Link
+                to={`/user/${rate.client.username}`}
+                className="w-max image-holder"
+              >
                 <img src={rate.client.photo} alt="profile" />
               </Link>
               <div className="info d-flex flex-column w-max gap-2">

@@ -1,18 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import NavBar from "./Components/Navbar/Navbar";
-import Login from "./Components/Login/Login";
-import Register from "./Components/Register/Register";
 import Loader from "./Components/Loader/Loader";
+import ProtectedPath from "./Components/ProtectedPath";
 import "react-tooltip/dist/react-tooltip.css";
 import { Toaster } from "react-hot-toast";
-import FilterResults from "./Pages/FilterResults/FilterResults";
-import SearchResults from "./Pages/SearchResults/SearchResults";
-import SellerRates from "./Pages/SellerRates/SellerRates";
-import ForgetPassword from "./Pages/ForgetPassword/ForgetPassword";
-import VerificationEmail from "./Pages/VerificationEmail/VerificationEmail";
-import NewPassword from "./Pages/NewPassword/NewPassword";
+import Cookies from "js-cookie";
+//Website Pages
 const Home = lazy(() => import("./Pages/Home"));
+const Login = lazy(() => import("./Components/Login/Login"));
+const Register = lazy(() => import("./Components/Register/Register"));
 const ConfirmEmail = lazy(() => import("./Pages/ConfirmEmail"));
 const SellerServices = lazy(() =>
   import("./Pages/SellerServices/SellerServices")
@@ -33,7 +30,18 @@ const FillServiceForm = lazy(() =>
 const MyRecieveOrders = lazy(() =>
   import("./Pages/MyRecieveOrders/MyRecieveOrders")
 );
+const FilterResults = lazy(() => import("./Pages/FilterResults/FilterResults"));
+const SearchResults = lazy(() => import("./Pages/SearchResults/SearchResults"));
+const SellerRates = lazy(() => import("./Pages/SellerRates/SellerRates"));
+const ForgetPassword = lazy(() =>
+  import("./Pages/ForgetPassword/ForgetPassword")
+);
+const VerificationEmail = lazy(() =>
+  import("./Pages/VerificationEmail/VerificationEmail")
+);
+const NewPassword = lazy(() => import("./Pages/NewPassword/NewPassword"));
 function App() {
+  const token = Cookies.get("userToken");
   return (
     <Suspense fallback={<Loader />}>
       <BrowserRouter>
@@ -41,7 +49,6 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/loader" element={<Loader />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forget_password" element={<ForgetPassword />} />
           <Route
@@ -54,19 +61,34 @@ function App() {
           <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/user/:username/services" element={<SellerServices />} />
           <Route path="/user/:username/rates" element={<SellerRates />} />
-          <Route path="/service/new" element={<AddService />} />
-          <Route path="/service/:id/update" element={<UpdateService />} />
+          <Route
+            path="/service/new"
+            element={<ProtectedPath comp={<AddService />} cond={token} />}
+          />
+          <Route
+            path="/service/:id/update"
+            element={<ProtectedPath comp={<UpdateService />} cond={token} />}
+          />
           <Route
             path="/user/:username/services/:id"
             element={<ServiceDetails />}
           />
           <Route
             path="/user/:username/update_profile"
-            element={<UpdateProfile />}
+            element={<ProtectedPath comp={<UpdateProfile />} cond={token} />}
           />
-          <Route path="/service/:id/fill_form" element={<FillServiceForm />} />
-          <Route path="/my_order" element={<MyServiceOrders />} />
-          <Route path="/my_recieve_order" element={<MyRecieveOrders />} />
+          <Route
+            path="/service/:id/fill_form"
+            element={<ProtectedPath comp={<FillServiceForm />} cond={token} />}
+          />
+          <Route
+            path="/my_order"
+            element={<ProtectedPath comp={<MyServiceOrders />} cond={token} />}
+          />
+          <Route
+            path="/my_recieve_order"
+            element={<ProtectedPath comp={<MyRecieveOrders />} cond={token} />}
+          />
           <Route path="/services/:name" element={<FilterResults />} />
           <Route path="/search/:name" element={<SearchResults />} />
         </Routes>

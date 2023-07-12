@@ -1,5 +1,3 @@
-import Male from "../../Images/Male.jpg";
-import Female from "../../Images/Female.jpg";
 import {
   Accordion,
   Container,
@@ -11,7 +9,6 @@ import {
 import { Link } from "react-router-dom";
 import {
   accountLinks,
-  getBalance,
   getCategoryLink,
   normalUserLinks,
   offcanvasAccordion,
@@ -28,6 +25,7 @@ import {
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
+import Cookies from "js-cookie";
 
 const NavBar = () => {
   const { userTotalInfo, categories, flagToClose } = useSelector(
@@ -36,15 +34,16 @@ const NavBar = () => {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    const storedUser = localStorage.getItem("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
-    const storedCategories = localStorage.getItem("categories");
+    const storedUser = Cookies.get("userTotalInfo");
+    storedUser !== undefined &&
+      dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    const storedCategories = Cookies.get("categories");
     if (storedCategories) {
       dispatch(setCategories(JSON.parse(storedCategories)));
     } else {
       fetchFromAPI("services/categories").then((res) => {
         dispatch(setCategories(res));
-        localStorage.setItem("categories", JSON.stringify(res));
+        Cookies.set("categories", JSON.stringify(res), { expires: 30 });
       });
     }
   }, [dispatch]);
@@ -52,9 +51,8 @@ const NavBar = () => {
     if (flagToClose) setShow(false);
   }, [flagToClose]);
   const handleCategClick = (name) => {
-    console.log("ss");
     dispatch(setSelectedCategory(name));
-    localStorage.setItem("selectedCategory", name);
+    Cookies.set("selectedCategory", name, { expires: 30 });
   };
   return (
     <Navbar fixed="top" expand="md" className="fixed left-0 top-0 w-screen">

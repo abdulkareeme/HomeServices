@@ -7,9 +7,11 @@ import "./search-results.css";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import { useDispatch, useSelector } from "react-redux";
 import { setClearResults } from "../../Store/homeServiceSlice";
+import Cookies from "js-cookie";
 const SearchResults = () => {
   const { clearResults } = useSelector((state) => state.homeService);
-  const searchWord = localStorage.getItem("searchWord");
+  const searchWord = Cookies.get("searchWord");
+  console.log(searchWord);
   const [servicesList, setServiceList] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();

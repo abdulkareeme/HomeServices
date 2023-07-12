@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchFromAPI } from "../api/FetchFromAPI";
 import { setAreasList } from "../Store/homeServiceSlice";
+import Cookies from "js-cookie";
 
 const customStyles = {
   control: (provided) => ({
@@ -39,11 +40,11 @@ const MultiAreaSelect = ({ value = null, setAreasServiceList }) => {
   );
   const dispatch = useDispatch();
   if (!areasList) {
-    const storedAreas = localStorage.getItem("areasList");
+    const storedAreas = Cookies.get("areasList");
     if (!storedAreas) {
       fetchFromAPI("api/register/").then((res) => {
         dispatch(setAreasList(res));
-        localStorage.setItem("areasList", JSON.stringify(res));
+        Cookies.set("areasList", JSON.stringify(res), { expires: 10 });
       });
     } else dispatch(setAreasList(JSON.parse(storedAreas)));
   }

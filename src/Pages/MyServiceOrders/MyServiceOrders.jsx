@@ -12,17 +12,18 @@ import { toast } from "react-hot-toast";
 import moment from "moment";
 import "moment/locale/ar";
 import LoaderButton from "../../Components/LoaderButton";
+import Cookies from "js-cookie";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
   );
   const dispatch = useDispatch();
   if (userToken === null) {
-    const storedToken = localStorage.getItem("userToken");
+    const storedToken = Cookies.get("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
   }
   if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
+    const storedUser = Cookies.get("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   const [myorderData, setMyOrderData] = useState(null);

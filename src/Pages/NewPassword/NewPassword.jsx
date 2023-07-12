@@ -7,6 +7,7 @@ import { postToAPI } from "../../api/FetchFromAPI";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import LoaderButton from "../../Components/LoaderButton";
+import Cookies from "js-cookie";
 
 const newPasswordSchema = Yup.object().shape({
   password: Yup.string()
@@ -31,8 +32,8 @@ const NewPassword = () => {
     password2: "",
   };
   const submitHandler = async (values) => {
-    const code = localStorage.getItem("forgetPassCode");
-    const email = localStorage.getItem("forgetPassEmail");
+    const code = Cookies.get("forgetPassCode");
+    const email = Cookies.get("forgetPassEmail");
     const payload = {
       email: email,
       forget_password_code: code,
@@ -51,8 +52,8 @@ const NewPassword = () => {
       setIsSubmitting(1);
       await postToAPI("api/forget_password_reset", payload);
       setIsSubmitting(0);
-      localStorage.setItem("forgetPassCode", "");
-      localStorage.setItem("forgetPassEmail", "");
+      Cookies.remove("forgetPassCode");
+      Cookies.remove("forgetPassEmail");
       toast.success("تم تعيين كلمة المرور الجديدة بنجاح", {
         duration: 3000,
         position: "top-center",
@@ -70,7 +71,7 @@ const NewPassword = () => {
     }
   };
   useEffect(() => {
-    const code = localStorage.getItem("forgetPassCode");
+    const code = Cookies.get("forgetPassCode");
     if (!code || code === "") history(-1);
   }, []);
 

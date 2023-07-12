@@ -2,10 +2,15 @@
     position: relative;
 }
 
-.user img {
+.user .image-holder {
     width: 40px;
-    border-radius: 50%;
+    height: 40px;
     cursor: pointer;
+}
+
+.user .image-holder img {
+    width: 100%;
+    border-radius: 50%;
 }
 
 .user .list-group {

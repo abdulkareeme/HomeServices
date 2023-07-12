@@ -5,6 +5,7 @@ import { fetchFromAPI } from "../api/FetchFromAPI";
 import Male from "../Images/Male.jpg";
 import Female from "../Images/Female.jpg";
 import moment from "moment";
+import Cookies from "js-cookie";
 
 export const BASE_API_URL = "http://abdulkareemedres.pythonanywhere.com";
 export const navbarLinks = [
@@ -145,7 +146,7 @@ export const updateUserTotalInfo = async (
     const userUpdateInfo = await fetchFromAPI(
       `api/user/${userTotalInfo?.username}`
     );
-    localStorage.setItem("userTotalInfo", JSON.stringify(userUpdateInfo));
+    Cookies.set("userTotalInfo", JSON.stringify(userUpdateInfo));
     dispatch(setUserTotalInfo(userUpdateInfo));
   } catch (err) {
     console.log(err);
@@ -158,8 +159,7 @@ export const getBalance = async (dispatch, setBalance, token) => {
         Authorization: `token ${token}`,
       },
     });
-    console.log(res);
-    localStorage.setItem("balance", res.total_balance);
+    Cookies.set("balance", res.total_balance, { expires: 30 });
     dispatch(setBalance(res.total_balance));
   } catch (err) {
     console.log(err);

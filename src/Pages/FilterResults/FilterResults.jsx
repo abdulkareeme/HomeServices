@@ -11,14 +11,15 @@ import {
 import "./filter-results.css";
 import SearchBar from "../../Components/SeachBar/SearchBar";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
+import Cookies from "js-cookie";
 const FilterResults = () => {
   const { selectedCategory, clearResults } = useSelector(
     (state) => state.homeService
   );
-  const searchWord = localStorage.getItem("searchWord");
+  const searchWord = Cookies.get("searchWord");
   const dispatch = useDispatch();
   if (!selectedCategory) {
-    const storedCategory = localStorage.getItem("selectedCategory");
+    const storedCategory = Cookies.get("selectedCategory");
     dispatch(setSelectedCategory(storedCategory));
   }
   const [servicesList, setServiceList] = useState(null);

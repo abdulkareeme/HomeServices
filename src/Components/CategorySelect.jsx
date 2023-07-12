@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchFromAPI } from "../api/FetchFromAPI";
 import { setCategories } from "../Store/homeServiceSlice";
+import Cookies from "js-cookie";
 
 const customStyles = {
   control: (provided) => ({
@@ -33,11 +34,11 @@ const CategorySelect = ({ read = false, value = null, setCategoryService }) => {
   const { categories } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();
   if (!categories) {
-    const storedCategories = localStorage.getItem("categories");
+    const storedCategories = Cookies.get("categories");
     if (!storedCategories) {
       fetchFromAPI("services/categories").then((res) => {
         dispatch(setCategories(res));
-        localStorage.setItem("categories", JSON.stringify(res));
+        Cookies.set("categories", JSON.stringify(res), { expires: 10 });
       });
     } else dispatch(setCategories(JSON.parse(storedCategories)));
   }

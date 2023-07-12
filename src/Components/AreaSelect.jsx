@@ -4,6 +4,7 @@ import Select from "react-select";
 import { fetchFromAPI } from "../api/FetchFromAPI";
 import { setAreasList } from "../Store/homeServiceSlice";
 import { json } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const customStyles = {
   control: (provided) => ({
@@ -35,11 +36,11 @@ const AreaSelect = ({ areaSelected, setAreaSelected }) => {
   const { areasList } = useSelector((state) => state.homeService);
   const dispatch = useDispatch();
   if (!areasList) {
-    const storedAreas = localStorage.getItem("areasList");
+    const storedAreas = Cookies.get("areasList");
     if (!storedAreas) {
       fetchFromAPI("api/register/").then((res) => {
         dispatch(setAreasList(res));
-        localStorage.setItem("areasList", JSON.stringify(res));
+        Cookies.set("areasList", JSON.stringify(res), { expires: 10 });
       });
     } else dispatch(setAreasList(JSON.parse(storedAreas)));
   }

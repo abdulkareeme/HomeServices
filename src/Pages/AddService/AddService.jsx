@@ -13,6 +13,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { updateUserTotalInfo } from "../../utils/constants";
 import LoaderButton from "../../Components/LoaderButton";
+import Cookies from "js-cookie";
 const addServicSchema = Yup.object().shape({
   title: Yup.string()
     .required("لم تدخل عنوان الخدمة بعد")
@@ -36,11 +37,11 @@ const AddService = () => {
   );
   const dispatch = useDispatch();
   if (userToken === null) {
-    const storedToken = localStorage.getItem("userToken");
+    const storedToken = Cookies.get("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
   }
   if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
+    const storedUser = Cookies.get("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   const history = useNavigate();
@@ -80,9 +81,9 @@ const AddService = () => {
     average_price_per_hour: "",
   };
   // protect path from client
-  useEffect(()=> {
-    if(userTotalInfo.mode!=="seller") history(-1);
-  },[])
+  useEffect(() => {
+    if (userTotalInfo.mode !== "seller") history(-1);
+  }, []);
   const updateFormDataList = (field, value, id) => {
     setFormDataList((prevList) => {
       return prevList.map((item) => {

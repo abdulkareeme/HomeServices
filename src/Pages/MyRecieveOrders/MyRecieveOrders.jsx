@@ -11,6 +11,7 @@ import moment from "moment";
 import "moment/locale/ar";
 import { getBalance } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 const MyRecieveOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -22,13 +23,13 @@ const MyRecieveOrders = () => {
   const handleClose = () => setShow(false);
 
   const dispatch = useDispatch();
-  const history =useNavigate();
+  const history = useNavigate();
   if (userToken === null) {
-    const storedToken = localStorage.getItem("userToken");
+    const storedToken = Cookies.get("userToken");
     dispatch(setUserToken(JSON.parse(storedToken)));
   }
   if (userTotalInfo === null) {
-    const storedUser = localStorage.getItem("userTotalInfo");
+    const storedUser = Cookies.get("userTotalInfo");
     dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   // many stats to filter recive data depends on status
@@ -235,9 +236,9 @@ const MyRecieveOrders = () => {
     getMyRecieveOrderData();
   }, []);
   // protect path from client
-  useEffect(()=> {
-    if(userTotalInfo.mode!=="seller") history(-1);
-  },[])
+  useEffect(() => {
+    if (userTotalInfo.mode !== "seller") history(-1);
+  }, []);
   return (
     <section className="my-recieve-orders">
       <Toaster />

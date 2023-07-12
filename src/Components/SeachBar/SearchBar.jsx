@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { setClearResults, setFlagToClose } from "../../Store/homeServiceSlice";
 import { useDispatch } from "react-redux";
 import "./searchbar.css";
+import Cookies from "js-cookie";
 const SearchBar = ({ type, goto }) => {
   const [inputValue, setInputValue] = useState("");
   const history = useNavigate();
@@ -12,7 +13,7 @@ const SearchBar = ({ type, goto }) => {
       dispatch(setFlagToClose(true));
       history(`/search/${inputValue}`);
     } else dispatch(setClearResults(true));
-    localStorage.setItem("searchWord", inputValue);
+    Cookies.set("searchWord", inputValue, { expires: 2 });
   };
   return (
     <div

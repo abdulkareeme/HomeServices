@@ -15,6 +15,7 @@ import {
 } from "../../Store/homeServiceSlice";
 import LoaderButton from "../LoaderButton";
 import { getBalance } from "../../utils/constants";
+import Cookies from "js-cookie";
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
     .email("أدخل بريد الكتروني صالح")
@@ -45,8 +46,12 @@ const Login = () => {
         dispatch(setIsRegistered(false));
         res?.user_info.mode === "seller" &&
           (await getBalance(dispatch, setBalance, res?.token[0]));
-        localStorage.setItem("userTotalInfo", JSON.stringify(res?.user_info));
-        localStorage.setItem("userToken", JSON.stringify(res?.token[0]));
+        Cookies.set("userTotalInfo", JSON.stringify(res?.user_info), {
+          expires: 30,
+        });
+        Cookies.set("userToken", JSON.stringify(res?.token[0]), {
+          expires: 30,
+        });
         history("/");
       })
       .catch((err) => {

@@ -11,12 +11,26 @@ const ServiceCard = ({ serviceData, id }) => {
         {serviceData?.seller.user.last_name}
       </Tooltip>
       <div>
-        <img
+        <div className="image-holder">
+          {serviceData?.seller.user.photo ? (
+            <img
+              onClick={() =>
+                history(`/user/${serviceData?.seller.user.username}`)
+              }
+              className={`image-${id}`}
+              src={serviceData.seller.user.photo}
+              alt="profile"
+            />
+          ) : (
+            <div className="image-skelton"></div>
+          )}
+        </div>
+        {/* <img
           onClick={() => history(`/user/${serviceData?.seller.user.username}`)}
           className={`image-${id}`}
           src={serviceData?.seller.user.photo}
           alt="profile"
-        />
+        /> */}
         <div className="stars d-flex gap-2">
           {handleRateStars(serviceData?.average_ratings)}
         </div>

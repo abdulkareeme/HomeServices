@@ -6,14 +6,14 @@ import { postToAPI } from "../../api/FetchFromAPI";
 import VerificationCodeInput from "../../Components/VerificationCodeInput/VerificationCodeInput";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const VerificationEmail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [forgetPassEmail, setForgetPassEmail] = useState(false);
-  console.log(forgetPassEmail);
   const history = useNavigate();
   useEffect(() => {
-    const email = localStorage.getItem("forgetPassEmail");
+    const email = Cookies.get("forgetPassEmail");
     if (!email || email === "") history(-1);
     setForgetPassEmail(email);
   }, []);

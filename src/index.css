@@ -257,3 +257,15 @@ button.eye ion-icon {
   font-size: 12px;
   margin: 5px 0;
 }
+
+.image-skelton {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(224, 219, 219);
+  border-radius: 100%;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}

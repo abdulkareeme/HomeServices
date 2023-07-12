@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import "./forget-password.css";
 import { ErrorMessage, Formik } from "formik";
 import LoaderButton from "../../Components/LoaderButton";
+import Cookies from "js-cookie";
 
 const EmailSchema = Yup.object().shape({
   email: Yup.string()
@@ -33,7 +34,7 @@ const ForgetPassword = () => {
         null
       );
       setIsSubmitting(0);
-      localStorage.setItem("forgetPassEmail", values.email);
+      Cookies.set("forgetPassEmail", values.email,{ expires: 30 });
       toast("تم الطلب بنجاح وسيتم تحويلك الى التحقق من الرمز", {
         duration: 2000,
         position: "top-center",

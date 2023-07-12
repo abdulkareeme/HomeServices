@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Cookies from "js-cookie";
 const VerificationCodeInput = () => {
   const { userInputValue } = useSelector((state) => state.homeService);
   const [forgetPassEmail, setForgetPassEmail] = useState(false);
@@ -161,7 +162,7 @@ const VerificationCodeInput = () => {
               },
             }
           );
-          localStorage.setItem("forgetPassCode", code);
+          Cookies.set("forgetPassCode", code, { expires: 30 });
           setTimeout(() => {
             history("/forget_password/reset");
           }, 1000);
@@ -196,7 +197,7 @@ const VerificationCodeInput = () => {
     }
   };
   useEffect(() => {
-    setForgetPassEmail(localStorage.getItem("forgetPassEmail"));
+    setForgetPassEmail(Cookies.get("forgetPassEmail"));
     inputRefs[inputRefs.length - 1].current.focus();
   }, []);
   return (

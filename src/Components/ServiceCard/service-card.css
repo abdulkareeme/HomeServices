@@ -17,8 +17,14 @@
     color: rgb(239, 239, 49);
 }
 
-.service-card img {
+.service-card .image-holder {
     width: 80px;
+    height: 80px;
+}
+
+.service-card img {
+    width: 100%;
+    object-fit: contain;
     cursor: pointer;
     border-radius: 50%;
 }

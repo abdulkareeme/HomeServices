@@ -1,17 +1,11 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "./user-profile.css";
 import UserProfileLayout from "../../Components/UserProfileLayout";
 import ServicesList from "../../Components/ServicesList/ServicesList";
 import { getTimeofSeconds, handleRateStars } from "../../utils/constants";
-import { setSelectedUser } from "../../Store/homeServiceSlice";
 const UserProfile = () => {
   const { selectedUser } = useSelector((state) => state.homeService);
-  const dispatch = useDispatch();
-  if (selectedUser === null) {
-    const storedselectedUser = JSON.parse(localStorage.getItem("selectedUser"));
-    dispatch(setSelectedUser(storedselectedUser));
-  }
   return (
     <UserProfileLayout>
       {selectedUser?.mode === "seller" ? (

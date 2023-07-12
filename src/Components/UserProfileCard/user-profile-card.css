@@ -1,5 +1,5 @@
 .user-profile-card {
-    margin-top: 70px;
+    margin-top: 100px;
 }
 
 .user-profile-card .row {
@@ -11,9 +11,15 @@
     gap: 10px;
 }
 
-.user-profile-card .row img {
+.user-profile-card .row .image-holder {
     width: 200px;
+    height: 180px;
+}
+
+.user-profile-card .row .image-holder img {
+    width: 100%;
     border-radius: 50%;
+    object-fit: contain;
 }
 
 .user-profile-card h2 {
