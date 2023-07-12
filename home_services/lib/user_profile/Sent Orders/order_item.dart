@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:home_services/Main%20Classes/form.dart';
-import 'package:home_services/user_profile/Received%20Orders/send_first_reject.dart';
 import 'package:home_services/user_profile/Sent%20Orders/cancel_order.dart';
 import 'package:home_services/user_profile/Sent%20Orders/form_review.dart';
+import 'package:home_services/user_profile/rating/rate_service.dart';
 import 'package:intl/intl.dart';
 
 import '../../Main Classes/order.dart';
@@ -26,10 +28,6 @@ class OrderItem extends StatefulWidget {
 class _OrderItemState extends State<OrderItem> {
   @override
   Widget build(BuildContext context) {
-    /*for(int i=0;i<widget.forms.length;i++){
-      print(widget.forms[i].field.title);
-      print(widget.forms[i].content);
-    }*/
     return Card(
       elevation: 5,
       child:Row(
@@ -70,30 +68,69 @@ class _OrderItemState extends State<OrderItem> {
               const SizedBox(height: 10,)
             ],
           ),
-          Column(
+          (widget.order!.isRateable == false && widget.order!.status == "Expire")?Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children:const [
+              Icon(Icons.done_all,color: Colors.green,),
+              Text("مكتملة",style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                color: Colors.green
+              ),)
+            ],
+          ) : Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FormReviewPage(forms: widget.forms)));
-              }, child:const Text("مراجعة فورم الطلب")),
+              Column(
+                children: [
+                  ElevatedButton(
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FormReviewPage(forms: widget.forms)));
+                      }, child:const Text("مراجعة فورم الطلب")),
 
-              const SizedBox(height: 5,),
-              (widget.order!.status != "Rejected")? ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary:Colors.red,
+                  const SizedBox(height: 5,),
+                  (widget.order!.status != "Rejected")? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary:Colors.red,
+                      ),
+                      onPressed:(){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CancelOrder(user: widget.user, orderId: widget.order!.id)));
+                      }, child:const Text("التراجع عن الطلب"))
+                      : IgnorePointer(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.grey
+                      ),
+                      onPressed: null , child:const Text("التراجع عن الطلب"),
                     ),
-                    onPressed:(){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CancelOrder(user: widget.user, orderId: widget.order!.id)));
-                    }, child:const Text("التراجع عن الطلب"))
-                  : IgnorePointer(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.grey
-                    ),
-                    onPressed: null , child:const Text("التراجع عن الطلب"),
                   ),
-                ),
+                  (widget.order!.isRateable == true && widget.order!.status == "Underway")? Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                        ),
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RateThisService(
+                            user: widget.user,
+                            orderId: widget.order!.id,
+                          )));
+                        },
+                        child: const Text("انهاء الخدمة وتقييم البائع")),
+                  ) : (widget.order!.isRateable == true && widget.order!.status == "Expire")? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                          padding: const EdgeInsets.only(left: 32,right: 32)
+                      ),
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RateThisService(
+                          user: widget.user,
+                          orderId: widget.order!.id,
+                        )));
+                      }, child: const Text("تقييم البائع")) : Container()
 
+                ],
+              )
             ],
           )
         ],

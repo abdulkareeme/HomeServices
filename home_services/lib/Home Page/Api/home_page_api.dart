@@ -103,7 +103,7 @@ class HomePageApi{
               info['birth_date'],
               info["date_joined"],
               utf8.decode(info["area_name"].toString().codeUnits),
-              info["bio"],
+              utf8.decode(info["bio"].toString().codeUnits),
               (info['average_rating'] != null)
                   ? info['average_rating']
                   : 0);
@@ -122,7 +122,7 @@ class HomePageApi{
               info["date_joined"],
               utf8.decode(info["area_name"].toString().codeUnits),
               (info['bio'] != null)
-                  ? info['bio']
+                  ? utf8.decode(info["bio"].toString().codeUnits)
                   :  "",
               info["area_id"],
               info["id"]

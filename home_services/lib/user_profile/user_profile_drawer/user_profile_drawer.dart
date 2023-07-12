@@ -3,6 +3,7 @@ import 'package:home_services/user_profile/Received%20Orders/get_my_received_ord
 import 'package:home_services/user_profile/Sent%20Orders/get_my_sent_order.dart';
 import 'package:home_services/user_profile/create_new_service/list_categories.dart';
 import 'package:home_services/user_profile/list_my_services/fetch_data.dart';
+import 'package:home_services/user_profile/rating/get_my_all_rating.dart';
 import 'package:home_services/user_profile/update_profile/get_area_list.dart';
 import '../../Home Page/Drawer/Widget/drawer_components.dart';
 
@@ -88,7 +89,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 color: Colors.black,
                 icon: Icons.rate_review,
                 onTap: (){
-
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetMyAllRating(user: widget.user,)));
                 },
                 iconColor: Colors.blueGrey),
           ),

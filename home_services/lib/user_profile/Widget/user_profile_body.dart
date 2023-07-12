@@ -5,12 +5,13 @@ import '../../style/user_profile_style.dart';
 // ignore: must_be_immutable
 class UserProfileBody extends StatefulWidget{
   // ignore: prefer_typing_uninitialized_variables
-  var user,width,height,myImage,selectImageMethod;
+  var user,width,height,selectImageMethod,myImage;
   UserProfileBody({
     required this.user,
     required this.height,
     required this.width,
     required this.selectImageMethod,
+    required this.myImage,
     super.key,
   });
   @override
@@ -18,6 +19,7 @@ class UserProfileBody extends StatefulWidget{
 }
 
 class _UserProfileBodyState extends State<UserProfileBody>{
+
   @override
   Widget build(BuildContext context) {
     var constHeight = widget.height;
@@ -30,8 +32,8 @@ class _UserProfileBodyState extends State<UserProfileBody>{
               ),
               Center(
                 child: InkWell(
-                  onTap: widget.selectImageMethod
-                  , child: (widget.myImage != null)? CircleAvatar(
+                  onTap:widget.selectImageMethod,
+                  child: (widget.myImage != null)? CircleAvatar(
                   radius: 90,
                   backgroundImage: MemoryImage(widget.myImage!),
                 ): CircleAvatar(

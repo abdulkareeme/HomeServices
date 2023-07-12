@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/style/service_details_style.dart';
+import 'package:home_services/user_profile/rating/get_service_all_rating.dart';
 import '../../Main Classes/service.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:home_services/user_profile/update_service/list_area.dart';
@@ -150,6 +151,19 @@ class SellerServiceDetails extends StatelessWidget {
                         ],
                       ),
                     const SizedBox(height: 25,),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                          padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/3.6,right: MediaQuery.of(context).size.width/3.6,top: 10,bottom: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        ),
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> GetServiceAllRating(user: user, id: service.id)));
+                        },
+                        child: const Text("عرض تقييمات الخدمة",style: TextStyle(
+                            fontSize: 17
+                        ))),
+                    const SizedBox(height: 20,),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue,

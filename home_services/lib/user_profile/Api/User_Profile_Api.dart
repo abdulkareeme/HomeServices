@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:home_services/Main%20Classes/field.dart';
 import 'package:home_services/Main%20Classes/order.dart';
+import 'package:home_services/Main%20Classes/rating.dart';
 import 'package:home_services/server/api_url.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -73,8 +75,8 @@ class ProfileApi {
             'services_number', info['services_number'])
             : await pref.setInt('services_number', 0);
         (info['average_rating'] != null)
-            ? await pref.setInt('rating', info['average_rating'])
-            : await pref.setInt('rating', 0);
+            ? await pref.setDouble('rating', info['average_rating'])
+            : await pref.setDouble('rating', 0.0);
         String an =utf8.decode(info['area_name'].toString().codeUnits);
         await pref.setString('area_name', an);
         await pref.setInt('area_id', info["area_id"]);
@@ -679,6 +681,123 @@ class ProfileApi {
 
     }
 
+  }
+
+  Future<List<Rating>> getServiceAllRating(int id,var user)async{
+    try{
+      Response response = await get(Uri.parse("${Server.host}${Server.serviceAllRating}$id"),
+        headers: {
+          "Authorization" : 'token ${user.token}'
+        }
+      );
+      List <Rating> rating = [];
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        var info = jsonDecode(response.body);
+        List op = info;
+        for(int i=0; i<op.length; i++){
+
+          Rating rate = Rating(
+              info[i]["id"],
+              utf8.decode(info[i]["client_comment"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits),
+              info[i]["client"]["photo"],
+              info[i]["client"]["username"],
+              info[i]["commitment_to_deadline"],
+              info[i]["quality_of_service"],
+              info[i]["rating_time"],
+              (info[i]["seller_comment"]!=null)?info[i]["seller_comment"]:"",
+              info[i]["work_ethics"]);
+
+          rating.add(rate);
+        }
+        return rating;
+      } else {
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+        List<Rating> os =[];
+        return os;
+      }
+    }catch(e){
+      print(e);
+      List<Rating> os =[];
+      return os;
+    }
+  }
+
+  Future<List<HomeServiceRating>> getAllMyRating(var user)async{
+    try{
+      Response response = await get(Uri.parse("${Server.host}${Server.allMyRating}${user.userName}"),
+          headers: {
+            "Authorization" : 'token ${user.token}'
+          }
+      );
+      List <HomeServiceRating> rating = [];
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        var info = jsonDecode(response.body);
+        List op = info;
+        for(int i=0; i<op.length; i++){
+          HomeServiceRating rate = HomeServiceRating(
+              info[i]["id"],
+              utf8.decode(info[i]["client_comment"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits),
+              info[i]["client"]["photo"],
+              info[i]["client"]["username"],
+              info[i]["commitment_to_deadline"],
+              info[i]["quality_of_service"],
+              info[i]["rating_time"],
+              (info[i]["seller_comment"]!=null)?info[i]["seller_comment"]:"",
+              info[i]["work_ethics"],
+              info[i]["home_service"]["id"],
+              utf8.decode(info[i]["home_service"]["title"].toString().codeUnits),
+              utf8.decode(info[i]["home_service"]["category"].toString().codeUnits));
+
+          rating.add(rate);
+        }
+        return rating;
+      } else {
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+        List<HomeServiceRating> os =[];
+        return os;
+      }
+    }catch(e){
+      print(e);
+      List<HomeServiceRating> os =[];
+      return os;
+    }
+  }
+  Future<List?> sendUserComment(var user,int orderId,int ethical ,int deadLine,int quality,TextEditingController comment)async{
+    try{
+      Response response = await post(Uri.parse("${Server.host}${Server.sendRate}$orderId"),
+        headers: {
+          "Authorization" : 'token ${user.token}'
+        },
+        body: {
+          "quality_of_service":quality,
+          "commitment_to_deadline":deadLine,
+          "work_ethics":ethical,
+          "client_comment":comment.text
+        }
+      );
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        List op = [];
+        return op;
+      } else {
+        print (response.statusCode);
+        print (jsonDecode(response.body));
+        List op = ['done'];
+        return op;
+      }
+    }catch(e){
+      print (e);
+      List op = ['done'];
+      return op;
+    }
   }
 
 }

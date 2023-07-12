@@ -21,9 +21,18 @@ class UserProfile extends StatefulWidget {
 
 }
 class _UserProfileState extends State<UserProfile> {
+  Future imagePicker(ImageSource source) async {
+    final ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: source);
+    if (file != null) {
+      return await file.readAsBytes();
+    } else {
+      print("no such image");
+    }
+  }
   Uint8List? myImage;
   void selectImage()async{
-    Uint8List image =await ProfileApi.imagePicker(ImageSource.gallery);
+    Uint8List image =await imagePicker(ImageSource.gallery);
     setState(() {
       myImage = image;
     });
@@ -42,7 +51,7 @@ class _UserProfileState extends State<UserProfile> {
           drawer: Drawer(
             child: UserProfileDrawer(user: widget.user, height: constHeight, width: constWidth, myImage: myImage)
           ),
-          body: UserProfileBody(user: widget.user, height: constHeight, width: constWidth, selectImageMethod: selectImage),
+          body: UserProfileBody(user: widget.user, height: constHeight, width: constWidth, selectImageMethod: selectImage,myImage: myImage),
         ),
       ),
     );

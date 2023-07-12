@@ -46,6 +46,19 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: (){
+                      final now = DateTime.now();
+                      final difference = now.difference(DateTime.parse("2023-07-10 12:30:00"));
+                      final hours = difference.inHours;
+                      final days = difference.inDays;
+                      final minutes = difference.inMinutes.remainder(60);
+                      final seconds = difference.inSeconds.remainder(60);
+                      print(hours);
+                      print(minutes);
+                      print(seconds);
+                      print(days);
+                      final months = days/30;
+                      print(months.toInt());
+                      print(months/12.toInt());
                       /*Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SellerServiceDetails(user: widget.user,)));*/
                     },
                     child: const Text("go"),

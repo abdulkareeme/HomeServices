@@ -25,4 +25,7 @@ class Server{
   static const String rejectOrderAfterReview = "services/reject_after_review/";
   static const String acceptOrderAfterReview = "services/accept_after_review/";
   static const String finishOrder = "services/finish_order/";
+  static const String serviceAllRating = "services/ratings/service/";
+  static const String allMyRating = "services/ratings/username/";
+  static const String sendRate = "services/make_rating/";
 }
