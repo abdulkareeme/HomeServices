@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Log%20out/Widget/log_out.dart';
 import 'package:home_services/user_profile/Received%20Orders/get_my_received_orders.dart';
 import 'package:home_services/user_profile/Sent%20Orders/get_my_sent_order.dart';
 import 'package:home_services/user_profile/create_new_service/list_categories.dart';
@@ -150,7 +151,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 color: Colors.black,
                 icon: Icons.logout,
                 onTap: (){
-
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LogOut(user: widget.user)));
                 },
                 iconColor: Colors.blueGrey),
           ),

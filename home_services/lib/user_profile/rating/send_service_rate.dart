@@ -21,7 +21,7 @@ class SendUserRate extends StatelessWidget {
           if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(child: CircularProgressIndicator(),);
           } else if(snapshot.connectionState == ConnectionState.done){
-            if(snapshot.data!.isNotEmpty){
+            if(snapshot.data!.isEmpty){
               return AlertDialog(
                 title: const Text("تم إرسال النعليق بنجاح"),
                 actions: [

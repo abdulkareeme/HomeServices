@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/my_field.dart';
+import 'package:home_services/user_profile/rating/send_service_rate.dart';
 
 
 class RateThisService extends StatefulWidget {
@@ -152,6 +153,14 @@ class _RateThisServiceState extends State<RateThisService> {
                   for(int i=0;i<ethical.length;i++){
                     if(ethical[i] == true)ethical1++;
                   }
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendUserRate(
+                    orderId: widget.orderId,
+                    user: widget.user,
+                    comment: comment,
+                    deadLine: deadLine1,
+                    ethical: ethical1,
+                    quality: ethical1,
+                  )));
                 }, child: const Text("تعليق"))
               ],
             ),

@@ -18,8 +18,8 @@ class LogOutApi{
           "Authorization": 'token ${user.token}',
         }
       );
-      if(response.statusCode == 200){
-        print(200);
+      if(response.statusCode == 204){
+        print(response.statusCode);
         SharedPreferences pref = await SharedPreferences.getInstance();
         pref.clear();
         List op = ['done'];

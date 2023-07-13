@@ -770,21 +770,29 @@ class ProfileApi {
       return os;
     }
   }
-  Future<List?> sendUserComment(var user,int orderId,int ethical ,int deadLine,int quality,TextEditingController comment)async{
+  Future<List?> sendUserComment(var user,var orderId,int ethical ,int deadLine,int quality,TextEditingController comment)async{
     try{
-      Response response = await post(Uri.parse("${Server.host}${Server.sendRate}$orderId"),
+      print(orderId);
+      print(ethical);
+      print(deadLine);
+      print(quality);
+      print(comment.text);
+      print(user.token);
+      Response response = await post(Uri.parse("${Server.host}${Server.sendRate}${orderId}"),
         headers: {
           "Authorization" : 'token ${user.token}'
         },
         body: {
-          "quality_of_service":quality,
-          "commitment_to_deadline":deadLine,
-          "work_ethics":ethical,
-          "client_comment":comment.text
+          "quality_of_service":quality.toString(),
+          "commitment_to_deadline":deadLine.toString(),
+          "work_ethics":ethical.toString(),
+          "client_comment":comment.text.toString()
         }
       );
+      print("oooo");
       if(response.statusCode == 200){
         print(response.statusCode);
+        print(jsonDecode(response.body));
         List op = [];
         return op;
       } else {

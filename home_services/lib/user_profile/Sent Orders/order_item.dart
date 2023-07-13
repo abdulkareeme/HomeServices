@@ -68,7 +68,7 @@ class _OrderItemState extends State<OrderItem> {
               const SizedBox(height: 10,)
             ],
           ),
-          (widget.order!.isRateable == false && widget.order!.status == "Expire")?Row(
+          /*(widget.order!.isRateable == false && widget.order!.status == "Expire")?Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children:const [
               Icon(Icons.done_all,color: Colors.green,),
@@ -132,7 +132,7 @@ class _OrderItemState extends State<OrderItem> {
                 ],
               )
             ],
-          )
+          )*/
         ],
       ),
     );

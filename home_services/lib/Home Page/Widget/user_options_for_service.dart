@@ -94,8 +94,8 @@ class UserOptionForService extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 25,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25,right: 25),
+                (user.mode == "seller")?Padding(
+                  padding: const EdgeInsets.only(left: 25,right: 25,bottom: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -103,8 +103,7 @@ class UserOptionForService extends StatelessWidget {
                       Text("${(user.averageFastAnswer== "")?0:user.averageFastAnswer}",style: ServiceDetailsStyle.detailsStyle(),),
                     ],
                   ),
-                ),
-                const SizedBox(height: 25,),
+                ):Visibility(visible: false,child: Container()),
                 Padding(
                   padding: const EdgeInsets.only(left: 25,right: 25),
                   child: Row(

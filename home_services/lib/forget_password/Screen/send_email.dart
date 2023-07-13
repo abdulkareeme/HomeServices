@@ -20,9 +20,20 @@ class _SendEmailForForgetPasswordState extends State<SendEmailForForgetPassword>
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  const Text("الرجاء إدخال الايميل لكي يتم ارسال رمز تحقق",style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500
+                  ),),
+                  SizedBox(height: MediaQuery.of(context).size.height/10,),
                   Padding(
                     padding: const EdgeInsets.only(left: 20,right: 20),
                     child: TextFormField(
+                      decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(),
+                        hintText: "أدخل الايميل",
+                        label: Text("الايميل"),
+                        focusedBorder: OutlineInputBorder()
+                      ),
                       controller: emailController,
                       validator: (data){
                         if(emailController.text.isEmpty){
@@ -44,7 +55,7 @@ class _SendEmailForForgetPasswordState extends State<SendEmailForForgetPassword>
                         padding: const EdgeInsets.only(left: 50,right: 50,top: 5,bottom: 5),
                       ),
                       onPressed: (){
-
+                        
                       },
                       child: const Text("إرسال"),
                     ),

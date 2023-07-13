@@ -17,21 +17,10 @@ class GetMySentOrder extends StatelessWidget {
           if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(child: CircularProgressIndicator(),);
           } else if(snapshot.connectionState == ConnectionState.done){
-            if(snapshot.data!.isNotEmpty){
               return MySentOrder(
                 orders: snapshot.data!,
                 user: user,
               );
-            } else {
-              return  AlertDialog(
-                title: const Text("حدثت مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),
-                actions: [
-                  ElevatedButton(onPressed: (){
-                    Navigator.of(context).pop();
-                  }, child: const Text("تأكيد"))
-                ],
-              );
-            }
           } else {
             return AlertDialog(
               title: const Text("حدثت مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),

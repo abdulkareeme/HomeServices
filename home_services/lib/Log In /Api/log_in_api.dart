@@ -31,7 +31,7 @@ class LogInApis {
     await pref.setString('gender', info['user_info']['gender']);
     print(info['user_info']['gender']);
     await (info['user_info']['bio'] != null)
-        ? pref.setString('bio', info['user_info']['bio'])
+        ? pref.setString('bio', utf8.decode(info['user_info']['bio'].toString().codeUnits))
         : pref.setString('bio', "");
     (info['user_info']['average_fast_answer'] != null)
         ? await pref.setString(
@@ -90,7 +90,9 @@ class LogInApis {
               info['user_info']['birth_date'],
               info['user_info']["date_joined"],
               utf8.decode(info['user_info']["area_name"].toString().codeUnits),
-              info['user_info']["bio"],
+              (info['user_info']['bio'] != null)
+                  ? utf8.decode(info['user_info']['bio'].toString().codeUnits)
+                  :  "",
               (info['user_info']['average_rating'] != null)
                   ? info['user_info']['average_rating'].toDouble()
                   : 0.0);
@@ -108,7 +110,7 @@ class LogInApis {
             info['user_info']["date_joined"],
             utf8.decode(info['user_info']["area_name"].toString().codeUnits),
             (info['user_info']['bio'] != null)
-                ? info['user_info']['bio']
+                ? utf8.decode(info['user_info']['bio'].toString().codeUnits)
                 :  "",
             info['user_info']["area_id"],
             info['user_info']["id"]);

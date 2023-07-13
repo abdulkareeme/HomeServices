@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Api/home_page_api.dart';
+import 'package:home_services/user_profile/create_new_service/list_categories.dart';
+// ignore: must_be_immutable
 class PostOrder extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   var user,serviceId,formAnswer;
   PostOrder({Key? key,required this.formAnswer,required this.serviceId,required this.user}) : super(key: key);
 
@@ -19,7 +22,7 @@ class PostOrder extends StatelessWidget {
                 title: const Text("تم طلب الخدمة بنجاح"),
                 actions: [
                   ElevatedButton(onPressed: (){
-                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetCategoriesList(user: user, op: true)));
                   }, child: const Text("تأكيد"))
                 ],
               );
