@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20out/Widget/log_out.dart';
-import 'package:home_services/user_profile/Received%20Orders/get_my_received_orders.dart';
-import 'package:home_services/user_profile/Sent%20Orders/get_my_sent_order.dart';
-import 'package:home_services/user_profile/create_new_service/list_categories.dart';
-import 'package:home_services/user_profile/list_my_services/fetch_data.dart';
-import 'package:home_services/user_profile/rating/get_my_all_rating.dart';
-import 'package:home_services/user_profile/update_profile/get_area_list.dart';
+import 'package:home_services/user_profile/Received%20Orders/Widget/get_my_received_orders.dart';
+import 'package:home_services/user_profile/Sent%20Orders/Widget/get_my_sent_order.dart';
+import 'package:home_services/user_profile/create_new_service/Widget/list_categories.dart';
+import 'package:home_services/user_profile/list_my_services/Widget/fetch_data.dart';
+import 'package:home_services/user_profile/rating/Widget/get_my_all_rating.dart';
+import 'package:home_services/user_profile/update_profile/Widget/get_area_list.dart';
 import '../../Home Page/Drawer/Widget/drawer_components.dart';
 
 // ignore: must_be_immutable

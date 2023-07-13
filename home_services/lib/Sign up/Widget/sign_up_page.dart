@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
-import 'package:home_services/Sign%20up/Widget/code_verification_page.dart';
-import 'package:home_services/Sign up/Api/sign_up_api.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'package:flutter/material.dart';
+import 'package:home_services/Log%20In%20/Screen/Log_In_page.dart';
+import 'package:home_services/Sign up/Api/sign_up_api.dart';
+import 'package:home_services/Sign%20up/Screen/code_verification_page.dart';
+
+// ignore: must_be_immutable
 class SignUpPage extends StatefulWidget {
   var firstnameController,
       lastnameController,

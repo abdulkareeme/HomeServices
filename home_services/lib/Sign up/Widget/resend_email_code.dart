@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Sign%20up/Screen/code_verification_page.dart';
 import '../Api/sign_up_api.dart';
-import 'code_verification_page.dart';
 
 class ResendEmailCode extends StatelessWidget{
   String email;

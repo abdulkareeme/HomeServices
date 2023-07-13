@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:home_services/server/api_url.dart';
 import 'package:http/http.dart';
-import '../../Log In /Widget/Log_In_page.dart';
 
 class SignUpApi{
 
@@ -72,7 +70,6 @@ class SignUpApi{
 
   Future<List?> postVerificationCode(var code, var email) async{
     try{
-      String initialError = "";
       Response response = await post(Uri.parse(Server.host+Server.userConfirmCode),body: {
         'email': email,
         'confirmation_code' : code,

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Main%20Classes/service.dart';
 import 'package:home_services/Sign%20up/Api/sign_up_api.dart';
-import 'package:home_services/Sign%20up/Screen/first_page_of_signup.dart';
+import 'package:home_services/user_profile/update_service/Widget/get_service_forms.dart';
 
-class GetAreaList extends StatelessWidget{
-  const GetAreaList({Key? key}) : super(key: key);
+// ignore: must_be_immutable
+class GetListArea extends StatelessWidget{
+  // ignore: prefer_typing_uninitialized_variables
+  var user;
+  ServiceDetails service;
+  GetListArea({required this.user,required this.service,super.key});
+
   @override
   Widget build(BuildContext context) {
-    SignUpApi ob = SignUpApi();
-    return(
-      Center(
-        child: Scaffold(
+    SignUpApi ob =SignUpApi();
+    return (
+        Scaffold(
           body: FutureBuilder(
-            future: ob.getAreaList(),
+            future:ob.getAreaList(),
             builder: (context,AsyncSnapshot<List?> snapshot){
               if(snapshot.connectionState == ConnectionState.waiting){
                 return const Center(child: CircularProgressIndicator());
@@ -19,7 +24,7 @@ class GetAreaList extends StatelessWidget{
                 if(snapshot.data!.isEmpty){
                   return AlertDialog(
                     title: const Text("ERROR"),
-                    content: const Text('Unable To Sign Up Right Now'),
+                    content: const Text('Unable To Create Service Now'),
                     actions: <Widget>[
                       ElevatedButton(
                         onPressed: () {
@@ -31,12 +36,12 @@ class GetAreaList extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return FirstPageOfSignUp(areaList: snapshot.data!);
+                  return GetServiceForm(service: service, areaList: snapshot.data!, user: user,);
                 }
               } else {
                 return AlertDialog(
                   title: const Text("ERROR"),
-                  content: const Text('Unable To Sign Up Right Now'),
+                  content: const Text('Unable To Create Service Now'),
                   actions: <Widget>[
                     ElevatedButton(
                       onPressed: () {
@@ -50,11 +55,8 @@ class GetAreaList extends StatelessWidget{
               }
             },
           ),
-        ),
-      )
+        )
     );
   }
-
-
 
 }

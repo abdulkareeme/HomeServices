@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Sign%20up/Api/sign_up_api.dart';
-import 'package:home_services/Sign%20up/Screen/first_page_of_signup.dart';
+import 'package:home_services/Home%20Page/Screen/home_page.dart';
+import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
+import 'package:home_services/user_profile/create_new_service/Widget/list_area.dart';
 
-class GetAreaList extends StatelessWidget{
-  const GetAreaList({Key? key}) : super(key: key);
+
+
+// ignore: must_be_immutable
+class GetCategoriesList extends StatelessWidget{
+  var user;
+  bool op ;
+  GetCategoriesList({required this.user,required this.op,super.key}) ;
+
   @override
   Widget build(BuildContext context) {
-    SignUpApi ob = SignUpApi();
-    return(
-      Center(
-        child: Scaffold(
-          body: FutureBuilder(
-            future: ob.getAreaList(),
+    ProfileApi ob =ProfileApi();
+    return (
+      Scaffold(
+        body: FutureBuilder(
+            future:ob.getCategories(),
             builder: (context,AsyncSnapshot<List?> snapshot){
               if(snapshot.connectionState == ConnectionState.waiting){
                 return const Center(child: CircularProgressIndicator());
@@ -19,7 +25,7 @@ class GetAreaList extends StatelessWidget{
                 if(snapshot.data!.isEmpty){
                   return AlertDialog(
                     title: const Text("ERROR"),
-                    content: const Text('Unable To Sign Up Right Now'),
+                    content: const Text('Unable To Create Service Now'),
                     actions: <Widget>[
                       ElevatedButton(
                         onPressed: () {
@@ -31,12 +37,12 @@ class GetAreaList extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return FirstPageOfSignUp(areaList: snapshot.data!);
+                  return (op == false)?GetListArea(categoriesList: snapshot.data!,user: user,): HomePage(user: user,category: snapshot.data!,);
                 }
               } else {
                 return AlertDialog(
                   title: const Text("ERROR"),
-                  content: const Text('Unable To Sign Up Right Now'),
+                  content: const Text('Unable To Create Service Now'),
                   actions: <Widget>[
                     ElevatedButton(
                       onPressed: () {
@@ -50,11 +56,8 @@ class GetAreaList extends StatelessWidget{
               }
             },
           ),
-        ),
       )
     );
   }
-
-
 
 }

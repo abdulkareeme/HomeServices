@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Log%20In%20/Widget/Log_In_page.dart';
+import 'package:home_services/Log%20In%20/Screen/Log_In_page.dart';
 import 'package:home_services/Sign%20up/Api/sign_up_api.dart';
-
-import '../../Home Page/home_page.dart';
-
 // ignore: must_be_immutable
 class CodeVerificationProcess extends StatelessWidget{
   String email , code;
