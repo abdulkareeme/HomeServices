@@ -28,4 +28,7 @@ class Server{
   static const String serviceAllRating = "services/ratings/service/";
   static const String allMyRating = "services/ratings/username/";
   static const String sendRate = "services/make_rating/";
+  static const String forgetPasswordSendEmail = "api/send_forget_password_code";
+  static const String forgetPasswordVerificationCode = "api/check_forget_password_code";
+  static const String resetForgetPassword = "api/forget_password_reset";
 }

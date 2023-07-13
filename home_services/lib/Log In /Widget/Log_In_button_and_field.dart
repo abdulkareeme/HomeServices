@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20In%20/Widget/log_in .dart';
+import 'package:home_services/forget_password/Screen/send_email.dart';
 import 'package:home_services/my_field.dart';
 import 'package:home_services/Log out/Api/Log_out_Api.dart';
 import '../../style/log_in_style.dart';
@@ -72,7 +73,7 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
               InkWell(
                 splashColor: Colors.black,
                 onTap: () {
-                  //op.logOut1(context);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const SendEmailForForgetPassword()));
                 },
                 child: Text(
                   "نسيت كلمة المرور؟",

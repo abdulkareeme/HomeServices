@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: /*SendEmailForForgetPassword(),*/CheckIfLoggedIn(), //HomePage(user: null,),////*LogIn(error: error),*//*CodeVerificationPage(email: "abode2001a123@gmail.com"),*/CheckIfLoggedIn(),//*CodeVerificationPage(email: "abode2001a123@gmail.com"),*///LogIn(error: error),//CheckIfLoggedIn(),//FirstPageOfSignUp(areaList: op),//CheckIfLoggedIn()LogIn(error: error),HomePage(userInfo: op),
+      home: CheckIfLoggedIn(), //HomePage(user: null,),////*LogIn(error: error),*//*CodeVerificationPage(email: "abode2001a123@gmail.com"),*/CheckIfLoggedIn(),//*CodeVerificationPage(email: "abode2001a123@gmail.com"),*///LogIn(error: error),//CheckIfLoggedIn(),//FirstPageOfSignUp(areaList: op),//CheckIfLoggedIn()LogIn(error: error),HomePage(userInfo: op),
       routes: {
         "log in": (context) => LogIn(
               error: error,

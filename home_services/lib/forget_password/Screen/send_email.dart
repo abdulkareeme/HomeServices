@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:home_services/forget_password/Widget/send_email.dart';
 
 class SendEmailForForgetPassword extends StatefulWidget {
   const SendEmailForForgetPassword({Key? key}) : super(key: key);
@@ -29,10 +30,13 @@ class _SendEmailForForgetPasswordState extends State<SendEmailForForgetPassword>
                     padding: const EdgeInsets.only(left: 20,right: 20),
                     child: TextFormField(
                       decoration: const InputDecoration(
+                        errorText: "",
                         enabledBorder: OutlineInputBorder(),
                         hintText: "أدخل الايميل",
                         label: Text("الايميل"),
-                        focusedBorder: OutlineInputBorder()
+                        focusedBorder: OutlineInputBorder(),
+                        errorBorder: OutlineInputBorder(),
+                        focusedErrorBorder: OutlineInputBorder(),
                       ),
                       controller: emailController,
                       validator: (data){
@@ -55,7 +59,7 @@ class _SendEmailForForgetPasswordState extends State<SendEmailForForgetPassword>
                         padding: const EdgeInsets.only(left: 50,right: 50,top: 5,bottom: 5),
                       ),
                       onPressed: (){
-                        
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendEmail(emailController:emailController,)));
                       },
                       child: const Text("إرسال"),
                     ),
