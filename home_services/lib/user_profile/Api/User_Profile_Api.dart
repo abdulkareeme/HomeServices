@@ -778,7 +778,7 @@ class ProfileApi {
       print(quality);
       print(comment.text);
       print(user.token);
-      Response response = await post(Uri.parse("${Server.host}${Server.sendRate}${orderId}"),
+      Response response = await post(Uri.parse("${Server.host}${Server.sendRate}$orderId"),
         headers: {
           "Authorization" : 'token ${user.token}'
         },
