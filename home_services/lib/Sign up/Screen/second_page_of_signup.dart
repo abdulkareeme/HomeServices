@@ -37,7 +37,8 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
     var ok = formKey.currentState;
     return ok!.validate();
   }
-
+  bool isPasswordVisible = false;
+  bool isPasswordVisible1 = false;
   @override
   Widget build(BuildContext context) {
     var height1 = MediaQuery.of(context).size.height;
@@ -73,22 +74,12 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
               key: formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: height1 / 18,
                   ),
-                  const Padding(
-                    padding:  EdgeInsets.only(right: 25),
-                    child:  Text("الانضمام لمنزلي",style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  ),
-                  SizedBox(
-                    height: height1 / 400,
-                  ),
+                  const Image(image:AssetImage("images/logo.png"),width: 280,),
                   const Padding(
                     padding:  EdgeInsets.only(right: 25),
                     child:  Text("إنشاء حساب جديد ",style: TextStyle(
@@ -132,12 +123,22 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                   ),
                   // password field
                   MyFild(
+                    suffixIcon: IconButton(
+                      icon: Icon(isPasswordVisible1
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          isPasswordVisible1 = !isPasswordVisible1;
+                        });
+                      },
+                    ),
                     leftPadding: 20.0,
                     rightPadding: 20.0,
                     errorText: widget.passwordError,
                     contorller: widget.passwordController,
                     hintText: "كلمة المرور",
-                    obscure: false,
+                    obscure: !isPasswordVisible1,
                     lable: const Text("كلمة المرور"),
                     color: Colors.white,
                     sidesColor: Colors.black,
@@ -148,6 +149,7 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                         return null;
                       }
                     },
+                    maxLine: 1,
                     readOnly: false,
                   ),
                   const SizedBox(
@@ -155,12 +157,23 @@ class _SecondPageOfSignUpState extends State<SecondPageOfSignUp> {
                   ),
                   // confirm password field
                   MyFild(
+                    suffixIcon: IconButton(
+                      icon: Icon(isPasswordVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          isPasswordVisible = !isPasswordVisible;
+                        });
+                      },
+                    ),
+                    maxLine: 1,
                     leftPadding: 20.0,
                     rightPadding: 20.0,
                     errorText: widget.confirmPasswordError,
                     contorller: widget.confirmPasswordController,
                     hintText: "تأكيد كلمة المرور",
-                    obscure: false,
+                    obscure: !isPasswordVisible,
                     lable: const Text("تأكيد كلمة المرور"),
                     color: Colors.white,
                     sidesColor: Colors.black,

@@ -73,17 +73,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   SizedBox(
                     height: height1 / 18,
                   ),
-                  const Padding(
-                    padding:  EdgeInsets.only(right: 0),
-                    child:  Text("الانضمام لمنزلي",style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  ),
-                  SizedBox(
-                    height: height1 / 400,
-                  ),
+                  const Image(image:AssetImage("images/logo.png"),width: 280,),
                   const Padding(
                     padding:  EdgeInsets.only(right: 0),
                     child:  Text("إنشاء حساب جديد ",style: TextStyle(
@@ -329,7 +319,7 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                   ),
                   //const SizedBox(height: 9,),
                   const SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
 
                   Padding(
@@ -344,6 +334,11 @@ class _FirstPageOfSignUpState extends State<FirstPageOfSignUp> {
                                   gender != null &&
                                   mode != null &&
                                   area != "Area") {
+                                setState(() {
+                                  widget.genderError = "";
+                                  widget.modeError = "";
+                                  widget.areaError = "";
+                                });
                                 Navigator.of(context).push(SlideRight(
                                     page: SecondPageOfSignUp(
                                   birthDateController: widget.dateController,

@@ -23,6 +23,7 @@ class LogInButtonAndField extends StatefulWidget {
 }
 
 class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
+  bool isPasswordVisible1 = false;
   LogOutApi op = LogOutApi();
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,16 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
 
         // password field
         MyFild(
+          suffixIcon: IconButton(
+            icon: Icon(isPasswordVisible1
+                ? Icons.visibility_off
+                : Icons.visibility),
+            onPressed: () {
+              setState(() {
+                isPasswordVisible1 = !isPasswordVisible1;
+              });
+            },
+          ),
           leftPadding: 20.0,
           rightPadding: 20.0,
           contorller: widget.passwordController,

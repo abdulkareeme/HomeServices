@@ -30,7 +30,7 @@ class _LogInState extends State<LogIn> {
             children: [
               ColorFiltered(
                 colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.darken),
-                child: Container(
+                child: SizedBox(
                   width: width,
                   height: height,
                   child: const Image(
@@ -44,12 +44,8 @@ class _LogInState extends State<LogIn> {
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 40,),
-                    Text(
-                      "منزلي",
-                      style: LogInStyle.manzliStyle(),
-                    ),
 
-                    const SizedBox(height: 160,),
+                    const Image(image:AssetImage("images/logo.png"),width: 280,height: 200,),
 
                     // Log in button and field
                     LogInButtonAndField(

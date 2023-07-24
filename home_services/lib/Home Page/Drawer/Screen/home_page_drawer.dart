@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_services/Animation/animation.dart';
 import 'package:home_services/Home%20Page/Drawer/Widget/drawer_components.dart';
 import 'package:home_services/Home%20Page/Widget/multi_level_drop_down_menu.dart';
 import 'package:home_services/Log%20out/Widget/log_out.dart';
@@ -29,6 +30,9 @@ class DrawerState extends State<Drawer_> {
       child: Column(
         children: [
           UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.grey[700]
+            ),
             accountName: Text(widget.user!.firstName +" "+ widget.user!.lastName),
 
             accountEmail: Text(widget.user.email),
@@ -43,7 +47,7 @@ class DrawerState extends State<Drawer_> {
                 padding: const EdgeInsets.only(right: 15),
                 child: Drawer_component(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UserProfile(user: widget.user,)));
+                      Navigator.of(context).push(SlideRight(page: UserProfile(user: widget.user,)));
                     },
                     text: "حسابي الشخصي",
                     iconColor: Colors.blue,

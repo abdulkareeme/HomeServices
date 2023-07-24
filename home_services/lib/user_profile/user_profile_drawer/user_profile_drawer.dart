@@ -31,6 +31,9 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
     return Column(
       children: [
         UserAccountsDrawerHeader(
+          decoration:BoxDecoration(
+            color: Colors.grey[700]
+          ),
             currentAccountPicture: (widget.myImage != null)? CircleAvatar(
               radius: 90,
               backgroundImage: MemoryImage(widget.myImage!),

@@ -47,6 +47,7 @@ class _UserProfileState extends State<UserProfile> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(widget.user.firstName +" "+ widget.user.lastName),
+            backgroundColor: Colors.grey[700],
           ),
           drawer: Drawer(
             child: UserProfileDrawer(user: widget.user, height: constHeight, width: constWidth, myImage: myImage)

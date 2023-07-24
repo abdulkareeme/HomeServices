@@ -26,7 +26,8 @@ class _HomePageState extends State<HomePage> {
           textDirection: TextDirection.rtl,
           child: Scaffold(
             appBar: AppBar(
-              title: const Text("Home Page"),
+              backgroundColor: Colors.grey[700],
+              title: const Text("الصفحة الرئيسية"),
             ),
             drawer: Drawer(
               child: Drawer_(user: widget.user,category: widget.category),
