@@ -3,7 +3,7 @@ import { ErrorMessage, Formik } from "formik";
 import DatePicker from "react-date-picker";
 import * as Yup from "yup";
 import AreaSelect from "../../Components/AreaSelect";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./update-profile.css";
 import { format } from "date-fns";
@@ -192,7 +192,7 @@ const UpdateProfile = () => {
         {({ values, handleChange, handleBlur, errors, touched }) => (
           <Container className="d-flex justify-content-center align-items-center">
             <form onSubmit={(e) => e.preventDefault()} action="">
-              <h3>المعلومات الشخصية</h3>
+              <h2>المعلومات الشخصية</h2>
               <div className="image-holder">
                 <img src={imageUrl} alt="profile" />
                 <div className="overlay">

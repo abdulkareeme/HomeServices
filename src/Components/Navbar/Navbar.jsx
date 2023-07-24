@@ -26,6 +26,7 @@ import {
 } from "../../Store/homeServiceSlice";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import Cookies from "js-cookie";
+import Logo from "../../Images/logo.png";
 
 const NavBar = () => {
   const { userTotalInfo, categories, flagToClose } = useSelector(
@@ -63,7 +64,9 @@ const NavBar = () => {
             className="menu-icon"
             name="menu"
           ></ion-icon>
-          <h1 className="m-0 fs-4 text-white">منزلي</h1>
+          <div className="logo">
+            <img src={Logo} alt="" />
+          </div>
         </Navbar.Brand>
         <ul className="m-0 d-flex gap-3 align-items-center pe-3">
           {userTotalInfo ? (
@@ -91,9 +94,8 @@ const NavBar = () => {
           <ion-icon
             onClick={() => setShow(false)}
             className="menu-icon"
-            name="menu"
+            name="close"
           ></ion-icon>
-          <h1 className="m-0 fs-4">منزلي</h1>
         </div>
         <hr />
         <Offcanvas.Body>

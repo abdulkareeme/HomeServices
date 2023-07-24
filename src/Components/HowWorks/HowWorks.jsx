@@ -3,9 +3,9 @@ import { howItWorksBoxes } from "../../utils/constants";
 import "./howworks.css";
 const HowWorks = () => {
   return (
-    <section>
+    <section className="how-it-works">
       <Container>
-        <h1 className="w-max mx-auto">كيف يعمل موقع منزلي ؟</h1>
+        <h1 className="w-max mx-auto mb-5">كيف يعمل موقع منزلي ؟</h1>
         <Row className="pt-6" xs={1} md={3}>
           {howItWorksBoxes.map((box, index) => (
             <Col

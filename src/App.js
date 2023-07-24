@@ -6,6 +6,7 @@ import ProtectedPath from "./Components/ProtectedPath";
 import "react-tooltip/dist/react-tooltip.css";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import Footer from "./Components/Footer/Footer";
 //Website Pages
 const Home = lazy(() => import("./Pages/Home"));
 const Login = lazy(() => import("./Components/Login/Login"));
@@ -92,6 +93,7 @@ function App() {
           <Route path="/services/:name" element={<FilterResults />} />
           <Route path="/search/:name" element={<SearchResults />} />
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </Suspense>
   );

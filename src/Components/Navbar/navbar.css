@@ -36,10 +36,21 @@
   color: #444444;
 }
 
-.navbar-brand>ion-icon {
+.navbar-brand > ion-icon {
   font-size: 30px;
   cursor: pointer;
   color: white;
+}
+
+.navbar-brand .logo {
+  width: 110px;
+  height: 35px;
+}
+
+.navbar-brand .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .offcanvas {
@@ -93,5 +104,11 @@
 @media (max-width: 767px) {
   .nav-link {
     padding: 0.7rem 1rem !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .navbar .container ul .nav-item button {
+    display: none !important;
   }
 }

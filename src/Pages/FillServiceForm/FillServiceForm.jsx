@@ -3,14 +3,20 @@ import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
 import { useEffect, useRef, useState } from "react";
 import "./fill-service-form.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Toaster, toast } from "react-hot-toast";
 import { Fragment } from "react";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import LoaderButton from "../../Components/LoaderButton";
+import { setUserToken } from "../../Store/homeServiceSlice";
+import Cookies from "js-cookie";
 const FillServiceForm = () => {
   const { userToken } = useSelector((state) => state.homeService);
-  console.log(userToken);
+  const dispatch = useDispatch();
+  if (userToken === null) {
+    const storedToken = Cookies.get("userToken");
+    dispatch(setUserToken(JSON.parse(storedToken)));
+  }
   const { id } = useParams();
   const history = useNavigate();
   const [formQuestions, setFormQuestions] = useState(null);

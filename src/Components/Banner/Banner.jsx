@@ -8,7 +8,10 @@ const Banner = () => {
         <Row>
           <Col>
             <h2>أنجز أعمالك بسهولة وأمان</h2>
-            <Link to="/" className="text-white text-decoration-none w-fit">
+            <Link
+              to="/register"
+              className="text-white text-decoration-none w-fit"
+            >
               سجل الآن
             </Link>
           </Col>

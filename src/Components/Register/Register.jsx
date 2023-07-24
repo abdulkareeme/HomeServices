@@ -133,9 +133,8 @@ const Register = () => {
               onSubmit={(e) => e.preventDefault()}
               className={`register-1 ${page === 1 ? "hidden" : ""}`}
             >
-              <h1>منزلي</h1>
-              <h3>سجل الآن</h3>
-              <div className="d-flex gap-5">
+              <h2>سجل الآن</h2>
+              <div className="full-name d-flex gap-3">
                 <div className="first-name">
                   <label>
                     الاسم

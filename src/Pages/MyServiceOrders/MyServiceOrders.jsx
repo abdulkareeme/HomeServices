@@ -48,6 +48,7 @@ const MyServiceOrders = () => {
   const handleClose = () => setShow(false);
   const handleCloseRateModal = () => setShowRateModal(false);
   const getMyOrderData = async () => {
+    console.log(userToken);
     try {
       const data = await fetchFromAPI("services/my_orders", {
         headers: {

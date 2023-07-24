@@ -3,7 +3,7 @@ import { memo, useState } from "react";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
+import { postToAPI } from "../../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import {
@@ -16,6 +16,7 @@ import {
 import LoaderButton from "../LoaderButton";
 import { getBalance } from "../../utils/constants";
 import Cookies from "js-cookie";
+
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
     .email("أدخل بريد الكتروني صالح")
@@ -49,10 +50,16 @@ const Login = () => {
         Cookies.set("userTotalInfo", JSON.stringify(res?.user_info), {
           expires: 30,
         });
-        Cookies.set("userToken", JSON.stringify(res?.token[0]), {
-          expires: 30,
-        });
+        Cookies.set(
+          "userToken",
+          JSON.stringify(res?.token[0]),
+          {
+            expires: 30,
+          },
+          { secure: true }
+        );
         history("/");
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -101,8 +108,7 @@ const Login = () => {
       <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, handleChange, setSubmitting, errors, touched }) => (
           <form onSubmit={(e) => e.preventDefault()} className="login">
-            <h1>منزلي</h1>
-            <h3>تسجيل دخول</h3>
+            <h2>تسجيل دخول</h2>
             <div className="email">
               <label>
                 البريد الالكتروني

@@ -38,7 +38,7 @@ const AddService = () => {
   const dispatch = useDispatch();
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
+    dispatch(setUserToken(storedToken));
   }
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
@@ -147,7 +147,7 @@ const AddService = () => {
               className={`add-service ${page === 1 ? "hidden" : ""}`}
               onSubmit={(e) => e.preventDefault()}
             >
-              <h1>أضف خدمة جديدة</h1>
+              <h2>أضف خدمة جديدة</h2>
               <div className="title">
                 <label>
                   عنوان الخدمة
@@ -236,6 +236,7 @@ const AddService = () => {
                     ? "next disable"
                     : "next"
                 }
+                // disabled={!isValid}
                 onClick={() => {
                   !isValid ||
                   (!touched.title &&

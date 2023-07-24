@@ -8,6 +8,7 @@ import "./service-details.css";
 import {
   setSelectedServiceToUpdate,
   setSelectedUser,
+  setUserToken,
 } from "../../Store/homeServiceSlice";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import Rates from "../../Components/Rates/Rates";
@@ -21,6 +22,10 @@ const ServiceDetails = () => {
   if (selectedUser === null) {
     const storedselectedUser = JSON.parse(Cookies.get("selectedUser"));
     dispatch(setSelectedUser(storedselectedUser));
+  }
+  if (userToken === null) {
+    const storedToken = Cookies.get("userToken");
+    dispatch(setUserToken(JSON.parse(storedToken)));
   }
   const [serviceDetails, setServiceDetails] = useState(null);
   const [serviceForm, setServiceForm] = useState(null);

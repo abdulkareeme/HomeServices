@@ -4,8 +4,10 @@ import "./landing.css";
 import SearchBar from "../SeachBar/SearchBar";
 const Landing = () => {
   return (
-    <div className="image-container">
-      <img src={landing} alt="Landing-bg" />
+    <div
+      className="image-container"
+      style={{ backgroundImage: `url(${landing})` }}
+    >
       <div className="overlay">
         <Container>
           <Row>

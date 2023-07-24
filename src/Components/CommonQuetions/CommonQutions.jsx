@@ -6,7 +6,7 @@ const CommonQuetions = () => {
   return (
     <section className="quetions">
       <Container>
-        <h1 className="mx-auto w-max">الأسئلة الشائعة</h1>
+        <h1 className="mx-auto mb-5 w-max">الأسئلة الشائعة</h1>
         <Accordion>
           {commonQuetionsData.map((quetion, index) => (
             <Fragment key={index}>
