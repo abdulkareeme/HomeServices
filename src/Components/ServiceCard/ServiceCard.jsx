@@ -2,6 +2,8 @@ import { handleRateStars } from "../../utils/constants";
 import "./service-card.css";
 import { Tooltip } from "react-tooltip";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
 const ServiceCard = ({ serviceData, id }) => {
   const history = useNavigate();
   return (
@@ -14,9 +16,14 @@ const ServiceCard = ({ serviceData, id }) => {
         <div className="image-holder">
           {serviceData?.seller.user.photo ? (
             <img
-              onClick={() =>
-                history(`/user/${serviceData?.seller.user.username}`)
-              }
+              onClick={() => {
+                history(`/user/${serviceData?.seller.user.username}`);
+                Cookies.set(
+                  "selectedUser",
+                  JSON.stringify(serviceData?.seller.user),
+                  { expires: 2 }
+                );
+              }}
               className={`image-${id}`}
               src={serviceData.seller.user.photo}
               alt="profile"
@@ -25,12 +32,6 @@ const ServiceCard = ({ serviceData, id }) => {
             <div className="image-skelton"></div>
           )}
         </div>
-        {/* <img
-          onClick={() => history(`/user/${serviceData?.seller.user.username}`)}
-          className={`image-${id}`}
-          src={serviceData?.seller.user.photo}
-          alt="profile"
-        /> */}
         <div className="stars d-flex gap-2">
           {handleRateStars(serviceData?.average_ratings)}
         </div>

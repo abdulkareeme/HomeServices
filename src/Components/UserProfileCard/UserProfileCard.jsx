@@ -27,16 +27,20 @@ const UserProfileCard = () => {
       try {
         const data = await fetchFromAPI(`api/user/${username}`);
         dispatch(setSelectedUser(data));
+        Cookies.set("selectedUser", JSON.stringify(data), { expires: 2 });
       } catch (err) {
         console.log(err);
       }
     } else {
       dispatch(setSelectedUser(userTotalInfo));
+      Cookies.set("selectedUser", JSON.stringify(userTotalInfo), {
+        expires: 2,
+      });
     }
   };
   useEffect(() => {
+    dispatch(setIsSelected(1));
     getUserPageInfo();
-    // Cookies.add
   }, [username]);
   const sellerProfileLinks = [
     {
@@ -59,7 +63,13 @@ const UserProfileCard = () => {
     },
   ];
   return (
-    <div className="user-profile-card">
+    <div
+      className="user-profile-card"
+      style={{
+        margin: selectedUser?.mode === "seller" ? "100px 0 0" : "100px 0 40px",
+        minHeight: selectedUser?.mode === "seller" ? null : "100vh",
+      }}
+    >
       <Container>
         {!selectedUser ? (
           <LoaderContent />

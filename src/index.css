@@ -104,7 +104,7 @@ section.confirm-email .container {
   color: #2caae2;
 }
 
-input {
+input.my-input {
   border: 1px solid #aaafb9;
   font-size: 15px;
   width: 100%;

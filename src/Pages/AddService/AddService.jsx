@@ -263,7 +263,7 @@ const AddService = () => {
                     <Fragment>
                       <div className="question">
                         <label> السؤال ونوع الإجابة</label>
-                        <div className="d-flex gap-2">
+                        <div className="question-body d-flex gap-2 align-items-start">
                           <input type="text" readOnly value={item.title} />
                           <TypeSelect
                             type="read"
@@ -287,7 +287,7 @@ const AddService = () => {
                             onClick={() => handelDelete(item.id)}
                           ></ion-icon>
                         </div>
-                        <div className="d-flex gap-2">
+                        <div className="question-body d-flex gap-2 align-items-start">
                           <input
                             type="text"
                             onChange={(e) =>
@@ -342,19 +342,22 @@ const AddService = () => {
                     ]);
                   }}
                 >
-                  أضف سؤال للزبون
+                  <ion-icon name="add"></ion-icon>
+                  أضف سؤال
                 </div>
               ) : null}
-              <div className="btn-group d-flex justify-content-between mt-4">
-                <div className="prev" onClick={() => setPage(0)}>
-                  الرجوع
-                </div>
+              <div className="btn-group d-flex justify-content-between align-items-center mt-4">
+                <ion-icon
+                  onClick={() => setPage(0)}
+                  name="arrow-back"
+                ></ion-icon>
                 <button
                   hidden={isSubmitting}
                   type="submit"
                   className="submit"
                   onClick={() => submitHandler(values)}
                 >
+                  <ion-icon name="checkmark"></ion-icon>
                   أضف الخدمة
                 </button>
                 <LoaderButton isSubmitting={isSubmitting} color="my-btn" />

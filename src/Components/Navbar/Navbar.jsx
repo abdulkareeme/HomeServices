@@ -27,6 +27,7 @@ import {
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import Cookies from "js-cookie";
 import Logo from "../../Images/logo.png";
+import LogoBlack from "../../Images/logo-black.png";
 
 const NavBar = () => {
   const { userTotalInfo, categories, flagToClose } = useSelector(
@@ -64,9 +65,9 @@ const NavBar = () => {
             className="menu-icon"
             name="menu"
           ></ion-icon>
-          <div className="logo">
+          <Link to="/" className="logo">
             <img src={Logo} alt="" />
-          </div>
+          </Link>
         </Navbar.Brand>
         <ul className="m-0 d-flex gap-3 align-items-center pe-3">
           {userTotalInfo ? (
@@ -90,12 +91,15 @@ const NavBar = () => {
         </ul>
       </Container>
       <Offcanvas placement="end" show={show}>
-        <div className="head d-flex gap-3">
+        <div className="head d-flex align-items-center gap-3 px-3 pt-4 pb-3">
           <ion-icon
             onClick={() => setShow(false)}
             className="menu-icon"
             name="close"
           ></ion-icon>
+          <Link to="/" className="logo">
+            <img src={LogoBlack} alt="" />
+          </Link>
         </div>
         <hr />
         <Offcanvas.Body>

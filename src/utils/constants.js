@@ -189,6 +189,11 @@ export const getTimeofSeconds = (seconds) => {
 export const isString = (value) => {
   return typeof value === "string" || value instanceof String;
 };
+export const isMedia=(media)=> {
+  const query = `(max-width:${media})`;
+    return window.matchMedia(query).matches;
+}
+
 export const getStatus = (
   id,
   status,

@@ -75,9 +75,9 @@ const FilterResults = () => {
           <SearchBar type="filled" goto="inside" />
         </div>
         {isLoading ? <LoaderContent /> : null}
-        <Row className="service-items justify-content-center d-flex gap-2">
+        <Row className="service-items justify-content-center d-flex gx-3 gy-4">
           {servicesList?.map((item) => (
-            <Col lg={4} md={5} xs={10} key={item.id}>
+            <Col lg={4} md={5} xs={9} key={item.id}>
               <ServiceCard serviceData={item} id={item.id} />
             </Col>
           ))}

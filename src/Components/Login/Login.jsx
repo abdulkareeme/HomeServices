@@ -16,6 +16,7 @@ import {
 import LoaderButton from "../LoaderButton";
 import { getBalance } from "../../utils/constants";
 import Cookies from "js-cookie";
+import LogoBlack from "../../Images/logo-black.png";
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
@@ -108,6 +109,9 @@ const Login = () => {
       <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, handleChange, setSubmitting, errors, touched }) => (
           <form onSubmit={(e) => e.preventDefault()} className="login">
+            <div className="logo">
+              <img src={LogoBlack} alt="" />
+            </div>
             <h2>تسجيل دخول</h2>
             <div className="email">
               <label>

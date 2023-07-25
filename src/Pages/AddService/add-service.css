@@ -78,9 +78,7 @@
 }
 
 .add-service form.add-form button.submit,
-.add-service form.add-service div.next,
-.add-service form.add-form div.add,
-.add-service form.add-form div.prev {
+.add-service form.add-service div.next {
   cursor: pointer;
   border: none;
   outline: none;
@@ -92,12 +90,42 @@
   margin: 10px 0;
   background-color: #2caae2;
   display: flex;
-  justify-content: center;
   align-items: center;
+}
+.add-service form.add-service div.next {
+  background-color: #2caae2;
+  justify-content: center;
+}
+.add-service form.add-form button.submit {
+  background-color: #52b035;
+  gap: 5px;
+}
+.add-service form.add-form button.submit ion-icon[name="checkmark"] {
+  font-size: 25px !important;
+  color: white !important;
 }
 
 .add-service form.add-form div.add {
-  margin: 0 50px;
+  color: white;
+  margin: 10px auto;
+  padding: 7px;
+  background-color: #222;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 500;
+  width: max-content;
+  display: flex;
+  align-items: center;
+}
+.add-service form.add-form div.add ion-icon {
+  color: white;
+  font-weight: bold;
+  font-size: 25px;
+}
+.add-service form.add-form ion-icon[name="arrow-back"] {
+  cursor: pointer;
+  color: #222;
+  font-size: 30px;
 }
 
 .add-service form.add-service > span {
@@ -122,4 +150,10 @@
 
 .add-service form.add-form .btn-group {
   padding: 0 50px;
+}
+
+@media (max-width: 400px) {
+  .add-service form.add-form .question .question-body {
+    flex-wrap: wrap;
+  }
 }

@@ -42,17 +42,16 @@ const SearchResults = () => {
   return (
     <section className="search-results">
       <Container>
-        <div className="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-5">
+        <div className="d-flex justify-content-between align-items-center gap-4 flex-wrap mb-5">
           <div>
             <h1>نتائج البحث</h1>
-            {/* <p>{shortInfo[selectedCategory]}</p> */}
           </div>
           <SearchBar type="filled" goto="inside" />
         </div>
         {isLoading ? <LoaderContent /> : null}
         <Row className="service-items justify-content-center d-flex gap-2">
           {servicesList?.map((item) => (
-            <Col lg={4} md={5} xs={10} key={item.id}>
+            <Col lg={4} md={5} xs={9} key={item.id}>
               <ServiceCard serviceData={item} id={item.id} />
             </Col>
           ))}

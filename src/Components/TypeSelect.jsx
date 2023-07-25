@@ -10,6 +10,7 @@ const customStyles = {
     boxShadow: "none",
     width: "130px",
     height: "40px",
+    margin: "0 0 10px",
   }),
   option: (provided, state) => ({
     ...provided,

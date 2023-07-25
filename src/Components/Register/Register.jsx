@@ -15,6 +15,8 @@ import {
   setUserInputValue,
 } from "../../Store/homeServiceSlice";
 import LoaderButton from "../LoaderButton";
+import LogoBlack from "../../Images/logo-black.png";
+
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
     .required("لم تدخل اسمك بعد")
@@ -133,7 +135,10 @@ const Register = () => {
               onSubmit={(e) => e.preventDefault()}
               className={`register-1 ${page === 1 ? "hidden" : ""}`}
             >
-              <h2>سجل الآن</h2>
+              <div className="logo">
+                <img src={LogoBlack} alt="" />
+              </div>
+              <h2>انشاء حساب</h2>
               <div className="full-name d-flex gap-3">
                 <div className="first-name">
                   <label>
@@ -292,8 +297,10 @@ const Register = () => {
               onSubmit={(e) => e.preventDefault()}
               className={`register-2 ${page === 0 ? "hidden" : ""}`}
             >
-              <h1 className="w-max mx-auto">منزلي</h1>
-              <h3 className="w-max mx-auto">سجل الآن</h3>
+              <div className="logo">
+                <img src={LogoBlack} alt="" />
+              </div>
+              <h2 className="w-max mx-auto">انشاء حساب</h2>
               <div className="birthdate">
                 <label>
                   عيد ميلادك
@@ -374,7 +381,7 @@ const Register = () => {
                   hidden={isSubmitting}
                   onClick={() => submitHandler(values)}
                 >
-                  انضم الى منزلي
+                  انضم الآن
                 </button>
                 <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
               </div>

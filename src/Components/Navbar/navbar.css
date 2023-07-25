@@ -42,12 +42,12 @@
   color: white;
 }
 
-.navbar-brand .logo {
+.logo {
   width: 110px;
   height: 35px;
 }
 
-.navbar-brand .logo img {
+.logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -55,10 +55,6 @@
 
 .offcanvas {
   width: 280px !important;
-}
-
-.offcanvas .head {
-  padding: 20px;
 }
 
 .offcanvas .head ion-icon {

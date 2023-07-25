@@ -19,14 +19,7 @@ const ServiceDetails = () => {
     (state) => state.homeService
   );
   const dispatch = useDispatch();
-  if (selectedUser === null) {
-    const storedselectedUser = JSON.parse(Cookies.get("selectedUser"));
-    dispatch(setSelectedUser(storedselectedUser));
-  }
-  if (userToken === null) {
-    const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
-  }
+
   const [serviceDetails, setServiceDetails] = useState(null);
   const [serviceForm, setServiceForm] = useState(null);
   const [serviceRates, setServiceRates] = useState(null);
@@ -71,6 +64,14 @@ const ServiceDetails = () => {
     history(`/service/${id}/update`);
   };
   useEffect(() => {
+    if (selectedUser === null) {
+      const storedselectedUser = Cookies.get("selectedUser");
+      dispatch(setSelectedUser(storedselectedUser));
+    }
+    if (userToken === null) {
+      const storedToken = Cookies.get("userToken");
+      dispatch(setUserToken(JSON.parse(storedToken)));
+    }
     getServiceDetails();
     getServiceForm();
     getServiceRates();
