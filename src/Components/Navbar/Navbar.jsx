@@ -45,7 +45,7 @@ const NavBar = () => {
     } else {
       fetchFromAPI("services/categories").then((res) => {
         dispatch(setCategories(res));
-        Cookies.set("categories", JSON.stringify(res),{ domain: 'home-service-6iln.onrender.com' }, { expires: 30 });
+        Cookies.set("categories", JSON.stringify(res), { expires: 30 });
       });
     }
   }, [dispatch]);
