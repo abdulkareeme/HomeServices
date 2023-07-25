@@ -10,10 +10,14 @@ class Services extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return (services.length == 0)?const Center(child: Text("لا توجد خدمات بهذا الاسم",style: TextStyle(
+        fontWeight: FontWeight.w300,
+        fontSize: 28,
+        color: Colors.black38
+    ),),):SingleChildScrollView(
       child: Column(
         children: [
-          for(int i=0;i<services.length;i++)ServiceItem(service: services[i],user: user,onTap: (){
+          for(int i=0;i<services.length;i++)if(services[i].creatorUserName!=user.userName)ServiceItem(service: services[i],user: user,onTap: (){
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FetchServiceDetails(
               userSellerCase: true,
               id: services[i].id,

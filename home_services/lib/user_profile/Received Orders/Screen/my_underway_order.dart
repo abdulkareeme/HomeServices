@@ -10,22 +10,50 @@ class MyUnderwayOrders extends StatefulWidget {
 
   @override
   State<MyUnderwayOrders> createState() => _MyUnderwayOrdersState();
+  bool isTheOrdersListEmpty = true;
 }
 
 class _MyUnderwayOrdersState extends State<MyUnderwayOrders> {
+
+  @override
+  void initState() {
+    print("object");
+    bool haveToBreak= false;
+    for(int i=0;i<widget.orders.length;i++){
+      print(widget.orders.length);
+      print(widget.orders[i]!.status);
+      if(widget.orders[i]!.status == "Underway"){
+        setState(() {
+          widget.isTheOrdersListEmpty = false;
+          haveToBreak = true;
+        });
+        if(haveToBreak)break;
+      }
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Directionality(
-            textDirection: TextDirection.rtl,
-            child:SingleChildScrollView(
-              child: Column(
-                children: [
-                  for(int i=0;i<widget.orders.length;i++)if(widget.orders[i]!.status == "Underway")UnderwayOrderItem(order: widget.orders[i], user: widget.user),
-                ],
-              ),
-            )
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("الطلبات قيد التنفيذ"),
+            backgroundColor: Colors.grey[700],
+          ),
+          body:(widget.isTheOrdersListEmpty == true)? const Center(child: Text("لا توجد خدمات قيد التنفيذ حاليا",style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 28,
+                  color: Colors.black26
+              ),),):SingleChildScrollView(
+                child:Column(
+                  children: [
+                    for(int i=0;i<widget.orders.length;i++)if(widget.orders[i]!.status == "Underway")UnderwayOrderItem(order: widget.orders[i], user: widget.user),
+                  ],
+                ),
+              )
         ),
       ),
     );

@@ -24,6 +24,11 @@ class _MySentOrderState extends State<MySentOrder> {
           child:SingleChildScrollView(
             child: Column(
               children: [
+                if(widget.orders.isEmpty)const Center(child: Text("ليس لديك طلبات مرسلة حاليا",style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 28,
+                    color: Colors.white70
+                ),),),
                 for(int i=0;i<widget.orders.length;i++)OrderItem(order: widget.orders[i],forms: widget.orders[i]!.formList,user: widget.user),
               ],
             ),

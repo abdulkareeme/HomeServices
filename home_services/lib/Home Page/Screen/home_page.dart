@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Drawer/Screen/home_page_drawer.dart';
 import 'package:home_services/Log%20out/Api/Log_out_Api.dart';
+import 'package:home_services/my_field.dart';
+import 'package:home_services/search/Widget/get_service_name_search_result.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -19,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,6 +37,23 @@ class _HomePageState extends State<HomePage> {
             ),
             body: Column(
               children: [
+                MyFild(
+                  contorller: searchController,
+                  hintText: "fd",
+                  obscure: false,
+                  lable: const Text("اسم الخدمة"),
+                  readOnly: false,
+                  rightPadding: 20.0,
+                  leftPadding: 20.0,
+                  color: Colors.white,
+                  sidesColor: Colors.black,
+                  suffixIcon: IconButton(
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetServiceNameSearchResult(user: widget.user,titleController: searchController,)));
+                    },
+                    icon: const Icon(Icons.search),
+                  ),
+                ),
                 Center(
                   child: ElevatedButton(
                     onPressed: ()async{
@@ -44,27 +64,6 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("clear data"),
                   ),
                 ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: (){
-                      final now = DateTime.now();
-                      final difference = now.difference(DateTime.parse("2023-07-10 12:30:00"));
-                      final hours = difference.inHours;
-                      final days = difference.inDays;
-                      final minutes = difference.inMinutes.remainder(60);
-                      final seconds = difference.inSeconds.remainder(60);
-                      print(hours);
-                      print(minutes);
-                      print(seconds);
-                      print(days);
-                      final months = days/30;
-                      print(months.toInt());
-                      print(months/12.toInt());
-                      /*Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SellerServiceDetails(user: widget.user,)));*/
-                    },
-                    child: const Text("go"),
-                  ),
-                )
               ],
             ),
           ),

@@ -17,6 +17,7 @@ class ThisServiceRating extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text("التقييمات"),
+            backgroundColor: Colors.grey[700],
           ),
           body: (ratingsList.isEmpty)?Center(
             child: SingleChildScrollView(
@@ -24,10 +25,14 @@ class ThisServiceRating extends StatelessWidget {
                 children: [
                    Visibility(
                       visible: (ratingsList.isEmpty)? true : false,
-                      child: const Text("لم يتم تقييم هذه الخدمة حاليا",style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey
-                      ),),
+                      child: Wrap(
+                        children:const [
+                          Text("لم يتم تقييم هذه الخدمة حاليا",style: TextStyle(
+                              fontSize: 100,
+                              color: Colors.black38
+                          ),)
+                        ],
+                      ),
                     ),
                 ],
               ),

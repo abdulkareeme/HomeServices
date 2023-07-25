@@ -17,8 +17,35 @@ class ReceivedOrderItem extends StatefulWidget {
 }
 
 class _ReceivedOrderItemState extends State<ReceivedOrderItem> {
+  String orderStatus = "";
+  Color statusColor = Colors.black;
   @override
   Widget build(BuildContext context) {
+    switch (widget.order!.status) {
+      case "Rejected":
+        setState(() {
+          orderStatus = "تم رفض الطلب";
+          statusColor = Colors.red;
+        });
+        break;
+      case "Under review":
+        setState(() {
+          orderStatus = "قيد مراجعة البائع";
+          statusColor = Colors.grey;
+        });
+        break;
+      case "Expire":
+        setState(() {
+          orderStatus = "تم الانتهاء";
+          statusColor = Colors.green;
+        });
+        break;
+      case "Underway":
+        setState(() {
+          orderStatus = "قيد التنفيذ";
+          statusColor = Colors.orange;
+        });
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -48,13 +75,16 @@ class _ReceivedOrderItemState extends State<ReceivedOrderItem> {
                         fontWeight: FontWeight.w500
                     ),),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 0,top: 4,bottom: 10),
-                    child:Text(widget.order!.status,style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                      color: (widget.order!.status == "Rejected")?Colors.red : Colors.grey,
-                    ),),
+                  Visibility(
+                    visible: (widget.order!.status == "Pending")? false:true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 0,top: 4,bottom: 10),
+                      child:Text(orderStatus,style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color:statusColor,
+                      ),),
+                    ),
                   ),
                   const SizedBox(height: 10,),
                   /*FirstAcceptAndRejectButtons(
