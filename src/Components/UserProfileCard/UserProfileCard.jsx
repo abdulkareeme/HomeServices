@@ -32,10 +32,29 @@ const UserProfileCard = () => {
         console.log(err);
       }
     } else {
-      dispatch(setSelectedUser(userTotalInfo));
-      Cookies.set("selectedUser", JSON.stringify(userTotalInfo), {
-        expires: 2,
-      });
+      try {
+        const data = await fetchFromAPI(`api/user/${username}`);
+        if (data !== userTotalInfo) {
+          dispatch(setUserTotalInfo(data));
+          dispatch(setSelectedUser(data));
+          Cookies.set("userTotalInfo", JSON.stringify(data));
+          Cookies.set("selectedUser", JSON.stringify(data), {
+            expires: 2,
+          });
+        } else {
+          dispatch(setSelectedUser(userTotalInfo));
+          Cookies.set("selectedUser", JSON.stringify(userTotalInfo), {
+            expires: 2,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
+      // dispatch(setSelectedUser(userTotalInfo));
+      // Cookies.set("selectedUser", JSON.stringify(userTotalInfo), {
+      //   expires: 2,
+      // });
     }
   };
   useEffect(() => {

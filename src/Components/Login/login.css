@@ -81,3 +81,7 @@ form.login > span {
   font-size: 15px;
   color: black;
 }
+form.login div span,
+form.login div a {
+  font-size: 14px;
+}

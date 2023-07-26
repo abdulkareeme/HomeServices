@@ -7,7 +7,7 @@ import {
   setUserToken,
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -62,12 +62,18 @@ const UserAvatar = () => {
       dispatch(setUserToken(null));
     });
   };
+  // handle click out of the element to hide it
+  window.onclick = function (event) {
+    var userMenu = document.getElementById("user-menu");
+    event.target !== userMenu && setShowList(false);
+  };
 
   return (
     <div className="user">
       <div className="image-holder">
         {userTotalInfo?.photo ? (
           <img
+            id="user-menu"
             onClick={() => setShowList(!showList)}
             src={userTotalInfo?.photo}
             alt="profile"
@@ -78,14 +84,11 @@ const UserAvatar = () => {
       </div>
       <ListGroup hidden={!showList}>
         {avatarList.map((item, index) => (
-          <ListGroup.Item
-            onClick={() => setShowList(false)}
-            key={index}
-            action
-            href={item.link}
-          >
-            {item.icon}
-            <span className="w-max">{item.label}</span>
+          <ListGroup.Item key={index} action>
+            <Link to={item.link}>
+              {item.icon}
+              <span className="w-max">{item.label}</span>
+            </Link>
           </ListGroup.Item>
         ))}
         {userTotalInfo.mode === "seller" ? (
@@ -100,7 +103,6 @@ const UserAvatar = () => {
         <ListGroup.Item
           action
           onClick={() => {
-            setShowList(false);
             handleLogout();
           }}
         >

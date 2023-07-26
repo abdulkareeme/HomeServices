@@ -66,7 +66,7 @@ const NavBar = () => {
             name="menu"
           ></ion-icon>
           <Link to="/" className="logo">
-            <img src={Logo} alt="" />
+            <img src={Logo} alt="Logo" />
           </Link>
         </Navbar.Brand>
         <ul className="m-0 d-flex gap-3 align-items-center pe-3">
@@ -97,8 +97,8 @@ const NavBar = () => {
             className="menu-icon"
             name="close"
           ></ion-icon>
-          <Link to="/" className="logo">
-            <img src={LogoBlack} alt="" />
+          <Link onClick={() => setShow(false)} to="/" className="logo">
+            <img src={LogoBlack} alt="Logo" />
           </Link>
         </div>
         <hr />

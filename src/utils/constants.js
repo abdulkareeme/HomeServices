@@ -7,7 +7,7 @@ import Female from "../Images/Female.jpg";
 import moment from "moment";
 import Cookies from "js-cookie";
 
-export const BASE_API_URL = "http://abdulkareemedres.pythonanywhere.com";
+export const BASE_API_URL = "https://abdulkareemedres.pythonanywhere.com";
 export const navbarLinks = [
   {
     label: "الصفحة الرئيسية",
@@ -164,11 +164,6 @@ export const getBalance = async (dispatch, setBalance, token) => {
   } catch (err) {
     console.log(err);
   }
-};
-export const getUserPhoto = (photo, gender) => {
-  if (photo === null) {
-    return gender === "Male" ? Male : Female;
-  } else return photo;
 };
 export const getTimeofSeconds = (seconds) => {
   const duration = moment.duration(seconds, "seconds");

@@ -175,7 +175,7 @@ const Login = () => {
               دخول
             </button>
             <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
               <Link className="text-decoration-none" to="/forget_password">
                 نسيت كلمة المرور ؟
               </Link>
