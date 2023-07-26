@@ -70,7 +70,7 @@ const ServiceDetails = () => {
     }
     if (userToken === null) {
       const storedToken = Cookies.get("userToken");
-      dispatch(setUserToken(JSON.parse(storedToken)));
+      dispatch(setUserToken(storedToken));
     }
     getServiceDetails();
     getServiceForm();

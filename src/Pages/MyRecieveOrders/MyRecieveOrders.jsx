@@ -10,7 +10,7 @@ import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import moment from "moment";
 import "moment/locale/ar";
 import { getBalance } from "../../utils/constants";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 const MyRecieveOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
@@ -26,7 +26,7 @@ const MyRecieveOrders = () => {
   const history = useNavigate();
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
+    dispatch(setUserToken(storedToken));
   }
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
@@ -253,7 +253,7 @@ const MyRecieveOrders = () => {
       <Container>
         {!myRecieveorderData ? <LoaderContent /> : null}
         {myRecieveorderData?.length === 0 ? (
-          <div className="message"> لا يوجد طلبات واردة</div>
+          <h3 className="message"> لا يوجد طلبات واردة</h3>
         ) : null}
         {myRecieveorderData?.length > 0 ? (
           <Fragment>
@@ -261,14 +261,26 @@ const MyRecieveOrders = () => {
             {pendingRecieveData?.length > 0 ? (
               <Row className="pending d-flex justify-content-center gap-2">
                 {pendingRecieveData?.map((order) => (
-                  <Col lg={3} md={4} xs={10} key={order.id}>
+                  <Col lg={3} md={4} xs={7} key={order.id}>
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4">
-                          <img src={order.photo} alt="profile" />
+                          <Link
+                            to={`/user/${order.client.username}`}
+                            className="text-black text-decoration-none"
+                          >
+                            <img src={order.client.photo} alt="profile" />
+                          </Link>
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
-                          <h5 className="m-0">{order.client}</h5>
+                          <h5 className="m-0">
+                            <Link
+                              to={`/user/${order.client.username}`}
+                              className="text-black text-decoration-none"
+                            >
+                              {order.client.first_name} {order.client.last_name}
+                            </Link>
+                          </h5>
                           <div>{order.home_service.title}</div>
                           <div className="text-muted">
                             {order.home_service.category.name}
@@ -305,20 +317,32 @@ const MyRecieveOrders = () => {
                 ))}
               </Row>
             ) : (
-              <div className="message">لا يوجد طلبات بحاجة لموافقة أو رفض</div>
+              <h3 className="message">لا يوجد طلبات بحاجة لموافقة أو رفض</h3>
             )}
             <h1 className="mt-5">طلبات قيد المراجعة</h1>
             {underReviewRecieveData?.length > 0 ? (
               <Row className="under-review d-flex justify-content-center gap-2">
                 {underReviewRecieveData?.map((order) => (
-                  <Col lg={3} md={4} xs={10} key={order.id}>
+                  <Col lg={3} md={4} xs={7} key={order.id}>
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
-                          <img src={order.photo} alt="profile" />
+                          <Link
+                            to={`/user/${order.client.username}`}
+                            className="text-black text-decoration-none"
+                          >
+                            <img src={order.client.photo} alt="profile" />
+                          </Link>
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
-                          <h5 className="m-0">{order.client}</h5>
+                          <h5 className="m-0">
+                            <Link
+                              to={`/user/${order.client.username}`}
+                              className="text-black text-decoration-none"
+                            >
+                              {order.client.first_name} {order.client.last_name}
+                            </Link>
+                          </h5>
                           <div>{order.home_service.title}</div>
                           <div className="text-muted">
                             {order.home_service.category.name}
@@ -366,20 +390,34 @@ const MyRecieveOrders = () => {
                 ))}
               </Row>
             ) : (
-              <div className="message">لا يوجد طلبات قيد المراجعة</div>
+              <h3 className="message">لا يوجد طلبات قيد المراجعة</h3>
             )}
             <h1 className="mt-5">طلبات قيد التنفيذ</h1>
             {underwayRecieveData?.length > 0 ? (
               <Row className="underway d-flex justify-content-center gap-2">
                 {underwayRecieveData?.map((order) => (
-                  <Col lg={3} md={4} xs={10} key={order.id}>
+                  <Col lg={3} md={4} xs={7} key={order.id}>
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
-                          <img src={order.photo} alt="profile" />
+                          <Link
+                            to={`/user/${order.client.username}`}
+                            className="text-black text-decoration-none"
+                          >
+                            <img src={order.client.photo} alt="profile" />
+                          </Link>
                         </div>
+
                         <div className="d-flex text-center flex-column gap-2">
-                          <h5 className="m-0">{order.client}</h5>
+                          <h5 className="m-0">
+                            <Link
+                              to={`/user/${order.client.username}`}
+                              className="text-black text-decoration-none"
+                            >
+                              {order.client.first_name} {order.client.last_name}
+                            </Link>
+                          </h5>
+
                           <div>{order.home_service.title}</div>
                           <div className="text-muted">
                             {order.home_service.category.name}
@@ -422,20 +460,32 @@ const MyRecieveOrders = () => {
                 ))}
               </Row>
             ) : (
-              <div className="message">لا يوجد طلبات قيد التنفيذ</div>
+              <h3 className="message">لا يوجد طلبات قيد التنفيذ</h3>
             )}
             <h1 className="mt-5">طلبات تم الانتهاء منها</h1>
             {expireRecieveData?.length > 0 ? (
               <Row className="expire d-flex justify-content-center gap-2">
                 {expireRecieveData?.map((order) => (
-                  <Col lg={3} md={4} xs={10} key={order.id}>
+                  <Col lg={3} md={4} xs={7} key={order.id}>
                     <div className="card my-3 bg-white shadow-sm border-0 rounded">
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
-                          <img src={order.photo} alt="profile" />
+                          <Link
+                            to={`/user/${order.client.username}`}
+                            className="text-black text-decoration-none"
+                          >
+                            <img src={order.client.photo} alt="profile" />
+                          </Link>
                         </div>
                         <div className="d-flex text-center flex-column gap-2">
-                          <h5 className="m-0">{order.client}</h5>
+                          <h5 className="m-0">
+                            <Link
+                              to={`/user/${order.client.username}`}
+                              className="text-black text-decoration-none"
+                            >
+                              {order.client.first_name} {order.client.last_name}
+                            </Link>
+                          </h5>
                           <div>{order.home_service.title}</div>
                           <div className="text-muted">
                             {order.home_service.category.name}
@@ -463,7 +513,7 @@ const MyRecieveOrders = () => {
                 ))}
               </Row>
             ) : (
-              <div className="message">لا يوجد طلبات تم الانتهاء منها</div>
+              <h3 className="message">لا يوجد طلبات تم الانتهاء منها</h3>
             )}
           </Fragment>
         ) : null}

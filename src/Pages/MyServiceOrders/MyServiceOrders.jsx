@@ -13,6 +13,7 @@ import moment from "moment";
 import "moment/locale/ar";
 import LoaderButton from "../../Components/LoaderButton";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -214,10 +215,22 @@ const MyServiceOrders = () => {
                   <div className="card my-3 bg-white shadow-sm border-0 rounded">
                     <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                       <div className="image-holder mt-4">
-                        <img src={order?.photo} alt="" />
+                        <Link
+                          to={`/user/${order.seller.username}`}
+                          className="text-black text-decoration-none"
+                        >
+                          <img src={order?.seller.photo} alt="" />
+                        </Link>
                       </div>
                       <div className="d-flex text-center flex-column gap-2">
-                        <h5 className="m-0">{order.home_service.seller}</h5>
+                        <h5 className="m-0">
+                          <Link
+                            to={`/user/${order.seller.username}`}
+                            className="text-black text-decoration-none"
+                          >
+                            {order.seller.first_name} {order.seller.last_name}
+                          </Link>
+                        </h5>
                         <div>{order.home_service.title}</div>
                         <div className="text-muted">
                           {order.home_service.category.name}

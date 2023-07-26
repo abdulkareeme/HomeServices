@@ -1,6 +1,12 @@
 .user {
   position: relative;
 }
+.userLoading {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(189, 183, 183);
+}
 
 .user .image-holder {
   width: 40px;

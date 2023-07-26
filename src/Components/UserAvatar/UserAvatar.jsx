@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./user-avatar.css";
 import { ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,23 +8,36 @@ import {
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { postToAPI } from "../../api/FetchFromAPI";
+import { fetchFromAPI, postToAPI } from "../../api/FetchFromAPI";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
 const UserAvatar = () => {
   const [showList, setShowList] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useNavigate();
   const { userTotalInfo, userToken, balance } = useSelector(
     (state) => state.homeService
   );
-  if (userTotalInfo === null) {
-    const storedUser = Cookies.get("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
-  }
+  const handleWatchChange = async (storedUser) => {
+    try {
+      setIsLoading(true);
+      const data = await fetchFromAPI(`api/user/${storedUser?.username}`);
+      if (data !== storedUser) {
+        dispatch(setUserTotalInfo(data));
+        Cookies.set("userTotalInfo", JSON.stringify(data));
+        setIsLoading(false);
+      } else {
+        dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
+    dispatch(setUserToken(storedToken));
   }
   balance === null && dispatch(setBalance(Cookies.get("balance")));
   const avatarList = [
@@ -67,51 +80,57 @@ const UserAvatar = () => {
     var userMenu = document.getElementById("user-menu");
     event.target !== userMenu && setShowList(false);
   };
-
-  return (
-    <div className="user">
-      <div className="image-holder">
-        {userTotalInfo?.photo ? (
-          <img
-            id="user-menu"
-            onClick={() => setShowList(!showList)}
-            src={userTotalInfo?.photo}
-            alt="profile"
-          />
-        ) : (
-          <div className="image-skelton"></div>
-        )}
+  useEffect(() => {
+    const storedUser = Cookies.get("userTotalInfo");
+    handleWatchChange(JSON.parse(storedUser));
+  }, []);
+  if (isLoading) {
+    return <div className="userLoading"></div>;
+  } else {
+    return (
+      <div className="user">
+        <div className="image-holder">
+          {userTotalInfo?.photo ? (
+            <img
+              id="user-menu"
+              onClick={() => setShowList(!showList)}
+              src={userTotalInfo?.photo}
+            />
+          ) : (
+            <div className="image-skelton"></div>
+          )}
+        </div>
+        <ListGroup hidden={!showList}>
+          {avatarList.map((item, index) => (
+            <ListGroup.Item key={index} action>
+              <Link to={item.link}>
+                {item.icon}
+                <span className="w-max">{item.label}</span>
+              </Link>
+            </ListGroup.Item>
+          ))}
+          {userTotalInfo.mode === "seller" ? (
+            <ListGroup.Item action>
+              <ion-icon name="cash-outline"></ion-icon>
+              <div className="d-flex gap-1 align-items-center">
+                <span>{balance}</span>
+                <span>نقطة</span>
+              </div>
+            </ListGroup.Item>
+          ) : null}
+          <ListGroup.Item
+            action
+            onClick={() => {
+              handleLogout();
+            }}
+          >
+            <ion-icon name="log-out-outline"></ion-icon>
+            <span className="w-max">تسجيل الخروج</span>
+          </ListGroup.Item>
+        </ListGroup>
       </div>
-      <ListGroup hidden={!showList}>
-        {avatarList.map((item, index) => (
-          <ListGroup.Item key={index} action>
-            <Link to={item.link}>
-              {item.icon}
-              <span className="w-max">{item.label}</span>
-            </Link>
-          </ListGroup.Item>
-        ))}
-        {userTotalInfo.mode === "seller" ? (
-          <ListGroup.Item action>
-            <ion-icon name="cash-outline"></ion-icon>
-            <div className="d-flex gap-1 align-items-center">
-              <span>{balance}</span>
-              <span>نقطة</span>
-            </div>
-          </ListGroup.Item>
-        ) : null}
-        <ListGroup.Item
-          action
-          onClick={() => {
-            handleLogout();
-          }}
-        >
-          <ion-icon name="log-out-outline"></ion-icon>
-          <span className="w-max">تسجيل الخروج</span>
-        </ListGroup.Item>
-      </ListGroup>
-    </div>
-  );
+    );
+  }
 };
 
 export default UserAvatar;

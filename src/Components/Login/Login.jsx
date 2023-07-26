@@ -53,7 +53,7 @@ const Login = () => {
         });
         Cookies.set(
           "userToken",
-          JSON.stringify(res?.token[0]),
+          res?.token[0],
           {
             expires: 30,
           },

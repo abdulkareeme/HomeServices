@@ -39,7 +39,7 @@ const UpdateProfile = () => {
   }
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
+    dispatch(setUserToken(storedToken));
   }
   const [dateValue, setDateValue] = useState(userTotalInfo?.birth_date);
   const [bioValue, setBioValue] = useState(userTotalInfo?.bio);

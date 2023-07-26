@@ -54,7 +54,6 @@ const TypeSelect = ({ type, value, setFormDataList, id }) => {
   } else {
     return (
       <Select
-        value={defaultValue}
         options={options}
         placeholder="نوع الاجابة"
         styles={customStyles}

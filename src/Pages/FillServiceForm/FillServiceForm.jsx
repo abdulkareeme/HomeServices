@@ -15,7 +15,7 @@ const FillServiceForm = () => {
   const dispatch = useDispatch();
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
+    dispatch(setUserToken(storedToken));
   }
   const { id } = useParams();
   const history = useNavigate();

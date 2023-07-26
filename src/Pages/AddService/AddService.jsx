@@ -55,24 +55,28 @@ const AddService = () => {
       title: "وصف المشكلة",
       field_type: "text",
       note: "",
+      visible: true,
     },
     {
       id: 2,
       title: "العنوان الحالي",
       field_type: "text",
       note: "",
+      visible: true,
     },
     {
       id: 3,
       title: "رقم للتواصل",
       field_type: "number",
       note: "",
+      visible: true,
     },
     {
       id: 4,
       title: "عدد الأيام المتوقعة لإنهاء العمل",
       field_type: "number",
       note: "",
+      visible: true,
     },
   ]);
   const initialValues = {
@@ -96,8 +100,17 @@ const AddService = () => {
     });
   };
   const handelDelete = (id) => {
-    setFormDataList(formDataList.filter((item) => item.id !== id));
+    setFormDataList((prevList) => {
+      return prevList.map((item) => {
+        if (item.id === id) {
+          return { ...item, visible: false };
+        }
+        return item;
+      });
+    });
   };
+  const finalForm = formDataList.filter((item) => item.visible);
+
   const submitHandler = async (values) => {
     toast("يتم الآن اضافة الخدمة", {
       duration: 3000,
@@ -111,18 +124,19 @@ const AddService = () => {
       ...values,
       category: categoryService,
       service_area: areasServiceList,
-      form: formDataList,
+      form: finalForm,
     };
     let bearer = `token ${userToken}`;
+    console.log(bearer);
     try {
-      setIsSubmitting(0);
+      setIsSubmitting(1);
       await postToAPI("services/create_service", values, {
         headers: {
           Authorization: bearer,
         },
       });
-      setIsSubmitting(1);
-      updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
+      await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
+      setIsSubmitting(0);
       toast.success("تم اضافة الخدمة بنجاح", {
         duration: 3000,
         position: "top-center",
@@ -134,6 +148,7 @@ const AddService = () => {
       history(`/user/${userTotalInfo.username}`);
     } catch (err) {
       console.log(err);
+      setIsSubmitting(0);
     }
     console.log(values);
   };
@@ -258,7 +273,7 @@ const AddService = () => {
                 اضافة الاسئلة تساعدك في الحصول على معلومات أكثر دقة من الزبون{" "}
               </p>
               {formDataList.map((item, index) => {
-                if (item.id < 5)
+                if (index < 4)
                   return (
                     <Fragment>
                       <div className="question">
@@ -273,10 +288,10 @@ const AddService = () => {
                           />
                         </div>
                       </div>
-                      {index < formDataList.length - 1 ? <hr /> : null}
+                      {item !== finalForm[finalForm.length - 1] ? <hr /> : null}
                     </Fragment>
                   );
-                else
+                else if (index >= 4 && item.visible) {
                   return (
                     <Fragment>
                       <div className="question">
@@ -322,11 +337,12 @@ const AddService = () => {
                           ></textarea>
                         </div>
                       </div>
-                      {index < formDataList.length - 1 ? <hr /> : null}
+                      {item !== finalForm[finalForm.length - 1] ? <hr /> : null}
                     </Fragment>
                   );
+                }
               })}
-              {formDataList.length < 10 ? (
+              {formDataList.filter((item) => item.visible).length < 10 ? (
                 <div
                   className="add"
                   type="submit"
@@ -338,12 +354,12 @@ const AddService = () => {
                         title: "",
                         field_type: "",
                         note: "",
+                        visible: true,
                       },
                     ]);
                   }}
                 >
                   <ion-icon name="add"></ion-icon>
-                  أضف سؤال
                 </div>
               ) : null}
               <div className="btn-group d-flex justify-content-between align-items-center mt-4">
