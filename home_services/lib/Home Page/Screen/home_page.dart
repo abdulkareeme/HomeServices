@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Drawer/Screen/home_page_drawer.dart';
-import 'package:home_services/Log%20out/Api/Log_out_Api.dart';
 import 'package:home_services/my_field.dart';
 import 'package:home_services/search/Widget/get_service_name_search_result.dart';
 
@@ -39,7 +38,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 MyFild(
                   contorller: searchController,
-                  hintText: "fd",
+                  hintText: "",
                   obscure: false,
                   lable: const Text("اسم الخدمة"),
                   readOnly: false,
@@ -54,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                     icon: const Icon(Icons.search),
                   ),
                 ),
-                Center(
+                /*Center(
                   child: ElevatedButton(
                     onPressed: ()async{
                       LogOutApi op = LogOutApi();
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: const Text("clear data"),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),

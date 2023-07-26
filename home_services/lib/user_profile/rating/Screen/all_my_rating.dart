@@ -16,6 +16,7 @@ class AllMyRating extends StatelessWidget {
         child: Scaffold(
             appBar: AppBar(
               title: const Text("تقييماتي"),
+              backgroundColor: Colors.grey[700],
             ),
             body: (ratingsList.isEmpty)?Center(
               child: SingleChildScrollView(

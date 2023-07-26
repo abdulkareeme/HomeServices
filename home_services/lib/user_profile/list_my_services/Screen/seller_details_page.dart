@@ -21,6 +21,10 @@ class SellerServiceDetails extends StatelessWidget {
           child: Directionality(
           textDirection: TextDirection.rtl,
            child: Scaffold(
+             appBar: AppBar(
+               backgroundColor: Colors.grey[700],
+               title: Text(service.title),
+             ),
              body:SingleChildScrollView(
                 child:Column(
                   children: [

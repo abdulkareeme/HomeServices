@@ -101,7 +101,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          color: Colors.white,
                          maxLine: 2,
                          maxLetters: 40,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      ),
                      SizedBox(
@@ -115,7 +115,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          lable:const Text("نص"),
                          readOnly: true,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      )
                    ],
@@ -135,7 +135,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          maxLine: 2,
                          maxLetters: 30,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      ),
                      SizedBox(
@@ -149,7 +149,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          lable:const Text("نص"),
                          readOnly: true,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      )
                    ],
@@ -167,7 +167,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          lable: const Text("رقم الموبايل"),
                          readOnly: true,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      ),
                      SizedBox(
@@ -181,7 +181,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          lable:const Text("رقم"),
                          readOnly: true,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      )
                    ],
@@ -200,7 +200,7 @@ class _ServiceFormState extends State<ServiceForm>{
                          lable: const Text("مدة الانتهاء المتوقعة"),
                          readOnly: true,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      ),
                      SizedBox(
@@ -214,14 +214,14 @@ class _ServiceFormState extends State<ServiceForm>{
                          lable:const Text("رقم"),
                          readOnly: true,
                          color: Colors.white,
-                         sidesColor: Colors.black,
+                         sidesColor: Colors.black38,
                        ),
                      )
                    ],
                  ),
                  for(int i=0;i<forms.length;i++)forms[i],
                  Padding(
-                   padding: const EdgeInsets.only(left: 25,right: 25,top: 20),
+                   padding: const EdgeInsets.only(left: 25,right: 25,top: 20,bottom: 20),
                    child: Row(
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
@@ -232,35 +232,58 @@ class _ServiceFormState extends State<ServiceForm>{
                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
                            ),
                            onPressed: (){
-                         for(int i=0;i<forms.length;i++){
-                           if(forms[i].getVisibility() == true){
-                             List op = [];
-                             if(forms[i].getQuestion() != null) {
-                               op.add(forms[i].getQuestion());
-                             } else {
-                               TextEditingController os = TextEditingController(text: "");
-                               op.add(os);
-                             }
-                             op.add(forms[i].getFieldType());
-                             if(forms[i].getNote() != null){
-                               op.add(forms[i].getNote());
-                             } else {
-                               TextEditingController of = TextEditingController(text: "");
-                               op.add(of);
-                             }
-                             //print(op);
-                             formsData.add(op);
-                           }
-                         }
-                         //print(formsData);
-                         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CreateService(
-                             areaList: widget.areaList,
-                             priceController: widget.priceController,
-                             type: widget.serviceType,
-                             descriptionController: widget.descriptionController,
-                             titleController: widget.titleController,
-                             formList: formsData,
-                             user: widget.user)));
+                             showDialog(context: context, builder: (context){
+                               return AlertDialog(
+                                 title: Text("تأكيد انشاء خدمة ${widget.titleController.text} ؟"),
+                                 actions: <Widget>[
+                                   ElevatedButton(
+                                   style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                   ),
+                                     onPressed: () {
+
+                                       Navigator.of(context).pop();
+                                     },
+                                     child: const Text('إلغاء'),
+                                   ),
+                                   ElevatedButton(
+                                     onPressed: () {
+                                       for(int i=0;i<forms.length;i++){
+                                         if(forms[i].getVisibility() == true){
+                                           List op = [];
+                                           if(forms[i].getQuestion() != null) {
+                                             op.add(forms[i].getQuestion());
+                                           } else {
+                                             TextEditingController os = TextEditingController(text: "");
+                                             op.add(os);
+                                           }
+                                           op.add(forms[i].getFieldType());
+                                           if(forms[i].getNote() != null){
+                                             op.add(forms[i].getNote());
+                                           } else {
+                                             TextEditingController of = TextEditingController(text: "");
+                                             op.add(of);
+                                           }
+                                           //print(op);
+                                           formsData.add(op);
+                                         }
+                                       }
+                                       //print(formsData);
+                                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CreateService(
+                                           areaList: widget.areaList,
+                                           priceController: widget.priceController,
+                                           type: widget.serviceType,
+                                           descriptionController: widget.descriptionController,
+                                           titleController: widget.titleController,
+                                           formList: formsData,
+                                           user: widget.user)));
+                                     },
+                                     child: const Text('إنشاء'),
+                                   ),
+                                 ],
+                               );
+                             });
+
                        }, child: const Text("إنشاء الخدمة",style:TextStyle(fontSize: 17),)),
                        ElevatedButton(
                            style: ElevatedButton.styleFrom(

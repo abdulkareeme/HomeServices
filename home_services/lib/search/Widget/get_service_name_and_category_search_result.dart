@@ -24,7 +24,7 @@ class GetServiceNameAndCategorySearchResult extends StatelessWidget {
               return const Center(child: CircularProgressIndicator(),);
             } else if(snapshot.connectionState == ConnectionState.done){
               if(snapshot.data!.item1 == true){
-                return Services(services: snapshot.data!.item2, user: user);
+                return Services(services: snapshot.data!.item2, user: user,category: category,);
               } else {
                 return AlertDialog(
                   title: const Text("حدثت مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),

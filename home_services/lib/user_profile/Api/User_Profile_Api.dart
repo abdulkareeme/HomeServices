@@ -728,7 +728,8 @@ class ProfileApi {
     try {
       Response response = await get(
           Uri.parse("${Server.host}${Server.allMyRating}${user.userName}"),
-          headers: {"Authorization": 'token ${user.token}'});
+          //headers: {"Authorization": 'token ${user.token}'}
+           );
       List<HomeServiceRating> rating = [];
       if (response.statusCode == 200) {
         print(response.statusCode);

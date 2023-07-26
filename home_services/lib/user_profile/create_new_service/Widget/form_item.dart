@@ -38,9 +38,6 @@ class _FormItemState extends State<FormItem>{
       child: (
         Container(
           margin: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            border: Border(top: BorderSide(),left: BorderSide(),right: BorderSide(),bottom: BorderSide(),)
-          ),
           //padding: const EdgeInsets.only(top: 10),
           child: Column(
             children: [
@@ -49,14 +46,16 @@ class _FormItemState extends State<FormItem>{
                   IconButton(onPressed: (){
                     showDialog(context: context, builder: (context){
                       return AlertDialog(
-                        title: const Text('Failed to sign up'),
-                        content: Text("اكيد بدك تحذف"),
+                        title: const Text("تأكيد الحذف ؟"),
                         actions: <Widget>[
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red,
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text('CANCEL'),
+                            child: const Text('إلغاء'),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -65,7 +64,7 @@ class _FormItemState extends State<FormItem>{
                               });
                               Navigator.of(context).pop();
                             },
-                            child: const Text('OK'),
+                            child: const Text('حذف'),
                           ),
                         ],
                       );
@@ -83,12 +82,12 @@ class _FormItemState extends State<FormItem>{
                       leftPadding: 20.0,
                       rightPadding: 20.0,
                       contorller: widget.questionController,
-                      hintText: "adf",
+                      hintText:"",
                       obscure: false,
-                      lable: const Text("adf"),
+                      lable: const Text("أدخل السؤال"),
                       readOnly: false,
                       color: Colors.white,
-                      sidesColor: Colors.black,
+                      sidesColor: Colors.black38,
                       maxLine: 5,
                       maxLetters: 50,
                     ),
@@ -119,7 +118,7 @@ class _FormItemState extends State<FormItem>{
                   lable: const Text("ملاحظة للمستخدم عن السؤال"),
                   readOnly: false,
                   color: Colors.white,
-                  sidesColor: Colors.black,
+                  sidesColor: Colors.black38,
 
                 ),
               ),

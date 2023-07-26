@@ -37,20 +37,22 @@ class _CreateNewServiceState extends State<CreateNewService>{
   }
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          body: Center(
-            child: SingleChildScrollView(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[700],
+            title: const Text("إضافة خدمة جديدة"),
+          ),
+          body: SingleChildScrollView(
               child: Form(
                 key: formKey,
                 child: Column(
-                    children:  [
-                      SizedBox(height: height/9,),
-                      Text("إنشاء خدمة جديدة",style: CreateNewServiceStyle.headerStyle(),),
-                      SizedBox(height: height/11,),
+                    children:[
+                      SizedBox(height: MediaQuery.of(context).size.height/59,),
+                      Text("",style: CreateNewServiceStyle.headerStyle(),),
+                      SizedBox(height: MediaQuery.of(context).size.height/89,),
 
                       // Title field
                       MyFild(
@@ -63,7 +65,7 @@ class _CreateNewServiceState extends State<CreateNewService>{
                         lable: const Text("عنوان الخدمة"),
                         readOnly: false,
                         color: Colors.white,
-                        sidesColor: Colors.black,
+                        sidesColor: Colors.black38,
                         val: (_){
                           if(widget.titleController.text.isEmpty){
                             return "required";
@@ -84,7 +86,7 @@ class _CreateNewServiceState extends State<CreateNewService>{
                         lable: const Text("تعريف بالخدمة"),
                         readOnly: false,
                         color: Colors.white,
-                        sidesColor: Colors.black,
+                        sidesColor: Colors.black38,
                         val: (_){
                           if(widget.descriptionController.text.isEmpty){
                             return "required";
@@ -110,7 +112,7 @@ class _CreateNewServiceState extends State<CreateNewService>{
                             return null;
                           }
                         },
-                        sidesColor: Colors.black,
+                        sidesColor: Colors.black38,
                         keyboardType: TextInputType.number,
                       )
                       ,
@@ -122,11 +124,11 @@ class _CreateNewServiceState extends State<CreateNewService>{
                             decoration: const InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Colors.black,
+                                      color: Colors.black38,
                                     )),
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Colors.black,
+                                      color: Colors.black38,
                                     ))),
                             style: const TextStyle(
                               color: Colors.black,
@@ -164,7 +166,7 @@ class _CreateNewServiceState extends State<CreateNewService>{
                           title: const Text("المدن"),
                           buttonText: const Text("إختيار المدن",style: TextStyle(fontSize: 17),),
                           decoration: const BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.black))
+                            border: Border(bottom: BorderSide(color: Colors.black38))
 
                           ),
                           buttonIcon: const Icon(Icons.arrow_drop_down),
@@ -191,7 +193,8 @@ class _CreateNewServiceState extends State<CreateNewService>{
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                padding:const EdgeInsets.only(top: 5,bottom: 5,left: 30,right: 30)
+                                padding:const EdgeInsets.only(top: 5,bottom: 5,left: 30,right: 30),
+                                primary: Colors.grey[700]
                               ),
                               onPressed: (){
                                   if(formState() && selectedAreas.isNotEmpty && type != "التصنيف"){
@@ -239,7 +242,6 @@ class _CreateNewServiceState extends State<CreateNewService>{
                   ),
               ),
             ),
-          ),
         ),
       ),
     );

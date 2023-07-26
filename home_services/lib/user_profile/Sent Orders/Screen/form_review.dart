@@ -12,6 +12,10 @@ class FormReviewPage extends StatelessWidget {
       child:Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[700],
+            title: const Text("فورم الخدمة"),
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: [

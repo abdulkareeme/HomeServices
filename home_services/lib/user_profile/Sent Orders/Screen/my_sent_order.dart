@@ -18,21 +18,25 @@ class _MySentOrderState extends State<MySentOrder> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child:SingleChildScrollView(
-            child: Column(
-              children: [
-                if(widget.orders.isEmpty)const Center(child: Text("ليس لديك طلبات مرسلة حاليا",style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 28,
-                    color: Colors.white70
-                ),),),
-                for(int i=0;i<widget.orders.length;i++)OrderItem(order: widget.orders[i],forms: widget.orders[i]!.formList,user: widget.user),
-              ],
-            ),
-          )
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[700],
+            title: const Text("الطلبات المرسلة"),
+          ),
+          body:SingleChildScrollView(
+              child: Column(
+                children: [
+                  if(widget.orders.isEmpty)const Center(child: Text("ليس لديك طلبات مرسلة حاليا",style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 28,
+                      color: Colors.white70
+                  ),),),
+                  for(int i=0;i<widget.orders.length;i++)OrderItem(order: widget.orders[i],forms: widget.orders[i]!.formList,user: widget.user),
+                ],
+              ),
+            )
         ),
       ),
     );

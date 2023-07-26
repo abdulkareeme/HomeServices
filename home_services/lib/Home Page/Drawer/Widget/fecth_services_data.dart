@@ -20,7 +20,7 @@ class GetThisCategoryServices extends StatelessWidget {
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return const Center(child: CircularProgressIndicator(),);
                 } else if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-                  return Services(services:snapshot.data!,user: user,);
+                  return Services(services:snapshot.data!,user: user,category: categoryName,);
                 } else {
                   return  AlertDialog(
                     title:const Text("حدث مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),

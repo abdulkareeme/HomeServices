@@ -11,7 +11,11 @@ class SingleFormItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(title),
+        Text(title,style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w400
+        ),),
+        const SizedBox(height: 7,),
         MyFild(
           contorller: controller,
           hintText: "",
@@ -21,7 +25,7 @@ class SingleFormItem extends StatelessWidget {
           rightPadding: 20.0,
           leftPadding: 20.0,
           color: Colors.white,
-          sidesColor: Colors.black
+          sidesColor: Colors.black38
         )
       ],
     );

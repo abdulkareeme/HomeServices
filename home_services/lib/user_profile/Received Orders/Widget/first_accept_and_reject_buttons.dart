@@ -20,7 +20,30 @@ class FirstAcceptAndRejectButtons extends StatelessWidget {
               primary: Colors.green
             ),
             onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendFirstAcceptance(id: orderId, user: user,order: order,)));
+              showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  title: const Text("قبول الطلب ؟"),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('إلغاء'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendFirstAcceptance(id: orderId, user: user,order: order,)));
+
+                      },
+                      child: const Text('قبول'),
+                    ),
+                  ],
+                );
+              });
             },
             child: const Text("قبول الطلب")),
         ElevatedButton(
@@ -28,7 +51,29 @@ class FirstAcceptAndRejectButtons extends StatelessWidget {
                 primary: Colors.red
             ),
             onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendFirstReject(user: user, orderId: orderId)));
+              showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  title: const Text("رفض الطلب ؟"),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('إلغاء'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendFirstReject(user: user, orderId: orderId)));
+
+                      },
+                      child: const Text('رفض'),
+                    ),
+                  ],
+                );
+              });
             },
             child: const Text("رفض الطلب"))
       ],

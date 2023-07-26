@@ -23,15 +23,59 @@ class SecondAcceptAndRejectButtons extends StatelessWidget {
                   primary: Colors.green
                 ),
                 onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendAcceptAfterReview(user: user, id: orderId)));
-                },
+                  showDialog(context: context, builder: (context){
+                    return AlertDialog(
+                      title: const Text("قبول الطلب ؟"),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('إلغاء'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendAcceptAfterReview(user: user, id: orderId)));
+
+                          },
+                          child: const Text('قبول'),
+                        ),
+                      ],
+                    );
+                  });
+                  },
                 child: const Text("قبول الطلب")),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Colors.red
                 ),
                 onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendRejectAfterReview(orderId: orderId, user: user)));
+                  showDialog(context: context, builder: (context){
+                    return AlertDialog(
+                      title: const Text("رفض الطلب ؟"),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('إلغاء'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendRejectAfterReview(orderId: orderId, user: user)));
+
+                          },
+                          child: const Text('رفض'),
+                        ),
+                      ],
+                    );
+                  });
                 },
                 child: const Text("رفض الطلب")),
           ],

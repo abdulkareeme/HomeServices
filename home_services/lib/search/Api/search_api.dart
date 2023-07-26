@@ -12,7 +12,6 @@ class SearchApi{
   // category and title search for the category section
   // we pass the category we want to search in and the title of the service we are looking for it
   // the user only need to enter the title, the category we get it from the category page
-
   Future<Tuple2<bool,List>> titleAndCategorySearch(TextEditingController title,var category)async{
     try{
       Response response = await get(Uri.parse("${Server.host}${Server.listMyService}?category=$category&title=${title.text}"));
@@ -64,7 +63,6 @@ class SearchApi{
   // home page search for the title of the service
   // we enter the title of the service and we get the result if it exist
   // the user enter the title only
-
   Future<Tuple2<bool,List>> titleSearch(TextEditingController title)async{
     try{
       Response response = await get(Uri.parse("${Server.host}${Server.listMyService}?title=${title.text}"));

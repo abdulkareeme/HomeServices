@@ -87,12 +87,9 @@ class _ReceivedOrderItemState extends State<ReceivedOrderItem> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  /*FirstAcceptAndRejectButtons(
-                    user: widget.user,
-                    orderId: widget.order!.id,
-                  )*/
                   if(widget.order!.status == "Pending")FirstAcceptAndRejectButtons(order: widget.order,user: widget.user, orderId: widget.order!.id),
                   if(widget.order!.status == "Under review")SecondAcceptAndRejectButtons(user: widget.user,orderId: widget.order!.id,formList: widget.order!.formList),
+                  const SizedBox(height: 7,)
                 ],
               ),
         ),

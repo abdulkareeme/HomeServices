@@ -19,9 +19,8 @@ class GetUserDetails extends StatelessWidget {
             return const Center(child: CircularProgressIndicator(),);
           } else {
             if(snapshot.connectionState == ConnectionState.done){
-             /* print(snapshot.data![0]);
-              print(snapshot.data![1]);*/
-              return UserDetails(user: snapshot.data![0],service:snapshot.data![1],);
+
+              return UserDetails(user: snapshot.data![0],service:snapshot.data![1],rating: snapshot.data![2],);
             } else {
               return  AlertDialog(
                 title:const Text("حدث مشكلة اثناء الاتصال, الرجاء المحاولة لاحقا"),

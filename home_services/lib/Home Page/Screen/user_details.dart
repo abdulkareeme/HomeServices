@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:home_services/Home%20Page/Widget/show_service_item.dart';
 import 'package:home_services/style/user_profile_style.dart';
+import 'package:home_services/user_profile/list_my_services/Widget/service_item.dart';
+import 'package:home_services/user_profile/rating/Widget/home_service_rate_item.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui'as ui;
 
@@ -10,7 +12,8 @@ class UserDetails extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   var user;
   var service;
-  UserDetails({Key? key,required this.user,required this.service}) : super(key: key);
+  var rating;
+  UserDetails({Key? key,required this.user,required this.service,this.rating}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +22,11 @@ class UserDetails extends StatelessWidget {
       child: Directionality(
         textDirection:ui.TextDirection.rtl,
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[700],
+            // ignore: prefer_interpolation_to_compose_strings
+            title: Text("${" حساب "+user.firstName} "+user.lastName),
+          ),
           body: (
               SingleChildScrollView(
                 child: Column(
@@ -127,18 +135,38 @@ class UserDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10,right: 30),
-                      child: Row(
-                        children:  [
-                          Text("الخدمات : ",style: UserProfileStyle.bioTitleStyle(),),
-                        ],
+                    Visibility(
+                      visible: (service.length == 0)? false:true,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10,right: 30),
+                        child: Row(
+                          children:  [
+                            Text("الخدمات : ",style: UserProfileStyle.bioTitleStyle(),),
+                          ],
+                        ),
                       ),
                     ),
                     for(int i=0;i<service.length;i++)Padding(
-                      padding: const EdgeInsets.only(right: 10,left: 10,bottom: 13),
-                      child: ShowServiceItem(service: service[i]),
+                      padding: const EdgeInsets.only(right: 10,left: 10,bottom: 13,top: 15),
+                      child: ServiceItem(service: service[i],user: user,onTap:null),
                     ),
+
+                    Visibility(
+                      visible: (service.length == 0)? false:true,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10,right: 30),
+                        child: Row(
+                          children:  [
+                            Text("التقييمات : ",style: UserProfileStyle.bioTitleStyle(),),
+                          ],
+                        ),
+                      ),
+                    ),
+                    for(int i=0;i<rating.length;i++)Padding(
+                      padding: const EdgeInsets.only(right: 10,left: 10,bottom: 13,top: 15),
+                      child:HomeServiceRateItem(op: rating[i]),
+                    ),
+
                   ],
                 ),
               )

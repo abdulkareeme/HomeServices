@@ -16,22 +16,29 @@ class MyServices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: (
-        Scaffold(
-          body: SingleChildScrollView(
-            child: (services.isEmpty)?const Center(child: Text("ليس لديك خدمات حاليا"),):Column(
-              children: [
-                 for(int i=0;i<services.length;i++)ServiceItem(service: services[i],user: user,onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FetchServiceDetails(
-                    id: services[i].id,
-                    user: user,
-                    userSellerCase: false,
-                  )));
-                }),
-              ],
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: (
+          Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.grey[700],
+              title: const Text("خدماتي"),
             ),
-          ),
-        )
+            body: SingleChildScrollView(
+              child: (services.isEmpty)?const Center(child: Text("ليس لديك خدمات حاليا"),):Column(
+                children: [
+                   for(int i=0;i<services.length;i++)ServiceItem(service: services[i],user: user,onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FetchServiceDetails(
+                      id: services[i].id,
+                      user: user,
+                      userSellerCase: false,
+                    )));
+                  }),
+                ],
+              ),
+            ),
+          )
+        ),
       ),
     );
   }

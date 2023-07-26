@@ -70,13 +70,15 @@ class _UpdateServiceState extends State<UpdateService> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[700],
+            title: Text("تعديل ${widget.service.title} "),
+          ),
           body:SingleChildScrollView(
               child: Form(
                 key: formKey,
                 child: Column(
                   children:  [
-                    SizedBox(height: height/9,),
-                    const Text("تعديل الخدمة الحالية",),
                     SizedBox(height: height/11,),
 
                     // Title field
@@ -90,7 +92,7 @@ class _UpdateServiceState extends State<UpdateService> {
                       lable: const Text("عنوان الخدمة"),
                       readOnly: false,
                       color: Colors.white,
-                      sidesColor: Colors.black,
+                      sidesColor: Colors.black38,
                       val: (_){
                         if(widget.titleController.text.isEmpty){
                           return "required";
@@ -111,7 +113,7 @@ class _UpdateServiceState extends State<UpdateService> {
                       lable: const Text("تعريف بالخدمة"),
                       readOnly: false,
                       color: Colors.white,
-                      sidesColor: Colors.black,
+                      sidesColor: Colors.black38,
                       val: (_){
                         if(widget.descriptionController.text.isEmpty){
                           return "required";
@@ -137,7 +139,7 @@ class _UpdateServiceState extends State<UpdateService> {
                           return null;
                         }
                       },
-                      sidesColor: Colors.black,
+                      sidesColor: Colors.black38,
                       keyboardType: TextInputType.number,
                     )
                     ,
@@ -148,7 +150,7 @@ class _UpdateServiceState extends State<UpdateService> {
                           title: const Text("المدن"),
                           buttonText: const Text("إختيار المدن",style: TextStyle(fontSize: 17),),
                           decoration: const BoxDecoration(
-                              border: Border(bottom: BorderSide(color: Colors.black))
+                              border: Border(bottom: BorderSide(color: Colors.black38))
 
                           ),
                           buttonIcon: const Icon(Icons.arrow_drop_down),
@@ -172,67 +174,88 @@ class _UpdateServiceState extends State<UpdateService> {
 
                     for(int i=0;i<forms.length;i++)forms[i],
                     Padding(
-                      padding: const EdgeInsets.only(left: 30,right: 30,top: 20),
+                      padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.green,
-                                padding: const EdgeInsets.only(left: 20,right: 20),
+                                padding: const EdgeInsets.only(left: 25,right: 25,top: 5,bottom: 5),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
                               ),
                               onPressed: (){
-                                if(formState() && selectedAreas.isNotEmpty){
-                                  setState(() {
-                                    selectedArea = false;
-                                  });
-                                  for(int i=0;i<forms.length;i++){
-                                    if(forms[i].getVisibility() == true){
-                                     List op = [];
-                                      if(forms[i].getQuestion() != null) {
-                                        op.add(forms[i].getQuestion());
-                                     } else {
-                                        TextEditingController os = TextEditingController(text: "");
-                                        op.add(os);
-                                      }
-                                      op.add(forms[i].getFieldType());
-                                      if(forms[i].getNote() != null){
-                                       op.add(forms[i].getNote());
-                                      } else {
-                                       TextEditingController of = TextEditingController(text: "");
-                                        op.add(of);
-                                      }
-                                    //print(op);
-                                    formData.add(op);
-                                  }
-                                }
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendUpdatedService(
-                                  descriptionController:widget.descriptionController,
-                                  titleController: widget.titleController,
-                                  priceController: widget.priceController,
-                                  user: widget.user,
-                                  service: widget.service,
-                                  formData: formData,
-                                  selectedArea: selectedAreas,
-                                )));
-                                } else {
+                                showDialog(context: context, builder: (context){
+                                  return AlertDialog(
+                                    title:  Text("تعديل الخدمة ${widget.service.title} ؟"),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.red,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('إلغاء'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if(formState() && selectedAreas.isNotEmpty){
+                                            setState(() {
+                                              selectedArea = false;
+                                            });
+                                            for(int i=0;i<forms.length;i++){
+                                              if(forms[i].getVisibility() == true){
+                                                List op = [];
+                                                if(forms[i].getQuestion() != null) {
+                                                  op.add(forms[i].getQuestion());
+                                                } else {
+                                                  TextEditingController os = TextEditingController(text: "");
+                                                  op.add(os);
+                                                }
+                                                op.add(forms[i].getFieldType());
+                                                if(forms[i].getNote() != null){
+                                                  op.add(forms[i].getNote());
+                                                } else {
+                                                  TextEditingController of = TextEditingController(text: "");
+                                                  op.add(of);
+                                                }
+                                                //print(op);
+                                                formData.add(op);
+                                              }
+                                            }
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendUpdatedService(
+                                              descriptionController:widget.descriptionController,
+                                              titleController: widget.titleController,
+                                              priceController: widget.priceController,
+                                              user: widget.user,
+                                              service: widget.service,
+                                              formData: formData,
+                                              selectedArea: selectedAreas,
+                                            )));
+                                          } else {
 
-                                  if(selectedAreas.isEmpty){
-                                    setState(() {
-                                      selectedArea = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      selectedArea = false;
-                                    });
-                                  }
-                                }
+                                            if(selectedAreas.isEmpty){
+                                              setState(() {
+                                                selectedArea = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                selectedArea = false;
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: const Text('تعديل'),
+                                      ),
+                                    ],
+                                  );
+                                });
                               },
                               child: const Text("تعديل الخدمة",style:TextStyle(fontSize: 17),)),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.only(left: 20,right: 20),
+                                padding: const EdgeInsets.only(left: 25,right: 25,top: 5,bottom: 5),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
                               ),
                               onPressed: (){

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:home_services/Main%20Classes/rating.dart';
 import 'package:home_services/Main%20Classes/user.dart';
 import 'package:http/http.dart';
 
@@ -59,6 +60,7 @@ class HomePageApi{
   Future<List?> getUserDetails(String username) async{
     bool firstFunction = false;
     bool secondFunction =false;
+    bool thirdFunction = false;
     List op =[];
     try{
       Response response = await get(Uri.parse(Server.host+Server.getUserDetails+username));
@@ -66,21 +68,7 @@ class HomePageApi{
         firstFunction = true;
         var info = jsonDecode(response.body);
         if(info['mode'] != "client"){
-          /*print(info['services_number'].runtimeType);
-          print(info["id"].runtimeType);
-          print(info["area_id"].runtimeType);
-          print(info['first_name'].runtimeType);
-          print(info["last_name"].runtimeType);
-          print(info["username"].runtimeType);
-          print(info['average_fast_answer'].runtimeType);
-          print(info['email'].runtimeType);
-          print(info['mode'].runtimeType);
-          print(info['gender'].runtimeType);
-          print(info['birth_date'].runtimeType);
-          print(info["date_joined"].runtimeType);
-          print(info["area_name"].runtimeType);
-          print(info["bio"].runtimeType);
-          print(info['average_rating'].runtimeType);*/
+
           Seller seller = Seller.noPhoto(
               (info['services_number'] != null)
                   ? info['services_number']
@@ -179,7 +167,51 @@ class HomePageApi{
     }catch(e){
      print (e);
     }
-    if(firstFunction && secondFunction){
+
+    try {
+      Response response = await get(
+        Uri.parse("${Server.host}${Server.allMyRating}$username"),
+        //headers: {"Authorization": 'token ${user.token}'}
+      );
+      List<HomeServiceRating> rating = [];
+      if (response.statusCode == 200) {
+        thirdFunction = true;
+        print(response.statusCode);
+        var info = jsonDecode(response.body);
+        List oq = info;
+        for (int i = 0; i < oq.length; i++) {
+          HomeServiceRating rate = HomeServiceRating(
+              info[i]["id"],
+              utf8.decode(info[i]["client_comment"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits),
+              info[i]["client"]["photo"],
+              info[i]["client"]["username"],
+              info[i]["commitment_to_deadline"],
+              info[i]["quality_of_service"],
+              info[i]["rating_time"],
+              (info[i]["seller_comment"] != null)
+                  ? info[i]["seller_comment"]
+                  : "",
+              info[i]["work_ethics"],
+              info[i]["home_service"]["id"],
+              utf8.decode(
+                  info[i]["home_service"]["title"].toString().codeUnits),
+              utf8.decode(
+                  info[i]["home_service"]["category"].toString().codeUnits));
+
+          rating.add(rate);
+        }
+        op.add(rating);
+      } else {
+        print(response.statusCode);
+        print(jsonDecode(response.body));
+      }
+    } catch (e) {
+      print(e);
+    }
+    print(op.length);
+    if(firstFunction && secondFunction && thirdFunction){
       return op;
     } else {
       List o = [];
