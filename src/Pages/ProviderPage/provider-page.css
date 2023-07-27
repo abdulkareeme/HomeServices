@@ -1,0 +1,22 @@
+.provider {
+  height: 100vh;
+}
+.provider .navbar-brand {
+  margin: 0 !important;
+}
+.provider .navbar-brand > ion-icon {
+  font-size: 18px !important;
+  cursor: pointer;
+  color: white;
+}
+
+.provider .balance {
+  margin-top: 150px;
+  height: 150px;
+}
+.provider .balance div ion-icon {
+  font-size: 35px;
+}
+.provider .infinity {
+  font-size: 100px;
+}

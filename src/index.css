@@ -170,7 +170,7 @@ label span {
   align-items: center;
 }
 
-.my-btn.disable {
+.disable {
   opacity: 0.9 !important;
   cursor: default !important;
 }

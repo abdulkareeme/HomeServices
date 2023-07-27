@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import NavBar from "./Components/Navbar/Navbar";
 import Loader from "./Components/Loader/Loader";
@@ -7,8 +7,10 @@ import "react-tooltip/dist/react-tooltip.css";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import Footer from "./Components/Footer/Footer";
+import ProviderLogin from "./Components/ProviderLogin/ProviderLogin";
 //Website Pages
 const Home = lazy(() => import("./Pages/Home"));
+const ProviderPage = lazy(() => import("./Pages/ProviderPage/ProviderPage"));
 const Login = lazy(() => import("./Components/Login/Login"));
 const Register = lazy(() => import("./Components/Register/Register"));
 const ConfirmEmail = lazy(() => import("./Pages/ConfirmEmail"));
@@ -43,14 +45,18 @@ const VerificationEmail = lazy(() =>
 const NewPassword = lazy(() => import("./Pages/NewPassword/NewPassword"));
 function App() {
   const token = Cookies.get("userToken");
+  const {pathname} =useLocation();
   return (
     <Suspense fallback={<Loader />}>
-      <BrowserRouter>
         <Toaster />
-        <NavBar />
+        {pathname!=="/provider"?<NavBar />:null}
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/provider" element={<ProviderPage />} />
+
           <Route path="/login" element={<Login />} />
+          <Route path="/provider_login" element={<ProviderLogin />} />
+
           <Route path="/forget_password" element={<ForgetPassword />} />
           <Route
             path="/forget_password/confirm"
@@ -94,7 +100,6 @@ function App() {
           <Route path="/search/:name" element={<SearchResults />} />
         </Routes>
         <Footer/>
-      </BrowserRouter>
     </Suspense>
   );
 }
