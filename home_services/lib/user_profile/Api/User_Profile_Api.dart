@@ -445,6 +445,7 @@ class ProfileApi {
                 utf8.decode(info[i]['form'][j]["content"].toString().codeUnits));
             orderForm.add(oo);
           }
+
           Order order = Order(
               info[i]['id'],
               DateFormat('yyyy-MM-dd')
@@ -456,8 +457,13 @@ class ProfileApi {
               "",
               (info[i]["is_rateable"] == null) ? false : info[i]["is_rateable"],
               info[i]["expected_time_by_day_to_finish"],
+              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits),
               utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
-              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits));
+              utf8.decode(info[i]["seller"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["seller"]["last_name"].toString().codeUnits),
+              utf8.decode(info[i]["seller"]["photo"].toString().codeUnits),
+            info[i]["seller"]["username"],
+          );
           finalData.add(order);
         }
         return finalData;
@@ -537,18 +543,23 @@ class ProfileApi {
             orderForm.add(oo);
           }
           Order order = Order(
-              info[i]['id'],
-              DateFormat('yyyy-MM-dd')
-                  .format(DateTime.parse(info[i]["create_date"])),
-              info[i]["status"],
-              homeService,
-              info[i]["client"]["username"],
-              orderForm,
-              "",
-              (info[i]["is_rateable"] == null) ? false : info[i]["is_rateable"],
-              info[i]["expected_time_by_day_to_finish"],
-              utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
-              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits));
+            info[i]['id'],
+            DateFormat('yyyy-MM-dd')
+                .format(DateTime.parse(info[i]["create_date"])),
+            info[i]["status"],
+            homeService,
+            info[i]["client"]["username"],
+            orderForm,
+            "",
+            (info[i]["is_rateable"] == null) ? false : info[i]["is_rateable"],
+            info[i]["expected_time_by_day_to_finish"],
+            utf8.decode(info[i]["client"]["last_name"].toString().codeUnits),
+            utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
+            utf8.decode(info[i]["seller"]["first_name"].toString().codeUnits),
+            utf8.decode(info[i]["seller"]["last_name"].toString().codeUnits),
+            utf8.decode(info[i]["seller"]["photo"].toString().codeUnits),
+            info[i]["seller"]["username"],
+          );
           finalData.add(order);
         }
         return finalData;

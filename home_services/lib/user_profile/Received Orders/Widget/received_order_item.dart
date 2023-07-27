@@ -62,7 +62,7 @@ class _ReceivedOrderItemState extends State<ReceivedOrderItem> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 0,top: 0),
-                    child:Text(widget.order!.lastName+" "+widget.order!.firstName,style: const TextStyle(
+                    child:Text(widget.order!.firstName+" "+widget.order!.lastName,style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500
                     ),),
