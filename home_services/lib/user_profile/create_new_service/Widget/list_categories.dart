@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Home%20Page/Screen/home_page.dart';
+import 'package:home_services/Home%20Page/Widget/get_all_services.dart';
 import 'package:home_services/user_profile/Api/User_Profile_Api.dart';
 import 'package:home_services/user_profile/create_new_service/Widget/list_area.dart';
 
@@ -37,7 +37,7 @@ class GetCategoriesList extends StatelessWidget{
                     ],
                   );
                 } else {
-                  return (op == false)?GetListArea(categoriesList: snapshot.data!,user: user,): HomePage(user: user,category: snapshot.data!,);
+                  return (op == false)?GetListArea(categoriesList: snapshot.data!,user: user,): GetAllServices(user: user,categoryList: snapshot.data!,);
                 }
               } else {
                 return AlertDialog(

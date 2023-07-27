@@ -84,9 +84,9 @@ class _OrderItemState extends State<OrderItem> {
             Padding(
                 padding: const EdgeInsets.only(right: 0, top: 6),
                 child: Text(
-                  widget.order!.homeService.creatorUserName,
+                  widget.order!.lastName+" "+widget.order!.firstName,
                   style: const TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.w500),
+                      fontSize: 20, fontWeight: FontWeight.w500),
                 )),
             Padding(
               padding: const EdgeInsets.only(right: 0, top: 4),

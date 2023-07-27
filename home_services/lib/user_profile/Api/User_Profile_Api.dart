@@ -417,9 +417,7 @@ class ProfileApi {
               utf8.decode(info[i]["home_service"]["category"]["name"]
                   .toString()
                   .codeUnits));
-          for (int j = 0;
-              j < info[i]["home_service"]["service_area"].length;
-              j++) {
+          for (int j = 0; j < info[i]["home_service"]["service_area"].length; j++) {
             Area o = Area(
               info[i]["home_service"]["service_area"][j]['id'],
               utf8.decode(info[i]["home_service"]["service_area"][j]['name']
@@ -429,11 +427,10 @@ class ProfileApi {
             serviceArea.add(o);
           }
           Service homeService = Service.orderService(
-              utf8.decode(
-                  info[i]["home_service"]["title"].toString().codeUnits),
-              info[i]["home_service"]["seller"],
+              utf8.decode(info[i]["home_service"]["title"].toString().codeUnits),
+              (info[i]["home_service"]["seller"]!= null)?info[i]["home_service"]["seller"]:"",
               category,
-              info[i]["home_service"]["average_price_per_hour"],
+              (info[i]["home_service"]["average_price_per_hour"]!= null )?info[i]["home_service"]["average_price_per_hour"]:"",
               serviceArea);
           List<Form1> orderForm = [];
           for (int j = 0; j < info[i]["form"].length; j++) {
@@ -445,8 +442,7 @@ class ProfileApi {
                 info[i]['form'][j]['field']["field_type"]);
             Form1 oo = Form1(
                 o,
-                utf8.decode(
-                    info[i]['form'][j]["content"].toString().codeUnits));
+                utf8.decode(info[i]['form'][j]["content"].toString().codeUnits));
             orderForm.add(oo);
           }
           Order order = Order(
@@ -455,11 +451,13 @@ class ProfileApi {
                   .format(DateTime.parse(info[i]["create_date"])),
               info[i]["status"],
               homeService,
-              info[i]["client"],
+              info[i]["client"]["username"],
               orderForm,
               "",
               (info[i]["is_rateable"] == null) ? false : info[i]["is_rateable"],
-              info[i]["expected_time_by_day_to_finish"]);
+              info[i]["expected_time_by_day_to_finish"],
+              utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits));
           finalData.add(order);
         }
         return finalData;
@@ -510,9 +508,7 @@ class ProfileApi {
               utf8.decode(info[i]["home_service"]["category"]["name"]
                   .toString()
                   .codeUnits));
-          for (int j = 0;
-              j < info[i]["home_service"]["service_area"].length;
-              j++) {
+          for (int j = 0; j < info[i]["home_service"]["service_area"].length; j++) {
             Area o = Area(
               info[i]["home_service"]["service_area"][j]['id'],
               utf8.decode(info[i]["home_service"]["service_area"][j]['name']
@@ -524,17 +520,15 @@ class ProfileApi {
           Service homeService = Service.orderService(
               utf8.decode(
                   info[i]["home_service"]["title"].toString().codeUnits),
-              info[i]["home_service"]["seller"],
+              (info[i]["home_service"]["seller"]!=null)?info[i]["home_service"]["seller"]:"",
               category,
               info[i]["home_service"]["average_price_per_hour"],
               serviceArea);
           List<Form1> orderForm = [];
           for (int j = 0; j < info[i]["form"].length; j++) {
             Field o = Field(
-                utf8.decode(
-                    info[i]['form'][j]['field']['note'].toString().codeUnits),
-                utf8.decode(
-                    info[i]['form'][j]['field']['title'].toString().codeUnits),
+                utf8.decode(info[i]['form'][j]['field']['note'].toString().codeUnits),
+                utf8.decode(info[i]['form'][j]['field']['title'].toString().codeUnits),
                 info[i]['form'][j]['field']["field_type"]);
             Form1 oo = Form1(
                 o,
@@ -548,11 +542,13 @@ class ProfileApi {
                   .format(DateTime.parse(info[i]["create_date"])),
               info[i]["status"],
               homeService,
-              info[i]["client"],
+              info[i]["client"]["username"],
               orderForm,
               "",
               (info[i]["is_rateable"] == null) ? false : info[i]["is_rateable"],
-              info[i]["expected_time_by_day_to_finish"]);
+              info[i]["expected_time_by_day_to_finish"],
+              utf8.decode(info[i]["client"]["first_name"].toString().codeUnits),
+              utf8.decode(info[i]["client"]["last_name"].toString().codeUnits));
           finalData.add(order);
         }
         return finalData;

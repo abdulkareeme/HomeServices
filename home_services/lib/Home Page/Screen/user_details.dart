@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/Home%20Page/Widget/show_service_item.dart';
 import 'package:home_services/style/user_profile_style.dart';
 import 'package:home_services/user_profile/list_my_services/Widget/service_item.dart';
 import 'package:home_services/user_profile/rating/Widget/home_service_rate_item.dart';

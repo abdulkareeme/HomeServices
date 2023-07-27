@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:home_services/Main%20Classes/rating.dart';
 import 'package:home_services/Main%20Classes/user.dart';
 import 'package:http/http.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../Main Classes/area.dart';
 import '../../Main Classes/category.dart';
@@ -301,4 +302,48 @@ class HomePageApi{
       return op;
     }
   }
+
+  Future<Tuple2<bool,List?>> getAllServeices()async{
+    try{
+      Response response = await get(Uri.parse(Server.host+Server.listMyService));
+      if(response.statusCode == 200){
+        bool ok = true;
+        var info = jsonDecode(response.body);
+        List os = info;
+        List services = [];
+        for (int i = 0; i < os.length; i++) {
+          List<Area> area = [];
+          Category ob = Category(info[i]["category"]['id'],
+              utf8.decode(info[i]["category"]['name'].toString().codeUnits));
+          for (int j = 0; j < info[i]["service_area"].length; j++) {
+            Area o = Area(info[i]["service_area"][j]['id'],
+                info[i]["service_area"][j]['name']);
+            area.add(o);
+          }
+          Service service = Service(
+              info[i]['id'],
+              utf8.decode(info[i]["title"].toString().codeUnits),
+              info[i]["average_ratings"],
+              utf8.decode(
+                  info[i]["seller"]["user"]["first_name"].toString().codeUnits),
+              utf8.decode(
+                  info[i]["seller"]["user"]["last_name"].toString().codeUnits),
+              info[i]["seller"]["user"]["username"],
+              info[i]["average_price_per_hour"],
+              ob,
+              area);
+          services.add(service);
+        }
+        return Tuple2(ok, services);
+      } else {
+        print(response.statusCode);
+        return const Tuple2(false, []);
+      }
+    }catch(e){
+      print(e);
+      return const Tuple2(false, []);
+    }
+  }
+
+
 }
