@@ -37,8 +37,7 @@ const NavBar = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const storedUser = Cookies.get("userTotalInfo");
-    storedUser !== undefined &&
-      dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
     const storedCategories = Cookies.get("categories");
     if (storedCategories) {
       dispatch(setCategories(JSON.parse(storedCategories)));

@@ -20,7 +20,7 @@ const UserProfileCard = () => {
   const { username } = useParams();
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   const getUserPageInfo = async () => {
     if (userTotalInfo?.username !== username) {

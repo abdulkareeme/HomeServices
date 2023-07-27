@@ -37,7 +37,7 @@ const UserAvatar = () => {
   };
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(storedToken));
+    storedToken && dispatch(setUserToken(storedToken));
   }
   balance === null && dispatch(setBalance(Cookies.get("balance")));
   const avatarList = [
@@ -67,12 +67,12 @@ const UserAvatar = () => {
         Authorization: bearer,
       },
     }).then(() => {
-      history("/");
       Cookies.remove("userTotalInfo");
       Cookies.remove("userToken");
       Cookies.remove("balance");
       dispatch(setUserTotalInfo(null));
       dispatch(setUserToken(null));
+      history("/");
     });
   };
   // handle click out of the element to hide it
@@ -82,7 +82,7 @@ const UserAvatar = () => {
   };
   useEffect(() => {
     const storedUser = Cookies.get("userTotalInfo");
-    handleWatchChange(JSON.parse(storedUser));
+    storedUser && handleWatchChange(JSON.parse(storedUser));
   }, []);
   if (isLoading) {
     return <div className="userLoading"></div>;

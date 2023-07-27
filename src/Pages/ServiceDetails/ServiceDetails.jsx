@@ -9,16 +9,26 @@ import {
   setSelectedServiceToUpdate,
   setSelectedUser,
   setUserToken,
+  setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import Rates from "../../Components/Rates/Rates";
 import Cookies from "js-cookie";
+import { toast } from "react-hot-toast";
 
 const ServiceDetails = () => {
   const { userTotalInfo, userToken, selectedUser } = useSelector(
     (state) => state.homeService
   );
   const dispatch = useDispatch();
+  if (userToken === null) {
+    const storedToken = Cookies.get("userToken");
+    storedToken && dispatch(setUserToken(storedToken));
+  }
+  if (userTotalInfo === null) {
+    const storedUser = Cookies.get("userTotalInfo");
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+  }
 
   const [serviceDetails, setServiceDetails] = useState(null);
   const [serviceForm, setServiceForm] = useState(null);
@@ -63,17 +73,34 @@ const ServiceDetails = () => {
     );
     history(`/service/${id}/update`);
   };
+  const handleBuyService = () => {
+    if (userToken) {
+      history(`/service/${id}/fill_form`);
+    } else {
+      toast.error("الرجاء تسجيل دخول أولا", {
+        duration: 2000,
+        position: "top-center",
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
+      });
+      setTimeout(() => {
+        history("/login");
+      }, 2000);
+    }
+  };
   useEffect(() => {
     if (selectedUser === null) {
       const storedselectedUser = Cookies.get("selectedUser");
-      dispatch(setSelectedUser(storedselectedUser));
+      storedselectedUser && dispatch(setSelectedUser(storedselectedUser));
     }
     if (userToken === null) {
       const storedToken = Cookies.get("userToken");
-      dispatch(setUserToken(storedToken));
+      storedToken && dispatch(setUserToken(storedToken));
     }
+    userToken && getServiceForm();
     getServiceDetails();
-    getServiceForm();
     getServiceRates();
   }, []);
   return (
@@ -86,14 +113,12 @@ const ServiceDetails = () => {
                 <h4>{serviceDetails?.category.name}</h4>
                 <h1 className="mb-4">{serviceDetails?.title}</h1>
               </div>
-              {username === userTotalInfo.username ? (
+              {username === userTotalInfo?.username ? (
                 <button onClick={() => handelClickUpdate()}>
                   تعديل الخدمة
                 </button>
               ) : (
-                <button onClick={() => history(`/service/${id}/fill_form`)}>
-                  شراء الخدمة
-                </button>
+                <button onClick={() => handleBuyService()}>شراء الخدمة</button>
               )}
             </div>
             <Row>

@@ -60,7 +60,6 @@ const Login = () => {
           { secure: true }
         );
         history("/");
-        window.location.reload();
       })
       .catch((err) => {
         console.log(err);

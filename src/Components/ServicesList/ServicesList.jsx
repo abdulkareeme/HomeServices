@@ -30,7 +30,7 @@ const ServicesList = ({ type }) => {
         <section className="services page">
           <Container>
             <Row>
-              {serviceList &&
+              {serviceList ? (
                 serviceList.map((item) => (
                   <Col
                     key={item.id}
@@ -55,8 +55,10 @@ const ServicesList = ({ type }) => {
                     <span>{item.category.name}</span>
                     <span> {item.average_price_per_hour} ل.س</span>
                   </Col>
-                ))}
-              {!serviceList && <LoaderContent />}
+                ))
+              ) : (
+                <LoaderContent />
+              )}
             </Row>
           </Container>
         </section>
@@ -64,7 +66,7 @@ const ServicesList = ({ type }) => {
     } else {
       return (
         <Row className="services">
-          {serviceList &&
+          {serviceList ? (
             serviceList.map((item) => (
               <Col key={item.id} lg={type === "page" ? 3 : 5} md={5} xs={10}>
                 <img
@@ -84,8 +86,10 @@ const ServicesList = ({ type }) => {
                 <span>{item.category.name}</span>
                 <span> {item.average_price_per_hour} ل.س</span>
               </Col>
-            ))}
-          {!serviceList && <LoaderContent />}
+            ))
+          ) : (
+            <LoaderContent />
+          )}
         </Row>
       );
     }

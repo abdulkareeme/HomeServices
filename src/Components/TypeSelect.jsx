@@ -42,10 +42,14 @@ const TypeSelect = ({ type, value, setFormDataList, id }) => {
     { value: "text", label: "نص" },
     { value: "number", label: "رقم" },
   ];
-  let defaultValue =
-    value === "text"
-      ? { value: "text", label: "نص" }
-      : { value: "number", label: "رقم" };
+  let defaultValue;
+  if (value === "text") {
+    defaultValue = { value: "text", label: "نص" };
+  } else if (value === "number") {
+    defaultValue = { value: "number", label: "رقم" };
+  } else {
+    defaultValue = null;
+  }
 
   if (type === "read") {
     return (
@@ -54,6 +58,7 @@ const TypeSelect = ({ type, value, setFormDataList, id }) => {
   } else {
     return (
       <Select
+        value={defaultValue}
         options={options}
         placeholder="نوع الاجابة"
         styles={customStyles}

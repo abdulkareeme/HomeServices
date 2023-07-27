@@ -38,11 +38,11 @@ const AddService = () => {
   const dispatch = useDispatch();
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(storedToken));
+    storedToken && dispatch(setUserToken(storedToken));
   }
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   const history = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -342,7 +342,7 @@ const AddService = () => {
                   );
                 }
               })}
-              {formDataList.filter((item) => item.visible).length < 10 ? (
+              {finalForm.length < 10 ? (
                 <div
                   className="add"
                   type="submit"

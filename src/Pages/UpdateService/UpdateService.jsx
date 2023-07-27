@@ -40,19 +40,19 @@ const UpdateService = () => {
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(0);
   const [areasServiceList, setAreasServiceList] = useState(
-    selectedServiceToUpdate.service_area
+    selectedServiceToUpdate?.service_area
   );
   const [categoryService, setCategoryService] = useState(
-    selectedServiceToUpdate.category
+    selectedServiceToUpdate?.category
   );
   const [formDataList, setFormDataList] = useState(
-    selectedServiceToUpdate.form
+    selectedServiceToUpdate?.form
   );
   useEffect(() => {
-    // add id to each obj in formData to delete & edit
+    // add id and visible to each obj in formData to delete & edit
     setFormDataList(
       formDataList.map((item, index) => {
-        return { id: index, ...item };
+        return { id: index, ...item, visible: true };
       })
     );
   }, []);
@@ -66,7 +66,7 @@ const UpdateService = () => {
     average_price_per_hour: selectedServiceToUpdate.average_price_per_hour,
   };
   const updateFormDataList = (field, value, id) => {
-    console.log(formDataList);
+    console.log(finalForm);
     setFormDataList((prevList) => {
       return prevList.map((item) => {
         if (item.id === id) {
@@ -77,10 +77,18 @@ const UpdateService = () => {
       });
     });
   };
-  console.log("update", selectedServiceToUpdate);
   const handelDelete = (id) => {
-    setFormDataList(formDataList.filter((item) => item.id !== id));
+    setFormDataList((prevList) => {
+      return prevList.map((item) => {
+        if (item.id === id) {
+          return { ...item, visible: false };
+        }
+        return item;
+      });
+    });
   };
+  const finalForm = formDataList?.filter((item) => item.visible);
+
   const submitHandler = async (values) => {
     setIsSubmitting(1);
     toast("يتم الآن حفظ التعديلات", {
@@ -113,7 +121,7 @@ const UpdateService = () => {
     try {
       const res = await putToAPI(
         `services/update_form_home_service/${id}`,
-        formDataList,
+        finalForm,
         {
           headers: {
             Authorization: bearer,
@@ -194,7 +202,7 @@ const UpdateService = () => {
           {({ values, handleChange, errors, touched }) => (
             <Container>
               <form
-                className={`add-service`}
+                className="add-service"
                 onSubmit={(e) => e.preventDefault()}
               >
                 <div className="title">
@@ -269,15 +277,15 @@ const UpdateService = () => {
                   />
                 </div>
               </form>
-              <form onSubmit={(e) => e.preventDefault()} className={`add-form`}>
+              <form onSubmit={(e) => e.preventDefault()} className="add-form">
                 <h3>اسئلة الزبون</h3>
-                {formDataList.map((item, index) => {
+                {formDataList?.map((item, index) => {
                   if (index < 4)
                     return (
                       <Fragment>
                         <div className="question">
                           <label> السؤال ونوع الإجابة</label>
-                          <div className="d-flex gap-2">
+                          <div className="question-body d-flex gap-2 align-items-start">
                             <input type="text" readOnly value={item.title} />
                             <TypeSelect
                               type="read"
@@ -287,10 +295,12 @@ const UpdateService = () => {
                             />
                           </div>
                         </div>
-                        {index < formDataList.length - 1 ? <hr /> : null}
+                        {item !== finalForm[finalForm.length - 1] ? (
+                          <hr />
+                        ) : null}
                       </Fragment>
                     );
-                  else
+                  else if (index >= 4 && item.visible) {
                     return (
                       <Fragment>
                         <div className="question">
@@ -301,7 +311,7 @@ const UpdateService = () => {
                               onClick={() => handelDelete(item.id)}
                             ></ion-icon>
                           </div>
-                          <div className="d-flex gap-2">
+                          <div className="question-body d-flex gap-2 align-items-start">
                             <input
                               type="text"
                               value={item.title}
@@ -338,11 +348,14 @@ const UpdateService = () => {
                             ></textarea>
                           </div>
                         </div>
-                        {index < formDataList.length - 1 ? <hr /> : null}
+                        {item !== finalForm[finalForm.length - 1] ? (
+                          <hr />
+                        ) : null}
                       </Fragment>
                     );
+                  }
                 })}
-                {formDataList.length < 10 ? (
+                {finalForm.length < 10 ? (
                   <div
                     className="add"
                     type="submit"
@@ -354,22 +367,25 @@ const UpdateService = () => {
                           title: "",
                           field_type: "",
                           note: "",
+                          visible: true,
                         },
                       ]);
                     }}
                   >
-                    أضف سؤال للزبون
+                    <ion-icon name="add"></ion-icon>
                   </div>
                 ) : null}
-                <button
-                  hidden={isSubmitting}
-                  type="submit"
-                  className="submit"
-                  onClick={() => submitHandler(values)}
-                >
-                  حفظ التعديلات
-                </button>
-                <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
+                <div className="btn-holder d-flex justify-content-end align-items-center">
+                  <button
+                    hidden={isSubmitting}
+                    type="submit"
+                    className="submit"
+                    onClick={() => submitHandler(values)}
+                  >
+                    حفظ التعديلات
+                  </button>
+                  <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
+                </div>
               </form>
             </Container>
           )}

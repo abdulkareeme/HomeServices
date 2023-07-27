@@ -35,11 +35,11 @@ const UpdateProfile = () => {
   const { username } = useParams();
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(storedToken));
+    storedToken && dispatch(setUserToken(storedToken));
   }
   const [dateValue, setDateValue] = useState(userTotalInfo?.birth_date);
   const [bioValue, setBioValue] = useState(userTotalInfo?.bio);

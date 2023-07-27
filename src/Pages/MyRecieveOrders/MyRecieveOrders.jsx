@@ -26,11 +26,11 @@ const MyRecieveOrders = () => {
   const history = useNavigate();
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(storedToken));
+    storedToken && dispatch(setUserToken(storedToken));
   }
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   // many stats to filter recive data depends on status
   const [myRecieveorderData, setMyRecieveOrderData] = useState(null);

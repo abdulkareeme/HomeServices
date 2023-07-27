@@ -21,11 +21,11 @@ const MyServiceOrders = () => {
   const dispatch = useDispatch();
   if (userToken === null) {
     const storedToken = Cookies.get("userToken");
-    dispatch(setUserToken(JSON.parse(storedToken)));
+    storedToken && dispatch(setUserToken(storedToken));
   }
   if (userTotalInfo === null) {
     const storedUser = Cookies.get("userTotalInfo");
-    dispatch(setUserTotalInfo(JSON.parse(storedUser)));
+    storedUser && dispatch(setUserTotalInfo(JSON.parse(storedUser)));
   }
   const [myorderData, setMyOrderData] = useState(null);
   const [show, setShow] = useState(false);
@@ -86,7 +86,7 @@ const MyServiceOrders = () => {
       });
       setIsSubmitting(0);
       toast.success("تم اضافة التقييم بنجاح", {
-        duration: 3000,
+        duration: 2000,
         position: "top-center",
         ariaProps: {
           role: "status",
@@ -95,7 +95,8 @@ const MyServiceOrders = () => {
       });
       setTimeout(() => {
         handleCloseRateModal();
-      }, 3000);
+        window.location.reload();
+      }, 2000);
     } catch (err) {
       setIsSubmitting(0);
       if (err.responce.data?.detail === "You have already rated this service") {
