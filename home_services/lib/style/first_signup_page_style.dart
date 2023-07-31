@@ -5,9 +5,9 @@ class FirstSignupPageStyle{
   static ButtonStyle nextButtonStyle(){
     return(
       ElevatedButton.styleFrom(
-        primary: Colors.black,
+        primary: Colors.black.withOpacity(0.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        padding: const EdgeInsets.only(top: 15,bottom: 15,right: 35,left: 35)
+        padding: const EdgeInsets.only(top: 7,bottom: 7,right: 35,left: 35)
       )
     );
   }

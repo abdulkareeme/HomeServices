@@ -6,7 +6,7 @@ class LogInStyle {
     return ElevatedButton.styleFrom(
       padding: const EdgeInsets.only(left: 100, right: 100),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      primary: Colors.black,
+      primary: Colors.black.withOpacity(0.6),
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:home_services/Log%20In%20/Widget/log_in .dart';
 import 'package:home_services/forget_password/Screen/send_email.dart';
@@ -18,16 +19,22 @@ class LogInButtonAndField extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _LogInButtonAndFieldState();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 }
 
 class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
-  bool isPasswordVisible1 = false;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool isPasswordVisible1 = true;
   LogOutApi op = LogOutApi();
+  bool formState(){
+    var op = formKey.currentState;
+    return op!.validate();
+  }
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: (Column(children: [
         Text(
           widget.loginError.toString(),
@@ -40,13 +47,25 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         MyFild(
           leftPadding: 20.0,
           rightPadding: 20.0,
-          contorller: widget.usernameController,
+          errorText: "",
+          contorller: usernameController,
           hintText: "البريد الالكتروني",
           obscure: false,
           lable: const Text("البريد الالكتروني"),
           color: Colors.white,
           sidesColor: Colors.black,
           readOnly: false,
+          val: (_){
+            if(usernameController.text.isNotEmpty){
+              if(EmailValidator.validate(usernameController.text)){
+                return null;
+              } else {
+                return "invalid email";
+              }
+            } else {
+              return "required";
+            }
+          },
         ),
 
         const SizedBox(
@@ -65,16 +84,24 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
               });
             },
           ),
+          errorText: "",
           leftPadding: 20.0,
           rightPadding: 20.0,
-          contorller: widget.passwordController,
+          contorller: passwordController,
           hintText: "كلمة المرور",
-          obscure: true,
+          obscure: isPasswordVisible1,
           lable: const Text("كلمة المرور"),
           color: Colors.white,
           sidesColor: Colors.black,
           readOnly: false,
           maxLine: 1,
+          val: (_){
+            if(passwordController.text.isEmpty){
+              return "required";
+            } else {
+              return null;
+            }
+          },
         ),
         Padding(
           padding: const EdgeInsets.only(left: 30, top: 5),
@@ -100,13 +127,14 @@ class _LogInButtonAndFieldState extends State<LogInButtonAndField> {
         ElevatedButton(
           onPressed: () {
             //logIn();
-            print(widget.usernameController.text);
-            print(widget.passwordController.text);
-            Navigator.of(context).push(MaterialPageRoute(
 
-                builder: (context) => LogInApi(
-                    passwordController: widget.passwordController,
-                    usernameController: widget.usernameController)));
+            if(formState()){
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+
+                  builder: (context) => LogInApi(
+                      passwordController: passwordController,
+                      usernameController: usernameController)));
+            }
           },
           style: LogInStyle.buttonStyle(),
           child: Text(

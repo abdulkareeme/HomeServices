@@ -14,8 +14,6 @@ class LogInApi extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _LogInApiState();
-  String error = "";
-
 }
 
 class _LogInApiState extends State<LogInApi> {
@@ -27,20 +25,38 @@ class _LogInApiState extends State<LogInApi> {
         body: (
             Center(
               child:FutureBuilder(
-                future:op1.login(widget.usernameController, widget.passwordController, widget.error),
+                future:op1.login(widget.usernameController, widget.passwordController,),
                 builder: (context,AsyncSnapshot<List?> snapshot){
                   if(snapshot.connectionState == ConnectionState.waiting){
                     return const CircularProgressIndicator();
                   } else if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                     if(snapshot.data!.isEmpty){
-                      return LogIn(error: widget.error,);
+                      return AlertDialog(
+                        title: const Text("يوجد خطأ في البريد الالكتروني او كلمة السر, يرجى اعادة المحاولة"),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: (){
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LogIn(error: "")));
+                            },
+                            child: const Text("تأكيد"))
+                        ],
+                      );
                     } else {
                       return (
                           GetCategoriesList(op: true,user: snapshot.data![0],)
                       );
                     }
                   } else {
-                    return (const Text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+                    return AlertDialog(
+                      title: const Text("حدث خطأ أثناء الاتصال, يرجى اعادة المحاولة"),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: (){
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LogIn(error: "")));
+                            },
+                            child: const Text("تأكيد"))
+                      ],
+                    );
                   }
                 },
               ),

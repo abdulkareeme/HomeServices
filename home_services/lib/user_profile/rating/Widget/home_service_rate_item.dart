@@ -174,20 +174,29 @@ class HomeServiceRateItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15,),
+              Row(
+                children: const [
+                  Padding(
+                    padding:  EdgeInsets.only(right: 22,),
+                    child: Text(
+                      "التعليقات : ",style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    )
+                    ,),
+                              ),
+                ],
+              ),
               Padding(
-                padding: const EdgeInsets.only(right: 22,bottom: 15),
-                child: Row(
-                  children: [
-                    const Text("التعليقات : ",style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),),
-                    Text(op.clientComment,style:const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    )),
-                  ],
-                ),
+                padding: const EdgeInsets.only(right:10,bottom: 15,left: 10),
+                child:Text.rich(
+                    textAlign: TextAlign.justify,
+                    TextSpan(
+                  text: op.clientComment,style:const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                )
+                )),
               )
             ],
           ),

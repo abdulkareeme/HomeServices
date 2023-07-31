@@ -55,7 +55,7 @@ class LogInApis {
   }
 
   Future<List?> login(
-      var emailController, var passwordController, var error) async {
+      var emailController, var passwordController,) async {
     try {
       Response response =
           await post(Uri.parse(Server.host + Server.loginApi), body: {
