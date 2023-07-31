@@ -1,40 +1,50 @@
 from rest_framework import serializers
 from .models import OrderService, HomeService
 
-from .serializers import CategorySerializer ,AreaSerializer ,RetrieveInputDataSerializer,InputDataSerializer
+from .serializers import CategorySerializer, AreaSerializer, RetrieveInputDataSerializer, InputDataSerializer
+
 
 class HomeServiceSpectacular(serializers.ModelSerializer):
     service_area = AreaSerializer(many=True)
-    seller = serializers.CharField(max_length = 150)
-    class Meta :
-        model = HomeService
-        fields = ['title','category','average_price_per_hour','service_area' , 'seller' ]
-        depth=2
+    seller = serializers.CharField(max_length=150)
 
-class ListOrdersSpectacular(serializers.ModelSerializer):
-    home_service = HomeServiceSpectacular()
-    client = serializers.CharField(max_length = 150)
-    form = RetrieveInputDataSerializer(many=True)
-    photo = serializers.ImageField()
-    class Meta :
-        model = OrderService
-        fields = ['id','create_date','status','home_service' , 'client' , 'form' , 'photo' , 'is_rateable','expected_time_by_day_to_finish']
+    class Meta:
+        model = HomeService
+        fields = ['title', 'category',
+                  'average_price_per_hour', 'service_area', 'seller']
+        depth = 2
+
 
 class MakeOrderSpectacular(serializers.ModelSerializer):
     form_data = InputDataSerializer(many=True)
+
     class Meta:
         model = OrderService
-        fields = ['expected_time_by_day_to_finish','form_data']
+        fields = ['expected_time_by_day_to_finish', 'form_data']
+
 
 class SellerCommentSpectacular(serializers.Serializer):
-    seller_comment = serializers.CharField(max_length=500 , required = True)
+    seller_comment = serializers.CharField(max_length=500, required=True)
 
 
 class ClientSpectacular(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     username = serializers.CharField()
-    photo  = serializers.ImageField()
+    photo = serializers.ImageField()
+
+
+class ListOrdersSpectacular(serializers.ModelSerializer):
+    home_service = HomeServiceSpectacular()
+    client = ClientSpectacular()
+    form = RetrieveInputDataSerializer(many=True)
+    seller = ClientSpectacular()
+
+    class Meta:
+        model = OrderService
+        fields = ['id', 'create_date', 'status', 'home_service', 'client',
+                  'form', 'seller', 'is_rateable', 'expected_time_by_day_to_finish']
+
 
 class RetrieveRatingsSpectacular(serializers.Serializer):
     id = serializers.IntegerField()
@@ -42,14 +52,16 @@ class RetrieveRatingsSpectacular(serializers.Serializer):
     commitment_to_deadline = serializers.FloatField(required=True)
     work_ethics = serializers.FloatField(required=True)
     client_comment = serializers.CharField(required=True)
-    seller_comment = serializers.CharField(allow_null=True , required=False)
+    seller_comment = serializers.CharField(allow_null=True, required=False)
     rating_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     client = ClientSpectacular()
+
 
 class HomeServiceSimpleSpectacular(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
     category = serializers.CharField()
+
 
 class RetrieveRatingsSpectacularForUsername(serializers.Serializer):
     id = serializers.IntegerField()
@@ -57,7 +69,7 @@ class RetrieveRatingsSpectacularForUsername(serializers.Serializer):
     commitment_to_deadline = serializers.FloatField(required=True)
     work_ethics = serializers.FloatField(required=True)
     client_comment = serializers.CharField(required=True)
-    seller_comment = serializers.CharField(allow_null=True , required=False)
+    seller_comment = serializers.CharField(allow_null=True, required=False)
     rating_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     client = ClientSpectacular()
     home_service = HomeServiceSimpleSpectacular()

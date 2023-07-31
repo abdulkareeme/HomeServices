@@ -163,7 +163,7 @@ class UpdateNormalUser(serializers.ModelSerializer):
         instance.save()
         instance.normal_user.save()
         return instance
-class UpdateUserPhoto(serializers.ModelSerializer):
+class UpdateUserPhotoSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(max_length = 128 , required=False)
     class Meta :
         model = User
@@ -234,3 +234,14 @@ class CheckForgetPasswordSerializer(serializers.Serializer):
                 user.save()
                 raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
             raise serializers.ValidationError("Wrong code please try again 🙃")
+        
+
+class ChargeBalanceSerializer(serializers.Serializer):
+    charged_balance = serializers.IntegerField()
+    username = serializers.CharField()
+    
+    
+    def validate_charged_balance(self , value):
+        if value <=0 :
+            raise serializers.ValidationError("This field must be positive")
+        return value
