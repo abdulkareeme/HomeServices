@@ -514,7 +514,7 @@ def login_provider(request):
         return Response({"detail": 'Your account does not support this feature'}, status=status.HTTP_400_BAD_REQUEST)
 
     _, token = AuthToken.objects.create(user)
-    if not user.is_superuser:
+    if user.is_superuser:
         balance = -1
     else:
         balance = user.normal_user.balance.total_balance
@@ -536,6 +536,12 @@ class ChargeBalance(APIView):
             return Response({'detail' : "User dose not exist"} , status=status.HTTP_404_NOT_FOUND)
         if not user.normal_user :
             return Response({'detail' : "User dose not exist"} , status=status.HTTP_404_NOT_FOUND)
+        # if not user.is_superuser :
+        if request.user.normal_user.balance.total_balance < serializer.validated_data['charged_balance'] :
+            return Response({'detail':"You don't have enough balance"} , status=status.HTTP_400_BAD_REQUEST)
+        request.user.normal_user.balance.total_balance -= serializer.validated_data['charged_balance']
         user.normal_user.balance.total_balance += serializer.validated_data['charged_balance']
+        request.user.normal_user.balance.save()
         user.normal_user.balance.save()
         return Response('Success')  
+        

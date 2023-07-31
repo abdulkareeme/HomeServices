@@ -22,5 +22,5 @@ urlpatterns = [
     path('make_seller_comment/<int:rating_id>' , views.SellerComment.as_view()),
     path('ratings/service/<int:service_id>',views.ListRatingsByService.as_view()),
     path('ratings/username/<str:username>',views.ListRatingsByUsername.as_view()),
-
+    path('earnings' , views.GetEarnings.as_view() , name='earnings')
 ]

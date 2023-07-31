@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField , OrderService
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer ,RatingDetailSerializer
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer ,RatingDetailSerializer ,GetEarningsSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -550,3 +550,22 @@ class ListRatingsByUsername(APIView):
             index+=1
 
         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+class GetEarnings(APIView):
+    permission_classes = [permissions.IsAdminUser]
+    @extend_schema(
+            responses={200 : GetEarningsSerializer(many=True) , 403:None}
+    )
+    def get(self , request ):
+        queryset = Earnings.objects.all()
+        serializer = GetEarningsSerializer(data = queryset , many=True)
+        serializer.is_valid(raise_exception=False)
+        index =0
+        for earning in queryset :
+            serializer.data [index]['home_service'] = dict()
+            serializer.data [index]['home_service']['title'] = earning.order.home_service.title
+            serializer.data [index]['home_service']['seller'] = earning.order.home_service.seller.user.username
+            serializer.data [index]['home_service']['service_id'] = earning.order.home_service.id
+            serializer.data [index]['home_service']['seller_full_name'] = str(earning.order.home_service.seller.user.first_name) +' '+str(earning.order.home_service.seller.user.last_name )
+
+        return Response(serializer.data)
