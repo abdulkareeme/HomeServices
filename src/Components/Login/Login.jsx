@@ -90,7 +90,7 @@ const Login = () => {
               },
             });
           }
-        } else if (err.response.data.non_field_errors?.length > 0) {
+        } else if (err.response.data?.detail?.non_field_errors?.length > 0) {
           toast.error("كلمة المرور غير صحيحة", {
             duration: 3000,
             position: "top-center",

@@ -36,6 +36,7 @@ const ProviderLogin = () => {
         is_admin: res?.is_admin,
         balance: res?.balance,
       };
+      console.log(value);
       Cookies.set("providerUser", JSON.stringify(value), {
         expires: 30,
       });
@@ -47,7 +48,17 @@ const ProviderLogin = () => {
         },
         { secure: true }
       );
-      history("/provider");
+      toast.success("تم تسجيل الدخول بنجاح", {
+        duration: 2000,
+        position: "top-center",
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
+      });
+      setTimeout(() => {
+        history("/provider");
+      }, 2000);
     } catch (err) {
       console.log(err);
       setIsSubmitting(0);
@@ -74,8 +85,20 @@ const ProviderLogin = () => {
             },
           });
         }
-      } else if (err.response.data.non_field_errors?.length > 0) {
+      } else if (err.response.data?.detail?.non_field_errors?.length > 0) {
         toast.error("كلمة المرور غير صحيحة", {
+          duration: 3000,
+          position: "top-center",
+          ariaProps: {
+            role: "status",
+            "aria-live": "polite",
+          },
+        });
+      } else if (
+        err.response.data.detail ===
+        "Your account does not support this feature"
+      ) {
+        toast.error("عذرا حسابك لا يدعم هذه الخاصية", {
           duration: 3000,
           position: "top-center",
           ariaProps: {

@@ -8,6 +8,8 @@ import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import Footer from "./Components/Footer/Footer";
 import ProviderLogin from "./Components/ProviderLogin/ProviderLogin";
+import Earnings from "./Pages/Earnings/Earnings";
+import ProviderNavbar from "./Components/ProviderNavbar/ProviderNavbar";
 //Website Pages
 const Home = lazy(() => import("./Pages/Home"));
 const ProviderPage = lazy(() => import("./Pages/ProviderPage/ProviderPage"));
@@ -49,10 +51,12 @@ function App() {
   return (
     <Suspense fallback={<Loader />}>
         <Toaster />
-        {pathname!=="/provider"?<NavBar />:null}
+        {pathname!=="/provider" && pathname!=="/website_earnings"?<NavBar />:<ProviderNavbar/>}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/provider" element={<ProviderPage />} />
+          <Route path="/website_earnings" element={<Earnings />} />
+
 
           <Route path="/login" element={<Login />} />
           <Route path="/provider_login" element={<ProviderLogin />} />
