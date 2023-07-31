@@ -7,6 +7,8 @@ from core.views import User , NormalUser, Balance
 from services.models import Area
 from knox.auth import AuthToken
 from hypothesis import strategies , given
+from datetime import timedelta
+from django.utils import timezone
 
 pytest_mark = pytest.mark.django_db
 
@@ -15,7 +17,7 @@ class TestCoreAPIViews(TestCase):
 
         self.client = APIClient()
         self.user_password = 'q111w222'
-        self.global_user = mixer.blend(NormalUser ,user__mode = 'seller' )
+        self.global_user = mixer.blend(NormalUser ,user__mode = 'seller'  , user__gender = 'Male')
         self.global_user.user.set_password(self.user_password)
         self.global_user.user.save()
         _, self.token = AuthToken.objects.create(self.global_user.user )
@@ -180,3 +182,56 @@ class TestCoreAPIViews(TestCase):
         assert self.global_user.bio == data['bio']
         assert self.global_user.user.first_name == data['user']['first_name']
         assert self.global_user.user.last_name == data['user']['last_name']
+
+    def test_update_user_photo(self):
+        url = reverse('update_user_photo')
+        response = self.client.put(url)
+        user = User.objects.get(pk = self.global_user.user.id)
+        assert response.status_code == 200
+        assert user.photo.url == '/media/profile/Male.jpg'
+
+    def test_confirm_email_success(self):
+        user = mixer.blend(User)
+        user.is_active =False 
+        user.confirmation_code = 123456
+        user.confirmation_tries =1
+        user.next_confirm_try = timezone.now() + timedelta(hours= 1)
+        user.save()
+        url = reverse('confirm_email')
+        response = self.client.post(url , data = {'email':user.email , 'confirmation_code':123456})
+        print(response.json())
+        confirmed_user = User.objects.get(pk = self.global_user.user.id)
+
+        assert response.status_code ==200 
+        assert confirmed_user.is_active ==True
+        assert confirmed_user.confirmation_code is None
+    
+    def test_confirm_email_errors_class(self):
+        url= reverse('confirm_email')
+        response1 = self.client.post(url)
+        response2 = self.client.post(url , data = {'email':'invalid email' , 'confirmation_code':123456})
+        response3 = self.client.post(url , data = {'email': self.global_user.user.email , 'confirmation_code':123456})
+        response4 = self.client.post(url , data = {'email': self.global_user.user.email})
+        response5 = self.client.post(url , data = {'email': 'blablabla@bla.bla' , 'confirmation_code':123456})
+
+        assert response1 == 400
+        assert response2 == 400
+        assert response3 == 400 
+        assert response4 == 400 
+        assert response5 == 400
+
+    def test_confirm_email_errors_in_process(self):
+        url = reverse('confirm_email')
+        user = mixer.blend(User , is_active = True)
+        response1 =self.client.post(url , data = {'email': user.email , 'confirmation_code':123456})
+
+        user.is_active =False 
+        user.confirmation_code = 123456
+        user.confirmation_tries =0
+        user.next_confirm_try = timezone.now() + timedelta(hours= 1)
+        user.save()
+
+        response2 = self.client.post(url , data = {'email': user.email , 'confirmation_code':123456})
+        #TODO the function does not finished yet
+        assert response1.status_code == 400
+        assert response1.json() == {'detail':"Email already verified"}
