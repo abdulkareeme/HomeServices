@@ -93,12 +93,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     birth_date = serializers.DateField(required=False)
     gender = serializers.ChoiceField(choices=gender_choices, required=True)
-    photo = serializers.ImageField(max_length=100, use_url=True, required=False , allow_null= True)
     mode = serializers.ChoiceField(choices=mode_choices, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name', 'birth_date', 'gender', 'photo', 'mode', 'area')
+        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name', 'birth_date', 'gender', 'mode', 'area')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
@@ -119,7 +118,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data['last_name'],
             birth_date=validated_data.get('birth_date', None),
             gender=validated_data['gender'],
-            photo=validated_data.get('photo', None),
             mode=validated_data['mode'],
             area=validated_data['area']
         )
@@ -148,7 +146,7 @@ class UpdateNormalUser(serializers.ModelSerializer):
     class Meta :
         model = NormalUser
         fields = ['bio','user']
-    
+
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data is not None:
@@ -165,8 +163,8 @@ class UpdateNormalUser(serializers.ModelSerializer):
         instance.save()
         instance.normal_user.save()
         return instance
-class UpdateUserPhoto(serializers.ModelSerializer):
-    photo = serializers.ImageField(max_length = 128 , required=False)
+class UpdateUserPhotoSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(max_length = 128 , required=False , allow_null=True)
     class Meta :
         model = User
         fields = ['photo']
@@ -174,6 +172,8 @@ class UpdateUserPhoto(serializers.ModelSerializer):
         photo = validated_data.get('photo',None)
         if photo is not None :
             instance.photo.save(photo.name , photo , save=False)
+        else :
+            instance.photo= None
         instance.save()
         return instance
 class ForgetPasswordResetSerializer(serializers.Serializer):

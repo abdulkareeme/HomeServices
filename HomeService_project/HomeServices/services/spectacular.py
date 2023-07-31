@@ -11,15 +11,6 @@ class HomeServiceSpectacular(serializers.ModelSerializer):
         fields = ['title','category','average_price_per_hour','service_area' , 'seller' ]
         depth=2
 
-class ListOrdersSpectacular(serializers.ModelSerializer):
-    home_service = HomeServiceSpectacular()
-    client = serializers.CharField(max_length = 150)
-    form = RetrieveInputDataSerializer(many=True)
-    photo = serializers.ImageField()
-    class Meta :
-        model = OrderService
-        fields = ['id','create_date','status','home_service' , 'client' , 'form' , 'photo' , 'is_rateable','expected_time_by_day_to_finish']
-
 class MakeOrderSpectacular(serializers.ModelSerializer):
     form_data = InputDataSerializer(many=True)
     class Meta:
@@ -35,6 +26,15 @@ class ClientSpectacular(serializers.Serializer):
     last_name = serializers.CharField()
     username = serializers.CharField()
     photo  = serializers.ImageField()
+
+class ListOrdersSpectacular(serializers.ModelSerializer):
+    home_service = HomeServiceSpectacular()
+    client = ClientSpectacular()
+    form = RetrieveInputDataSerializer(many=True)
+    seller = ClientSpectacular()
+    class Meta :
+        model = OrderService
+        fields = ['id','create_date','status','home_service' , 'client' , 'form' ,'seller', 'is_rateable','expected_time_by_day_to_finish']
 
 class RetrieveRatingsSpectacular(serializers.Serializer):
     id = serializers.IntegerField()

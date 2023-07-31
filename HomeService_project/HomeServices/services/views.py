@@ -74,16 +74,23 @@ class MyOrders(APIView):
         serializer = ListOrdersSerializer(data = queryset , many=True)
         serializer.is_valid(raise_exception=False)
         i = 0
+        #order.home_service.seller.user.username
         for order in queryset :
-            serializer.data[i]['client']=order.client.user.username
-            serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
+            serializer.data[i]['client'] = dict()
+            serializer.data[i]['client']['first_name'] = order.client.user.first_name
+            serializer.data[i]['client']['last_name'] = order.client.user.last_name
+            serializer.data[i]['client']['username'] = order.client.user.username
+            serializer.data[i]['client']['photo'] = 'http://' + request.get_host() +order.client.user.photo.url
+
+            serializer.data[i]['seller']= dict()
+            serializer.data[i]['seller']['username'] = order.home_service.seller.user.username
+            serializer.data[i]['seller']['first_name'] = order.home_service.seller.user.first_name
+            serializer.data[i]['seller']['last_name'] = order.home_service.seller.user.last_name
+            serializer.data[i]['seller']['photo'] = 'http://' + request.get_host() + order.home_service.seller.user.photo.url
+
             serializer.data[i]['form'] = get_form_data(order=order)
             serializer.data[i]['is_rateable'] = is_rateable(order=order)
             serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
-            photo = None
-            if order.client.user.photo :
-                photo = 'http://' + request.get_host() +order.client.user.photo.url
-            serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
 
@@ -100,18 +107,23 @@ class ReceivedOrders(APIView):
         serializer.is_valid()
         i = 0
         for order in queryset :
-            serializer.data[i]['client']=order.client.user.username
-            serializer.data[i]['home_service']['seller']=order.home_service.seller.user.username
+            serializer.data[i]['client'] = dict()
+            serializer.data[i]['client']['first_name'] = order.client.user.first_name
+            serializer.data[i]['client']['last_name'] = order.client.user.last_name
+            serializer.data[i]['client']['username'] = order.client.user.username
+            serializer.data[i]['client']['photo'] = 'http://' + request.get_host() +order.client.user.photo.url
+
+            serializer.data[i]['seller']= dict()
+            serializer.data[i]['seller']['username'] = order.home_service.seller.user.username
+            serializer.data[i]['seller']['first_name'] = order.home_service.seller.user.first_name
+            serializer.data[i]['seller']['last_name'] = order.home_service.seller.user.last_name
+            serializer.data[i]['seller']['photo'] = 'http://' + request.get_host() + order.home_service.seller.user.photo.url
             if order.status != 'Pending':
                 serializer.data[i]['form'] = get_form_data(order=order)
             else :
                 serializer.data[i]['form'] = []
             serializer.data[i]['is_rateable'] = is_rateable(order=order)
             serializer.data[i]['expected_time_by_day_to_finish'] = order.expected_time_by_day_to_finish
-            photo = None
-            if order.client.user.photo :
-                photo = 'http://' + request.get_host() +order.client.user.photo.url
-            serializer.data[i]['photo'] = photo
             i+=1
         return Response(serializer.data )
 
@@ -250,7 +262,7 @@ class MakeOrderService(APIView):
             home_service = HomeService.objects.get(pk= service_id)
         except HomeService.DoesNotExist :
             return Response({"detail":["404 NOT FOUND"] }, status= status.HTTP_404_NOT_FOUND)
-        form  = home_service.field
+        form  = home_service.field.filter(is_newest = True)
         serializer = InputFieldSerializerAll(data=form , many=True)
         serializer.is_valid(raise_exception=False)
         return Response(serializer.data , status= status.HTTP_200_OK)
@@ -290,7 +302,7 @@ class MakeOrderService(APIView):
 
         # make sure that all fields belong to this service are exist
         validated_data = []
-        for input_field_1 in home_service.field.all() :
+        for input_field_1 in home_service.field.filter(is_newest = True) :
             is_exists = False
             for input_field_2 in serializer.data :
                 if input_field_1.id == input_field_2['field'] :
@@ -302,7 +314,7 @@ class MakeOrderService(APIView):
         new_order = OrderService.objects.create(client = request.user.normal_user , home_service=home_service , expected_time_by_day_to_finish=expected_time_by_day_to_finish)
         new_order.save()
         index = 0
-        all_fields = home_service.field.all()
+        all_fields = home_service.field.filter(is_newest = True)
         for input_data in validated_data:
             InputData.objects.create(field = all_fields[index] , content = input_data['content'] , order = new_order).save()
             index+=1

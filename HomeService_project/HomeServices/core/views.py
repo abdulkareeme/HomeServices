@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.auth import AuthToken
-from .serializers import RegisterSerializer, UserConfirmEmailSerializer , NormalUserSerializer , ListUsersSerializer , PasswordResetSerializer ,UpdateNormalUser ,ForgetPasswordResetSerializer ,CheckForgetPasswordSerializer ,UpdateUserPhoto
+from .serializers import RegisterSerializer, UserConfirmEmailSerializer , NormalUserSerializer , ListUsersSerializer , PasswordResetSerializer ,UpdateNormalUser ,ForgetPasswordResetSerializer ,CheckForgetPasswordSerializer ,UpdateUserPhotoSerializer
 from rest_framework.views import APIView
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
@@ -314,7 +314,6 @@ class ResendEmailMessage(APIView):
 
 class UpdateUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    permission_classes = [permissions.IsAuthenticated]
     @extend_schema(
             responses={200:UpdateProfileSpectacular , 401:None},
             description="Note : The area is all area in the database "
@@ -330,19 +329,29 @@ class UpdateUser(APIView):
         context['area'] = area.data
         return Response(context , status=status.HTTP_200_OK)
     @extend_schema(
-            request=UpdateNormalUserSpectacular ,
+            request=UpdateNormalUser ,
             responses={200:LoginSpectacular , 400: None , 401:None}
     )
     def put(self , request):
         user = request.user
         serializer = UpdateNormalUser(data=request.data , instance=user)
-        photo_serializer = UpdateUserPhoto(data=request.data , instance=user)
         serializer.is_valid(raise_exception=True)
-        photo_serializer.is_valid(raise_exception=True)
         serializer.save()
-        photo_serializer.save()
         host = 'http://' + request.get_host()
         return Response(get_user_info(user , host) , status=status.HTTP_200_OK)
+class UpdateUserPhoto(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.JSONParser , parsers.MultiPartParser]
+    @extend_schema(
+            request=UpdateUserPhotoSerializer,
+            responses={200:None , 400:None , 401 : None}
+    )
+    def put(self , request):
+        user = request.user
+        photo_serializer = UpdateUserPhotoSerializer(data=request.data , instance=user)
+        photo_serializer.is_valid(raise_exception=True)
+        photo_serializer.save()
+        return Response("Photo Updated Successfully" , status=status.HTTP_200_OK)
 @extend_schema(
     responses={200:MyBalanceSpectacular , 401:None }
 )
