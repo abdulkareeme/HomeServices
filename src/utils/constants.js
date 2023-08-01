@@ -165,6 +165,22 @@ export const getBalance = async (dispatch, setBalance, token) => {
     console.log(err);
   }
 };
+export const getProviderBalance = async (token) => {
+  try {
+    const res = await fetchFromAPI("api/my_balance", {
+      headers: {
+        Authorization: `token ${token}`,
+      },
+    });
+    const stroedUser = Cookies.get("providerUser");
+    const valueOfUser = JSON.parse(stroedUser);
+    if (valueOfUser.balance !== res.total_balance) {
+      Cookies.set("providerUser", JSON.stringify({ ...valueOfUser, balance: res.total_balance }));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const getTimeofSeconds = (seconds) => {
   const duration = moment.duration(seconds, "seconds");
 
@@ -176,31 +192,28 @@ export const getTimeofSeconds = (seconds) => {
     days > 0 ? `${days} ${days > 2 && days < 11 ? "ايام" : "يوم"}, ` : "";
   const hourString =
     hours > 0 ? `${hours} ${hours > 2 && hours < 11 ? "ساعات" : "ساعة"}, ` : "";
-  const minuteString = `${minutes} ${
-    minutes > 2 && minutes < 11 ? "دقائق" : "دقيقة"
-  }`;
+  const minuteString = `${minutes} ${minutes > 2 && minutes < 11 ? "دقائق" : "دقيقة"
+    }`;
   return dayString + hourString + minuteString;
 };
 export const isString = (value) => {
   return typeof value === "string" || value instanceof String;
 };
-export const isMedia=(media)=> {
+export const isMedia = (media) => {
   const query = `(max-width:${media})`;
-    return window.matchMedia(query).matches;
+  return window.matchMedia(query).matches;
 }
 
 export const getStatus = (
-  id,
-  status,
-  is_rateable,
+  order,
   setSelectedRate,
   setShowRateModal
 ) => {
-  if (status === "Expire" && is_rateable) {
+  if (order.status === "Expire" && order.is_rateable) {
     return (
       <button
         onClick={() => {
-          setSelectedRate(id);
+          setSelectedRate(order);
           setShowRateModal(true);
         }}
         className="have-to-rate"
@@ -209,18 +222,18 @@ export const getStatus = (
         <ion-icon name="star"></ion-icon>
       </button>
     );
-  } else if (status === "Expire" && !is_rateable) {
+  } else if (order.status === "Expire" && !order.is_rateable) {
     return (
       <div className="d-flex gap-2 align-items-center">
         <span style={{ backgroundColor: "green" }} className="circle"></span>
         <span>تم الانتهاء</span>
       </div>
     );
-  } else if (status === "Underway" && is_rateable) {
+  } else if (order.status === "Underway" && order.is_rateable) {
     return (
       <button
         onClick={() => {
-          setSelectedRate(id);
+          setSelectedRate(order);
           setShowRateModal(true);
         }}
         className="have-to-rate"
@@ -233,10 +246,10 @@ export const getStatus = (
     return (
       <div className="d-flex gap-2 align-items-center">
         <span
-          style={{ backgroundColor: statusObj[status].color }}
+          style={{ backgroundColor: statusObj[order.status].color }}
           className="circle"
         ></span>
-        <span>{statusObj[status].label}</span>
+        <span>{statusObj[order.status].label}</span>
       </div>
     );
   }

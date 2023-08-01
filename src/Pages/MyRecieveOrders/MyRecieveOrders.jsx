@@ -3,7 +3,7 @@ import { Fragment, memo, useEffect, useLayoutEffect, useState } from "react";
 import { fetchFromAPI, putToAPI } from "../../api/FetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import "./my-recieve-orders.css";
-import { setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
+import { setBalance, setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
 import swal from "sweetalert";
 import { Toaster, toast } from "react-hot-toast";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
@@ -149,12 +149,12 @@ const MyRecieveOrders = () => {
           Authorization: `token ${userToken}`,
         },
       });
-      // await getBalance();
       setPendingRecieveData(
-        pendingRecieveData.filter((item) => item.id !== order.id)
+      pendingRecieveData.filter((item) => item.id !== order.id)
       );
       order.form = res;
       setunderReviewRecieveData([...underReviewRecieveData, order]);
+      await getBalance(dispatch,setBalance,userToken);
       swal("تم القبول بنجاح", {
         icon: "success",
       });

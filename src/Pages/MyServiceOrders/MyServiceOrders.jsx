@@ -13,7 +13,7 @@ import moment from "moment";
 import "moment/locale/ar";
 import LoaderButton from "../../Components/LoaderButton";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const MyServiceOrders = () => {
   const { userTotalInfo, userToken } = useSelector(
     (state) => state.homeService
@@ -45,7 +45,7 @@ const MyServiceOrders = () => {
       {item.field.note.length > 0 ? <p>{item.field.note}</p> : null}
     </div>
   ));
-
+  const history=useNavigate();
   const handleClose = () => setShow(false);
   const handleCloseRateModal = () => setShowRateModal(false);
   const getMyOrderData = async () => {
@@ -61,14 +61,13 @@ const MyServiceOrders = () => {
       console.log(err);
     }
   };
-  const makeRate = async (id) => {
+  const makeRate = async (order) => {
     const payload = {
       quality_of_service: qualityStars,
       commitment_to_deadline: deadlineStars,
       work_ethics: ethicalStars,
       client_comment: rateComment,
     };
-    console.log(payload);
     try {
       setIsSubmitting(1);
       toast("يتم الآن اضافة التقييم", {
@@ -79,7 +78,7 @@ const MyServiceOrders = () => {
           "aria-live": "polite",
         },
       });
-      await postToAPI(`services/make_rating/${id}`, payload, {
+      await postToAPI(`services/make_rating/${order.id}`, payload, {
         headers: {
           Authorization: `token ${userToken}`,
         },
@@ -95,7 +94,7 @@ const MyServiceOrders = () => {
       });
       setTimeout(() => {
         handleCloseRateModal();
-        window.location.reload();
+        history(`/user/${order.seller.username}/rates`)
       }, 2000);
     } catch (err) {
       setIsSubmitting(0);
@@ -212,7 +211,7 @@ const MyServiceOrders = () => {
             <h1>الطلبات المرسلة</h1>
             <Row className="d-flex justify-content-center gap-2">
               {myorderData?.map((order) => (
-                <Col lg={3} md={4} xs={10} key={order.id}>
+                <Col lg={3} md={4} xs={7} key={order.id}>
                   <div className="card my-3 bg-white shadow-sm border-0 rounded">
                     <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                       <div className="image-holder mt-4">
@@ -249,9 +248,7 @@ const MyServiceOrders = () => {
                         </span>
                       </div>
                       {getStatus(
-                        order.id,
-                        order.status,
-                        order.is_rateable,
+                        order,
                         setSelectedRate,
                         setShowRateModal
                       )}

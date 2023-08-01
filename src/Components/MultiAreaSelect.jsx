@@ -33,33 +33,32 @@ const customStyles = {
 
 const MultiAreaSelect = ({ value = null, setAreasServiceList }) => {
   const { areasList } = useSelector((state) => state.homeService);
-  const [defaultValue, setDefaultValue] = useState(
-    value?.map((item) => {
-      return { value: item.id, label: item.name };
-    })
-  );
+  const [defaultValue, setDefaultValue] = useState(null);
   const dispatch = useDispatch();
-  if (!areasList) {
-    const storedAreas = Cookies.get("areasList");
-    if (!storedAreas) {
-      fetchFromAPI("api/register/").then((res) => {
-        dispatch(setAreasList(res));
-        Cookies.set("areasList", JSON.stringify(res), { expires: 10 });
-      });
-    } else dispatch(setAreasList(JSON.parse(storedAreas)));
-  }
+  
+  useEffect(()=> {
+    setDefaultValue(value?.map((item) => {
+      return { value: item.id, label: item.name };
+    }))
+    if (!areasList) {
+      const storedAreas = Cookies.get("areasList");
+      if (!storedAreas) {
+        fetchFromAPI("api/register/").then((res) => {
+          dispatch(setAreasList(res));
+          Cookies.set("areasList", JSON.stringify(res), { expires: 10 });
+        });
+      } else dispatch(setAreasList(JSON.parse(storedAreas)));
+    }
+  },[])
   const handleChange = (selectedOption) => {
     let list = [];
-    console.log(selectedOption);
     setDefaultValue(selectedOption);
     for (let i = 0; i < selectedOption.length; ++i) {
       list = [
         ...list,
-        // areasList.filter((item) => item.name === selectedOption[i].value)[0].id,
         selectedOption[i].value,
       ];
     }
-    console.log(list);
     setAreasServiceList(list);
   };
   let options = [];

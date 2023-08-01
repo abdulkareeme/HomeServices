@@ -47,63 +47,60 @@ const VerificationEmail = lazy(() =>
 const NewPassword = lazy(() => import("./Pages/NewPassword/NewPassword"));
 function App() {
   const token = Cookies.get("userToken");
-  const {pathname} =useLocation();
+  const { pathname } = useLocation();
   return (
     <Suspense fallback={<Loader />}>
-        <Toaster />
-        {pathname!=="/provider" && pathname!=="/website_earnings"?<NavBar />:<ProviderNavbar/>}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/provider" element={<ProviderPage />} />
-          <Route path="/website_earnings" element={<Earnings />} />
-
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/provider_login" element={<ProviderLogin />} />
-
-          <Route path="/forget_password" element={<ForgetPassword />} />
-          <Route
-            path="/forget_password/confirm"
-            element={<VerificationEmail />}
-          />
-          <Route path="/forget_password/reset" element={<NewPassword />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/confirm_email" element={<ConfirmEmail />} />
-          <Route path="/user/:username" element={<UserProfile />} />
-          <Route path="/user/:username/services" element={<SellerServices />} />
-          <Route path="/user/:username/rates" element={<SellerRates />} />
-          <Route
-            path="/service/new"
-            element={<ProtectedPath comp={<AddService />} cond={token} />}
-          />
-          <Route
-            path="/service/:id/update"
-            element={<ProtectedPath comp={<UpdateService />} cond={token} />}
-          />
-          <Route
-            path="/user/:username/services/:id"
-            element={<ServiceDetails />}
-          />
-          <Route
-            path="/user/:username/update_profile"
-            element={<ProtectedPath comp={<UpdateProfile />} cond={token} />}
-          />
-          <Route
-            path="/service/:id/fill_form"
-            element={<ProtectedPath comp={<FillServiceForm />} cond={token} />}
-          />
-          <Route
-            path="/my_order"
-            element={<ProtectedPath comp={<MyServiceOrders />} cond={token} />}
-          />
-          <Route
-            path="/my_recieve_order"
-            element={<ProtectedPath comp={<MyRecieveOrders />} cond={token} />}
-          />
-          <Route path="/services/:name" element={<FilterResults />} />
-          <Route path="/search/:name" element={<SearchResults />} />
-        </Routes>
-        <Footer/>
+      <Toaster />
+      {pathname !== "/provider" && pathname !== "/website_earnings" ? <NavBar /> : <ProviderNavbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/provider" element={<ProviderPage />} />
+        <Route path="/website_earnings" element={<Earnings />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/provider_login" element={<ProviderLogin />} />
+        <Route path="/forget_password" element={<ForgetPassword />} />
+        <Route
+          path="/forget_password/confirm"
+          element={<VerificationEmail />}
+        />
+        <Route path="/forget_password/reset" element={<NewPassword />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/confirm_email" element={<ConfirmEmail />} />
+        <Route path="/user/:username" element={<UserProfile />} />
+        <Route path="/user/:username/services" element={<SellerServices />} />
+        <Route path="/user/:username/rates" element={<SellerRates />} />
+        <Route
+          path="/service/new"
+          element={<ProtectedPath comp={<AddService />} cond={token} />}
+        />
+        <Route
+          path="/service/:id/update"
+          element={<ProtectedPath comp={<UpdateService />} cond={token} />}
+        />
+        <Route
+          path="/user/:username/services/:id"
+          element={<ServiceDetails />}
+        />
+        <Route
+          path="/user/:username/update_profile"
+          element={<ProtectedPath comp={<UpdateProfile />} cond={token} />}
+        />
+        <Route
+          path="/service/:id/fill_form"
+          element={<ProtectedPath comp={<FillServiceForm />} cond={token} />}
+        />
+        <Route
+          path="/my_order"
+          element={<ProtectedPath comp={<MyServiceOrders />} cond={token} />}
+        />
+        <Route
+          path="/my_recieve_order"
+          element={<ProtectedPath comp={<MyRecieveOrders />} cond={token} />}
+        />
+        <Route path="/services/:name" element={<FilterResults />} />
+        <Route path="/search/:name" element={<SearchResults />} />
+      </Routes>
+      <Footer />
     </Suspense>
   );
 }

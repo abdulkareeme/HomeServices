@@ -7,6 +7,8 @@ import { ErrorMessage, Formik } from "formik";
 import LoaderButton from "../../Components/LoaderButton";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { toast } from "react-hot-toast";
+import { getBalance, getProviderBalance } from "../../utils/constants";
+import { useDispatch } from "react-redux";
 const addBalanceSchema = Yup.object().shape({
   username: Yup.string()
     .required("لم تدخل اسم المستخدم بعد")
@@ -21,12 +23,14 @@ const ProviderPage = () => {
   const [providerUser, setProviderUser] = useState(null);
   const [providerToken, setProviderToken] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch=useDispatch();
 
   useEffect(() => {
     const storedproviderUser = Cookies.get("providerUser");
     const storedproviderToken = Cookies.get("providerToken");
     storedproviderUser && setProviderUser(JSON.parse(storedproviderUser));
     storedproviderToken && setProviderToken(storedproviderToken);
+    getProviderBalance(storedproviderToken);
   }, []);
   const initialValues = {
     username: "",
@@ -41,11 +45,12 @@ const ProviderPage = () => {
       };
       let bearer = `token ${providerToken}`;
 
-      const res = await postToAPI("api/charge_balance", payload, {
+      await postToAPI("api/charge_balance", payload, {
         headers: {
           Authorization: bearer,
         },
       });
+      await getProviderBalance(providerToken);
       toast.success("تم تحويل الرصيد بنجاح", {
         duration: 3000,
         position: "top-center",

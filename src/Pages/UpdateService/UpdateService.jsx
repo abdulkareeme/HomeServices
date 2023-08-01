@@ -35,6 +35,7 @@ const UpdateService = () => {
   const { userToken, userTotalInfo, selectedServiceToUpdate } = useSelector(
     (state) => state.homeService
   );
+  console.log(selectedServiceToUpdate);
   const dispatch = useDispatch();
   const history = useNavigate();
   const { id } = useParams();
@@ -99,13 +100,18 @@ const UpdateService = () => {
         "aria-live": "polite",
       },
     });
+    let defaultList=null;
+    if(typeof areasServiceList[0] === 'object') {
+      defaultList = areasServiceList.map(item => item.id);
+    }
     values = {
       ...values,
-      service_area: areasServiceList,
+      service_area: defaultList || areasServiceList,
     };
+    console.log("vv",values);
     let bearer = `token ${userToken}`;
     try {
-      const res = await putToAPI(
+      await putToAPI(
         `services/retrieve_update_home_service/${id}`,
         values,
         {
@@ -114,12 +120,7 @@ const UpdateService = () => {
           },
         }
       );
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-    try {
-      const res = await putToAPI(
+      await putToAPI(
         `services/update_form_home_service/${id}`,
         finalForm,
         {
@@ -128,7 +129,6 @@ const UpdateService = () => {
           },
         }
       );
-      console.log(res);
       setIsSubmitting(0);
       toast.success("تم حفظ التعديلات بنجاح", {
         duration: 3000,
@@ -142,6 +142,7 @@ const UpdateService = () => {
         history(`/user/${userTotalInfo.username}`);
       }, 1500);
     } catch (err) {
+      setIsSubmitting(0);
       console.log(err);
     }
   };
