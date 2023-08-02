@@ -7,8 +7,7 @@ import { ErrorMessage, Formik } from "formik";
 import LoaderButton from "../../Components/LoaderButton";
 import { postToAPI } from "../../api/FetchFromAPI";
 import { toast } from "react-hot-toast";
-import { getBalance, getProviderBalance } from "../../utils/constants";
-import { useDispatch } from "react-redux";
+import { getProviderBalance } from "../../utils/constants";
 const addBalanceSchema = Yup.object().shape({
   username: Yup.string()
     .required("لم تدخل اسم المستخدم بعد")
@@ -17,26 +16,26 @@ const addBalanceSchema = Yup.object().shape({
   balance: Yup.number()
     .required("لم تدخل الرصيد بعد")
     .min(2000, "الرصيد يجب أن يكون أكثر من 2000")
-    .max(10000, "الرصيد يجب ألا يتجاوز 10000"),
+    .max(20000, "الرصيد يجب ألا يتجاوز 20000"),
 });
 const ProviderPage = () => {
   const [providerUser, setProviderUser] = useState(null);
   const [providerToken, setProviderToken] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const dispatch=useDispatch();
 
+  const initialValues = {
+    username: "",
+    balance: "",
+  };
   useEffect(() => {
     const storedproviderUser = Cookies.get("providerUser");
     const storedproviderToken = Cookies.get("providerToken");
     storedproviderUser && setProviderUser(JSON.parse(storedproviderUser));
     storedproviderToken && setProviderToken(storedproviderToken);
-    getProviderBalance(storedproviderToken);
+    !providerUser?.is_admin &&
+      getProviderBalance(storedproviderToken, setProviderUser);
   }, []);
-  const initialValues = {
-    username: "",
-    balance: "",
-  };
-  const submitHandler = async (values) => {
+  const submitHandler = async (values, resetForm) => {
     setIsSubmitting(1);
     try {
       const payload = {
@@ -50,7 +49,9 @@ const ProviderPage = () => {
           Authorization: bearer,
         },
       });
-      await getProviderBalance(providerToken);
+      !providerUser?.is_admin &&
+        (await getProviderBalance(providerToken, setProviderUser));
+      resetForm();
       toast.success("تم تحويل الرصيد بنجاح", {
         duration: 3000,
         position: "top-center",
@@ -96,7 +97,15 @@ const ProviderPage = () => {
           initialValues={initialValues}
           validationSchema={addBalanceSchema}
         >
-          {({ values, isValid, handleChange, handleBlur, errors, touched }) => (
+          {({
+            values,
+            resetForm,
+            isValid,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+          }) => (
             <form
               onSubmit={(e) => e.preventDefault()}
               className="provider-form"
@@ -149,7 +158,7 @@ const ProviderPage = () => {
                 disabled={!isValid}
                 type="submit"
                 hidden={isSubmitting}
-                onClick={() => submitHandler(values)}
+                onClick={() => submitHandler(values, resetForm)}
               >
                 تعبئة رصيد
               </button>

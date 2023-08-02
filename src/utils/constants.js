@@ -165,7 +165,7 @@ export const getBalance = async (dispatch, setBalance, token) => {
     console.log(err);
   }
 };
-export const getProviderBalance = async (token) => {
+export const getProviderBalance = async (token,setProviderUser) => {
   try {
     const res = await fetchFromAPI("api/my_balance", {
       headers: {
@@ -176,6 +176,7 @@ export const getProviderBalance = async (token) => {
     const valueOfUser = JSON.parse(stroedUser);
     if (valueOfUser.balance !== res.total_balance) {
       Cookies.set("providerUser", JSON.stringify({ ...valueOfUser, balance: res.total_balance }));
+      setProviderUser({ ...valueOfUser, balance: res.total_balance })
     }
   } catch (err) {
     console.log(err);

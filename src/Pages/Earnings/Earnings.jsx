@@ -4,6 +4,7 @@ import { Container, Table } from "react-bootstrap";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
 import Cookies from "js-cookie";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
+import moment from "moment";
 
 const Earnings = () => {
   const [allEarnings, setAllEarnings] = useState(null);
@@ -17,6 +18,7 @@ const Earnings = () => {
         },
       });
       setAllEarnings(res);
+      console.log(res);
     } catch (err) {
       console.log(err);
     }
@@ -29,7 +31,10 @@ const Earnings = () => {
       {allEarnings ? (
         <Fragment>
           <Container>
-            <h2 className="mb-5">الأرباح</h2>
+            <div className="d-flex gap-2 align-items-center mx-auto w-max mb-5">
+              <h1>الأرباح</h1>
+              <ion-icon name="trophy"></ion-icon>
+            </div>
           </Container>
           <Table striped bordered hover responsive>
             <thead>
@@ -45,12 +50,26 @@ const Earnings = () => {
             <tbody>
               {allEarnings.map((item) => (
                 <tr>
-                  <td>{item.home_service.service_id}</td>
-                  <td>{item.home_service.title}</td>
-                  <td>{item.home_service.full_name}</td>
+                  <td>
+                    {item.home_service.service_id
+                      ? item.home_service.service_id
+                      : "NA"}
+                  </td>
+                  <td>
+                    {item.home_service.title ? item.home_service.title : "NA"}
+                  </td>
+                  <td>
+                    {item.home_service.seller_full_name
+                      ? item.home_service.seller_full_name
+                      : "NA"}
+                  </td>
                   <td>{item.earnings}</td>
                   <td>{item.beneficiary.beneficiary_name}</td>
-                  <td>{item.create_date}</td>
+                  <td>
+                    {moment(item.created_date).format(
+                      "dddd , MMMM Do  YYYY , h:mm:ss a"
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
