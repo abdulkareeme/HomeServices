@@ -1,6 +1,9 @@
-## Home Service Website
+# Home Service Website
 
-This is a platform that connects users, sellers, providers, and admins to fulfill all home service needs. The platform offers four different account types: user, seller, provider, and admin. 
+This is a platform that connects users, sellers, providers, and admins to fulfill all home service needs. The platform offers four different account types: user, seller, provider, and admin.
+
+## 📌  Live Demo
+https://home-service-6iln.onrender.com/
 
 ## Getting Started
 
