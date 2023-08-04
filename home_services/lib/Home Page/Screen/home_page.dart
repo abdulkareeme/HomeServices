@@ -14,10 +14,12 @@ class HomePage extends StatefulWidget {
   var user;
   List category;
   List? services;
+  int sellerBalance;
   HomePage({
     required this.user,
     required this.category,
     required this.services,
+    required this.sellerBalance,
     super.key,
   });
   @override
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
               title: const Text("الصفحة الرئيسية"),
             ),
             drawer: Drawer(
-              child: Drawer_(user: widget.user,category: widget.category),
+              child: Drawer_(user: widget.user,category: widget.category,myBalance: widget.sellerBalance),
             ),
             body: SingleChildScrollView(
               child: Column(

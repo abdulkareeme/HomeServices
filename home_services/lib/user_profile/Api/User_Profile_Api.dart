@@ -340,7 +340,7 @@ class ProfileApi {
           "service_area": areaList
         };
       }
-
+      print(areaList);
       final body = jsonEncode(toJson());
       Response response = await put(
           Uri.parse('${Server.host}${Server.updateServiceMainData}$id'),
@@ -351,10 +351,15 @@ class ProfileApi {
           body: body);
       if (response.statusCode == 200) {
         firstFunction = true;
+      } else {
+        print("aaaaaaaaaaaaaaaaaaaaaaaaa");
+        print(response.statusCode);
+        print(jsonDecode(response.body));
       }
     } catch (e) {
       print(e);
     }
+
     // second function
     try {
       List toJson(var list) {
@@ -387,6 +392,10 @@ class ProfileApi {
       if (response.statusCode == 200) {
         print(response.statusCode);
         secondFunction = true;
+      } else {
+        print("bbbbbbbbbbbbbbbbbbbbbbbb");
+        print(response.statusCode);
+        print(jsonDecode(response.body));
       }
     } catch (e) {
       print(e);
@@ -866,4 +875,27 @@ class ProfileApi {
       return Tuple2(status, services);
     }
   }
+
+  // get seller user balance
+  // we pass the user token and we get the seller user balance
+
+  Future<Tuple2<bool,int>> getUserBalance (var user) async{
+    try{
+      Response response = await get(Uri.parse(Server.host+Server.userBalance),
+        headers: {"Authorization": 'token ${user.token}'});
+      if(response.statusCode == 200){
+        print(response.statusCode);
+        var info = jsonDecode(response.body);
+        return Tuple2(true, info["total_balance"]);
+      } else {
+        print(response.statusCode);
+        print (jsonDecode(response.body));
+        return Tuple2(false, 0);
+      }
+    } catch (e) {
+      print(e);
+      return Tuple2(false, 0);
+    }
+  }
+
 }

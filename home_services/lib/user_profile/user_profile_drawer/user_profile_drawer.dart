@@ -12,11 +12,13 @@ import '../../Home Page/Drawer/Widget/drawer_components.dart';
 class UserProfileDrawer extends StatefulWidget{
   // ignore: prefer_typing_uninitialized_variables
   var user,width,height,myImage;
+  int myBalance;
   UserProfileDrawer({
     required this.user,
     required this.height,
     required this.width,
     required this.myImage,
+    required this.myBalance,
     super.key,
   });
   @override
@@ -40,7 +42,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
             ): CircleAvatar(
                 backgroundImage:(widget.user.gender == "Male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg') ),
             accountName: Text(widget.user.firstName +" "+ widget.user.lastName),
-            accountEmail:Text(widget.user.email)
+            accountEmail:Text(widget.user.email),
         ),
         Visibility(
           visible: (widget.user.mode == "client")? false :true,
@@ -140,6 +142,23 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
                 iconColor: Colors.blueGrey),
           ),
 
+        ),
+        Visibility(
+          visible: (widget.user.mode == "client")? false :true,
+          child: Padding(
+            padding: EdgeInsets.only(right:constWidth/2.5),
+            child:Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("رصيدي : ${widget.myBalance} ل.س",style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17
+                ),),
+              ],
+            ),
+          ),
         ),
         const Divider(
           thickness: 0.5,

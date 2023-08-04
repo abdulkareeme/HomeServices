@@ -137,11 +137,7 @@ class _OrderServiceState extends State<OrderService> {
                         o.add(widget.forms[i].getController());
                         data.add(o);
                       }
-                      /*for(int i=0;i<data.length;i++){
-                        print(data[i][0]);
-                        print(data[i][1]);
-                        print("/////////////////////");
-                      }*/
+
                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PostOrder(
                         user: widget.user,
                         formAnswer: data,

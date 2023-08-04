@@ -7,6 +7,10 @@ import '../../server/api_url.dart';
 
 class ForgetPasswordApi{
 
+  // first step of forget password process
+  // we send the user email to determined the user tha he want to change his/her password and send the confirm code to the email
+  // this function take user email
+
   Future<List?> sendEmailForForgetPassword(TextEditingController email) async{
 
     try{
@@ -33,8 +37,10 @@ class ForgetPasswordApi{
 
   }
 
-  Future<List?> sendVerificationCodeForForgetPassword(TextEditingController email,String code) async{
+  // this function to send the confirm code that send to the user email
+  // this function take user email and confirm code
 
+  Future<List?> sendVerificationCodeForForgetPassword(TextEditingController email,String code) async{
     try{
       Response response =await post(Uri.parse(Server.host+Server.forgetPasswordVerificationCode),
           body: {
@@ -59,6 +65,9 @@ class ForgetPasswordApi{
     }
 
   }
+
+  // this function to update the password
+  // we send the email and the confirm code and the new password and its confirm
 
   Future<List?> resetForgetPassword(TextEditingController email,String code,TextEditingController password,TextEditingController confirmPassword) async{
 

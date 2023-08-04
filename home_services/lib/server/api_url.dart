@@ -31,4 +31,5 @@ class Server{
   static const String forgetPasswordSendEmail = "api/send_forget_password_code";
   static const String forgetPasswordVerificationCode = "api/check_forget_password_code";
   static const String resetForgetPassword = "api/forget_password_reset";
+  static const String userBalance = "api/my_balance";
 }

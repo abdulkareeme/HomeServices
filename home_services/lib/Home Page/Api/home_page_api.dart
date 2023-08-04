@@ -12,6 +12,10 @@ import '../../server/api_url.dart';
 
 class HomePageApi{
 
+  // this function to get all the services that belong to certain category
+  // we pass the category name to the api and get the data
+  // this function return a list of service object
+
   Future<List?> getThisCategoryServices (var category) async{
     try{
       // ignore: prefer_interpolation_to_compose_strings
@@ -57,6 +61,11 @@ class HomePageApi{
       print(e);
     }
   }
+
+  // this function get all the details for the user profile page we navigate to it
+  // this function contain three functions in it one to get the user info
+  // and one to get all services that user offer if there any and the last one to get all this user rating if there any
+  // when all this three function work rights the function return a list contain a user object and list of services object and list of rating object
 
   Future<List?> getUserDetails(String username) async{
     bool firstFunction = false;
@@ -219,6 +228,9 @@ class HomePageApi{
       return o;
     }
   }
+
+
+
 
   Future<List?> getOrderedServiceForm (int id,var user) async {
     try{

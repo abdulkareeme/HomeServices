@@ -6,12 +6,14 @@ import '../../style/user_profile_style.dart';
 class UserProfileBody extends StatefulWidget{
   // ignore: prefer_typing_uninitialized_variables
   var user,width,height,selectImageMethod,myImage;
+  int myBalance;
   UserProfileBody({
     required this.user,
     required this.height,
     required this.width,
     required this.selectImageMethod,
     required this.myImage,
+    required this.myBalance,
     super.key,
   });
   @override

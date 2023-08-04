@@ -9,8 +9,10 @@ import 'Api/User_Profile_Api.dart';
 class UserProfile extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   var user;
+  int myBalance;
   UserProfile({
     required this.user,
+    required this.myBalance,
     super.key,
 });
 
@@ -50,9 +52,9 @@ class _UserProfileState extends State<UserProfile> {
             backgroundColor: Colors.grey[700],
           ),
           drawer: Drawer(
-            child: UserProfileDrawer(user: widget.user, height: constHeight, width: constWidth, myImage: myImage)
+            child: UserProfileDrawer(user: widget.user, height: constHeight, width: constWidth, myImage: myImage,myBalance: widget.myBalance,)
           ),
-          body: UserProfileBody(user: widget.user, height: constHeight, width: constWidth, selectImageMethod: selectImage,myImage: myImage),
+          body: UserProfileBody(user: widget.user, height: constHeight, width: constWidth, selectImageMethod: selectImage,myImage: myImage,myBalance:widget.myBalance ),
         ),
       ),
     );

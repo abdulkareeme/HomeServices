@@ -12,8 +12,10 @@ class Drawer_ extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   var user;
   List category;
+  int myBalance;
   Drawer_({
     super.key,
+    required this.myBalance,
     required this.user,
     required this.category,
 });
@@ -47,7 +49,7 @@ class DrawerState extends State<Drawer_> {
                 padding: const EdgeInsets.only(right: 15),
                 child: Drawer_component(
                     onTap: (){
-                      Navigator.of(context).push(SlideRight(page: UserProfile(user: widget.user,)));
+                      Navigator.of(context).push(SlideRight(page: UserProfile(user: widget.user, myBalance: widget.myBalance,)));
                     },
                     text: "حسابي الشخصي",
                     iconColor: Colors.blue,
