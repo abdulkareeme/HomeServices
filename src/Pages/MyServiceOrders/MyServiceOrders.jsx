@@ -45,7 +45,7 @@ const MyServiceOrders = () => {
       {item.field.note.length > 0 ? <p>{item.field.note}</p> : null}
     </div>
   ));
-  const history=useNavigate();
+  const history = useNavigate();
   const handleClose = () => setShow(false);
   const handleCloseRateModal = () => setShowRateModal(false);
   const getMyOrderData = async () => {
@@ -94,7 +94,7 @@ const MyServiceOrders = () => {
       });
       setTimeout(() => {
         handleCloseRateModal();
-        history(`/user/${order.seller.username}/rates`)
+        history(`/user/${order.seller.username}/rates`);
       }, 2000);
     } catch (err) {
       setIsSubmitting(0);
@@ -204,7 +204,7 @@ const MyServiceOrders = () => {
       <Container>
         {!myorderData ? <LoaderContent /> : null}
         {myorderData?.length === 0 ? (
-          <div className="message"> لا يوجد طلبات مرسلة</div>
+          <h2 className="mx-auto w-max mt-4"> لا يوجد طلبات مرسلة</h2>
         ) : null}
         {myorderData?.length > 0 ? (
           <Fragment>
@@ -247,11 +247,7 @@ const MyServiceOrders = () => {
                           الفورم المرفق
                         </span>
                       </div>
-                      {getStatus(
-                        order,
-                        setSelectedRate,
-                        setShowRateModal
-                      )}
+                      {getStatus(order, setSelectedRate, setShowRateModal)}
                       <div className="d-flex flex-column align-items-end gap-4">
                         <div className="date text-muted w-max">
                           {moment(order?.create_date).locale("ar").fromNow()}

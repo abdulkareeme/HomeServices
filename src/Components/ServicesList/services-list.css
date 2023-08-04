@@ -1,37 +1,44 @@
 .services {
-    gap: 15px;
+  gap: 15px;
 }
 
 .services.page {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
-.services img {
-    cursor: pointer;
+.services .image-holder {
+  background-color: transparent;
+  width: 100%;
+  height: 200px;
+  cursor: pointer;
 }
 
+.services .image-holder img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .services.page .row {
-    gap: 30px;
+  gap: 30px;
 }
 
 .services .container .row div,
-.services>div {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.services > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-
-.services .container .row>div h1,
-.services>div h1 {
-    cursor: pointer;
-    font-size: 20px;
-    margin: 0;
+.services .container .row > div h1,
+.services > div h1 {
+  cursor: pointer;
+  font-size: 20px;
+  margin: 0;
 }
 
-.services .container .row>div span:first-of-type,
-.services>div span:first-of-type {
-    font-size: 15px;
-    color: #777777;
-    font-weight: 500;
+.services .container .row > div span:first-of-type,
+.services > div span:first-of-type {
+  font-size: 15px;
+  color: #777777;
+  font-weight: 500;
 }

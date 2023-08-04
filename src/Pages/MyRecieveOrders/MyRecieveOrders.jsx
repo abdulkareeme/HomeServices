@@ -3,7 +3,11 @@ import { Fragment, memo, useEffect, useLayoutEffect, useState } from "react";
 import { fetchFromAPI, putToAPI } from "../../api/FetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import "./my-recieve-orders.css";
-import { setBalance, setUserToken, setUserTotalInfo } from "../../Store/homeServiceSlice";
+import {
+  setBalance,
+  setUserToken,
+  setUserTotalInfo,
+} from "../../Store/homeServiceSlice";
 import swal from "sweetalert";
 import { Toaster, toast } from "react-hot-toast";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
@@ -150,11 +154,11 @@ const MyRecieveOrders = () => {
         },
       });
       setPendingRecieveData(
-      pendingRecieveData.filter((item) => item.id !== order.id)
+        pendingRecieveData.filter((item) => item.id !== order.id)
       );
       order.form = res;
       setunderReviewRecieveData([...underReviewRecieveData, order]);
-      await getBalance(dispatch,setBalance,userToken);
+      await getBalance(dispatch, setBalance, userToken);
       swal("تم القبول بنجاح", {
         icon: "success",
       });
@@ -253,7 +257,7 @@ const MyRecieveOrders = () => {
       <Container>
         {!myRecieveorderData ? <LoaderContent /> : null}
         {myRecieveorderData?.length === 0 ? (
-          <h3 className="message"> لا يوجد طلبات واردة</h3>
+          <h2 className="mx-auto w-max mt-4"> لا يوجد طلبات واردة</h2>
         ) : null}
         {myRecieveorderData?.length > 0 ? (
           <Fragment>

@@ -38,13 +38,15 @@ const ServicesList = ({ type }) => {
                     md={5}
                     xs={10}
                   >
-                    <img
-                      onClick={() =>
-                        history(`/user/${username}/services/${item.id}`)
-                      }
-                      src={item.category.photo}
-                      alt=""
-                    />
+                    <div className="image-holder">
+                      <img
+                        onClick={() =>
+                          history(`/user/${username}/services/${item.id}`)
+                        }
+                        src={item.category.photo}
+                        alt=""
+                      />
+                    </div>
                     <h1
                       onClick={() =>
                         history(`/user/${username}/services/${item.id}`)

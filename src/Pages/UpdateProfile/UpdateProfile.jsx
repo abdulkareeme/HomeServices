@@ -119,7 +119,7 @@ const UpdateProfile = () => {
         );
         await updateUserTotalInfo(dispatch, userTotalInfo, setUserTotalInfo);
         toast.success("تم تحديث المعلومات بنجاح", {
-          duration: 3000,
+          duration: 2000,
           position: "top-center",
           ariaProps: {
             role: "status",

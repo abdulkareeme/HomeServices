@@ -6,11 +6,15 @@ import { toast } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import LoaderButton from "../LoaderButton";
+
 const VerificationCodeInput = () => {
   const { userInputValue } = useSelector((state) => state.homeService);
   const [forgetPassEmail, setForgetPassEmail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const history = useNavigate();
   const { pathname } = useLocation();
+
   const inputRefs = [
     useRef(null),
     useRef(null),
@@ -77,17 +81,18 @@ const VerificationCodeInput = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (checkFields()) {
-      console.log(getCode());
       const confirmData = {
         confirmation_code: getCode(),
         email: userInputValue.email,
       };
+      setIsSubmitting(true);
       postToAPI("api/confirm_email", confirmData)
         .then((res) => {
+          setIsSubmitting(false);
           toast.success(
             "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى صفحة تسجيل الدخول",
             {
-              duration: 5000,
+              duration: 3000,
               position: "top-center",
               ariaProps: {
                 role: "status",
@@ -95,7 +100,9 @@ const VerificationCodeInput = () => {
               },
             }
           );
-          history("/login");
+          setTimeout(() => {
+            history("/login");
+          }, 3000);
         })
         .catch((err) => {
           console.log(err);
@@ -210,7 +217,10 @@ const VerificationCodeInput = () => {
       }}
     >
       <div className="verification-code-input">{inputFields}</div>
-      <button type="submit">ارسال</button>
+      <button hidden={isSubmitting} type="submit">
+        ارسال
+      </button>
+      <LoaderButton isSubmitting={isSubmitting} color="my-btn" />
     </form>
   );
 };
