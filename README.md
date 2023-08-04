@@ -5,7 +5,7 @@ This is a platform that connects users, sellers, providers, and admins to fulfil
 ## 📌  Live Demo
 https://home-service-6iln.onrender.com/
 
-## Getting Started
+## 😎 Getting Started
 
 1. To get started with the Home Service Website, create an account with one of the available account types. 
 2. If you're a seller, you can add services to our platform, as well as update or delete them as needed. 
@@ -13,7 +13,7 @@ https://home-service-6iln.onrender.com/
 4. Users can browse services, view detailed information, and rate services after purchasing. To buy a service, users simply fill out the service form and submit it for review.
 5. Providers can charge balance to sellers for accepting orders, while admins can charge balance and show total earnings on the platform.
 
-## Technologies Used
+## 🚀 Technologies Used
 
 This website was built using the following technologies:
 - React js (create-react-app)
