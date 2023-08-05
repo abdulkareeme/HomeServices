@@ -12,7 +12,7 @@ const ServiceCard = ({ serviceData, id }) => {
         {serviceData?.seller.user.first_name}{" "}
         {serviceData?.seller.user.last_name}
       </Tooltip>
-      <div>
+      <div className="d-flex flex-wrap align-items-center gap-2">
         <div className="image-holder">
           {serviceData?.seller.user.photo ? (
             <img
@@ -36,7 +36,7 @@ const ServiceCard = ({ serviceData, id }) => {
           {handleRateStars(serviceData?.average_ratings)}
         </div>
       </div>
-      <div>
+      <div className="d-flex flex-wrap align-items-center gap-2">
         <span
           onClick={() =>
             history(

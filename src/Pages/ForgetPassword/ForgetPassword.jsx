@@ -34,8 +34,8 @@ const ForgetPassword = () => {
         null
       );
       setIsSubmitting(0);
-      Cookies.set("forgetPassEmail", values.email,{ expires: 30 });
-      toast("تم الطلب بنجاح وسيتم تحويلك الى التحقق من الرمز", {
+      Cookies.set("forgetPassEmail", values.email, { expires: 30 });
+      toast.success("تم الطلب بنجاح وسيتم تحويلك الى التحقق من الرمز", {
         duration: 2000,
         position: "top-center",
         ariaProps: {

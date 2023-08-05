@@ -27,9 +27,9 @@ const ServicesList = ({ type }) => {
   if (selectedUser.services_number > 0) {
     if (type === "page") {
       return (
-        <section className="services page">
+        <section className="services page ">
           <Container>
-            <Row>
+            <Row className="justify-content-center">
               {serviceList ? (
                 serviceList.map((item) => (
                   <Col
@@ -67,17 +67,25 @@ const ServicesList = ({ type }) => {
       );
     } else {
       return (
-        <Row className="services">
+        <Row className="services justify-content-center">
           {serviceList ? (
             serviceList.map((item) => (
-              <Col key={item.id} lg={type === "page" ? 3 : 5} md={5} xs={10}>
-                <img
-                  onClick={() =>
-                    history(`/user/${username}/services/${item.id}`)
-                  }
-                  src={item.category.photo}
-                  alt=""
-                />
+              <Col
+                className="serv"
+                key={item.id}
+                lg={type === "page" ? 3 : 5}
+                md={5}
+                xs={10}
+              >
+                <div className="image-holder">
+                  <img
+                    onClick={() =>
+                      history(`/user/${username}/services/${item.id}`)
+                    }
+                    src={item.category.photo}
+                    alt=""
+                  />
+                </div>
                 <h1
                   onClick={() =>
                     history(`/user/${username}/services/${item.id}`)
