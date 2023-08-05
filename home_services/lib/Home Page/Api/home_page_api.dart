@@ -315,7 +315,7 @@ class HomePageApi{
     }
   }
 
-  Future<Tuple2<bool,List?>> getAllServeices()async{
+  Future<Tuple2<bool,List?>> getAllServices()async{
     try{
       Response response = await get(Uri.parse(Server.host+Server.listMyService));
       if(response.statusCode == 200){
@@ -329,7 +329,7 @@ class HomePageApi{
               utf8.decode(info[i]["category"]['name'].toString().codeUnits));
           for (int j = 0; j < info[i]["service_area"].length; j++) {
             Area o = Area(info[i]["service_area"][j]['id'],
-                info[i]["service_area"][j]['name']);
+                utf8.decode(info[i]["service_area"][j]['name'].toString().codeUnits));
             area.add(o);
           }
           Service service = Service(

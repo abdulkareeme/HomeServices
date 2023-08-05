@@ -15,7 +15,7 @@ class GetAllServices extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: FutureBuilder(
-          future: ob.getAllServeices(),
+          future: ob.getAllServices(),
           builder: (context,AsyncSnapshot<Tuple2<bool,List?>> snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){
               return const Center(child: CircularProgressIndicator(),);
