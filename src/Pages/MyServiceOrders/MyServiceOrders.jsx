@@ -212,7 +212,10 @@ const MyServiceOrders = () => {
             <Row className="d-flex justify-content-center gap-2">
               {myorderData?.map((order) => (
                 <Col lg={3} md={4} xs={7} key={order.id}>
-                  <div className="card my-3 bg-white shadow-sm border-0 rounded">
+                  <div
+                    data-aos="fade-up"
+                    className="card my-3 bg-white shadow-sm border-0 rounded"
+                  >
                     <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                       <div className="image-holder mt-4">
                         <Link

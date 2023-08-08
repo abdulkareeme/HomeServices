@@ -133,6 +133,7 @@ const Register = () => {
           <Container className="d-flex justify-content-center align-items-center">
             <form
               onSubmit={(e) => e.preventDefault()}
+              data-aos="fade-up"
               className={`register-1 ${page === 1 ? "hidden" : ""}`}
             >
               <div className="logo">

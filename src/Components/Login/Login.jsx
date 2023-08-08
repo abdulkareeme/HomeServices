@@ -107,7 +107,11 @@ const Login = () => {
       <Toaster />
       <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, isValid, handleChange, handleBlur, errors, touched }) => (
-          <form onSubmit={(e) => e.preventDefault()} className="login">
+          <form
+            data-aos="fade-up"
+            onSubmit={(e) => e.preventDefault()}
+            className="login"
+          >
             <div className="logo">
               <img src={LogoBlack} alt="" />
             </div>

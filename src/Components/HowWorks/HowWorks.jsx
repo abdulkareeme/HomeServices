@@ -12,6 +12,8 @@ const HowWorks = () => {
               xs={12}
               md={6}
               lg={4}
+              data-aos="fade-up"
+              data-aos-delay={`${index}00`}
               className="box p-2 d-flex align-items-center gap-4"
               key={index}
             >

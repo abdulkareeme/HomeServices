@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 const ServiceCard = ({ serviceData, id }) => {
   const history = useNavigate();
   return (
-    <div className="service-card">
+    <div className="service-card" data-aos="zoom-in">
       <Tooltip anchorSelect={`.image-${id}`} place="top">
         {serviceData?.seller.user.first_name}{" "}
         {serviceData?.seller.user.last_name}

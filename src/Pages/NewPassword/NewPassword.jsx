@@ -83,7 +83,11 @@ const NewPassword = () => {
         validationSchema={newPasswordSchema}
       >
         {({ values, isValid, handleChange, handleBlur, errors, touched }) => (
-          <form onSubmit={(e) => e.preventDefault()} className="forget">
+          <form
+            data-aos="fade-up"
+            onSubmit={(e) => e.preventDefault()}
+            className="forget"
+          >
             <h1 className="w-max">اعادة تعيين كلمة المرور</h1>
             <div className="password">
               <label>

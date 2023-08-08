@@ -106,7 +106,11 @@ const ForgetPassword = () => {
       <Toaster />
       <Formik initialValues={initialValues} validationSchema={EmailSchema}>
         {({ values, handleChange, handleBlur, errors, touched }) => (
-          <form onSubmit={(e) => e.preventDefault()} className="forget">
+          <form
+            data-aos="fade-up"
+            onSubmit={(e) => e.preventDefault()}
+            className="forget"
+          >
             <h2>نسيت كلمة المرور؟</h2>
             <h5>يرجى إدخال عنوان البريد الإلكتروني المرتبط بحسابك أدناه:</h5>
             <div className="email">

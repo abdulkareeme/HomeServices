@@ -100,35 +100,27 @@ const UpdateService = () => {
         "aria-live": "polite",
       },
     });
-    let defaultList=null;
-    if(typeof areasServiceList[0] === 'object') {
-      defaultList = areasServiceList.map(item => item.id);
+    let defaultList = null;
+    if (typeof areasServiceList[0] === "object") {
+      defaultList = areasServiceList.map((item) => item.id);
     }
     values = {
       ...values,
       service_area: defaultList || areasServiceList,
     };
-    console.log("vv",values);
+    console.log("vv", values);
     let bearer = `token ${userToken}`;
     try {
-      await putToAPI(
-        `services/retrieve_update_home_service/${id}`,
-        values,
-        {
-          headers: {
-            Authorization: bearer,
-          },
-        }
-      );
-      await putToAPI(
-        `services/update_form_home_service/${id}`,
-        finalForm,
-        {
-          headers: {
-            Authorization: bearer,
-          },
-        }
-      );
+      await putToAPI(`services/retrieve_update_home_service/${id}`, values, {
+        headers: {
+          Authorization: bearer,
+        },
+      });
+      await putToAPI(`services/update_form_home_service/${id}`, finalForm, {
+        headers: {
+          Authorization: bearer,
+        },
+      });
       setIsSubmitting(0);
       toast.success("تم حفظ التعديلات بنجاح", {
         duration: 3000,
@@ -201,7 +193,7 @@ const UpdateService = () => {
           validationSchema={updateServicSchema}
         >
           {({ values, handleChange, errors, touched }) => (
-            <Container>
+            <Container data-aos="fade-up">
               <form
                 className="add-service"
                 onSubmit={(e) => e.preventDefault()}

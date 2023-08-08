@@ -191,7 +191,11 @@ const UpdateProfile = () => {
       <Formik initialValues={initialValues} validationSchema={SignInSchema}>
         {({ values, handleChange, handleBlur, errors, touched }) => (
           <Container className="d-flex justify-content-center align-items-center">
-            <form onSubmit={(e) => e.preventDefault()} action="">
+            <form
+              data-aos="fade-up"
+              onSubmit={(e) => e.preventDefault()}
+              action=""
+            >
               <h2>المعلومات الشخصية</h2>
               <div className="image-holder">
                 <img src={imageUrl} alt="profile" />

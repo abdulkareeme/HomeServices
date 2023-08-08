@@ -31,12 +31,14 @@ const ServicesList = ({ type }) => {
           <Container>
             <Row className="justify-content-center">
               {serviceList ? (
-                serviceList.map((item) => (
+                serviceList.map((item, index) => (
                   <Col
                     key={item.id}
                     lg={type === "page" ? 3 : 5}
                     md={5}
                     xs={10}
+                    data-aos="zoom-in"
+                    data-aos-delay={`${index}00`}
                   >
                     <div className="image-holder">
                       <img
@@ -69,13 +71,15 @@ const ServicesList = ({ type }) => {
       return (
         <Row className="services justify-content-center">
           {serviceList ? (
-            serviceList.map((item) => (
+            serviceList.map((item, index) => (
               <Col
                 className="serv"
                 key={item.id}
                 lg={type === "page" ? 3 : 5}
                 md={5}
                 xs={10}
+                data-aos="zoom-in"
+                data-aos-delay={`${index}00`}
               >
                 <div className="image-holder">
                   <img

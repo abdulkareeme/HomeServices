@@ -4,7 +4,7 @@ import { setClearResults, setFlagToClose } from "../../Store/homeServiceSlice";
 import { useDispatch } from "react-redux";
 import "./searchbar.css";
 import Cookies from "js-cookie";
-const SearchBar = ({ type, goto }) => {
+const SearchBar = ({ type, goto, animName = null, animDelay = null }) => {
   const [inputValue, setInputValue] = useState("");
   const history = useNavigate();
   const dispatch = useDispatch();
@@ -17,6 +17,8 @@ const SearchBar = ({ type, goto }) => {
   };
   return (
     <div
+      data-aos={animName}
+      data-aos-delay={animDelay}
       className={type === "filled" ? "filled-container" : "outlined-container"}
     >
       <input

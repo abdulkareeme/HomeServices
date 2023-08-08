@@ -12,13 +12,22 @@ const Landing = () => {
         <Container>
           <Row>
             <Col className="justify-content-center">
-              <h1 className="fs-1 w-fit mx-auto mb-4">
+              <h1 data-aos="zoom-in" className="fs-1 w-fit mx-auto mb-4">
                 موقع عربي لعرض الخدمات المنزلية
               </h1>
-              <p className="fs-5 w-fit mx-auto mb-6">
+              <p
+                data-aos="zoom-in-up"
+                data-aos-delay="200"
+                className="fs-5 w-fit mx-auto mb-6"
+              >
                 سهولة الوصول لمزودي الخدمات المناسبين
               </p>
-              <SearchBar type="filled" goto="page" />
+              <SearchBar
+                type="filled"
+                goto="page"
+                animName="zoom-in-up"
+                animDelay="200"
+              />
             </Col>
           </Row>
         </Container>

@@ -266,7 +266,10 @@ const MyRecieveOrders = () => {
               <Row className="pending d-flex justify-content-center gap-2">
                 {pendingRecieveData?.map((order) => (
                   <Col lg={3} md={4} xs={7} key={order.id}>
-                    <div className="card my-3 bg-white shadow-sm border-0 rounded">
+                    <div
+                      data-aos="fade-up"
+                      className="card my-3 bg-white shadow-sm border-0 rounded"
+                    >
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4">
                           <Link
@@ -328,7 +331,10 @@ const MyRecieveOrders = () => {
               <Row className="under-review d-flex justify-content-center gap-2">
                 {underReviewRecieveData?.map((order) => (
                   <Col lg={3} md={4} xs={7} key={order.id}>
-                    <div className="card my-3 bg-white shadow-sm border-0 rounded">
+                    <div
+                      data-aos="fade-up"
+                      className="card my-3 bg-white shadow-sm border-0 rounded"
+                    >
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
                           <Link
@@ -401,7 +407,10 @@ const MyRecieveOrders = () => {
               <Row className="underway d-flex justify-content-center gap-2">
                 {underwayRecieveData?.map((order) => (
                   <Col lg={3} md={4} xs={7} key={order.id}>
-                    <div className="card my-3 bg-white shadow-sm border-0 rounded">
+                    <div
+                      data-aos="fade-up"
+                      className="card my-3 bg-white shadow-sm border-0 rounded"
+                    >
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
                           <Link
@@ -471,7 +480,10 @@ const MyRecieveOrders = () => {
               <Row className="expire d-flex justify-content-center gap-2">
                 {expireRecieveData?.map((order) => (
                   <Col lg={3} md={4} xs={7} key={order.id}>
-                    <div className="card my-3 bg-white shadow-sm border-0 rounded">
+                    <div
+                      data-aos="fade-up"
+                      className="card my-3 bg-white shadow-sm border-0 rounded"
+                    >
                       <div className="card-body d-flex flex-column justify-content-between align-items-center gap-2">
                         <div className="image-holder mt-4 mt-4">
                           <Link

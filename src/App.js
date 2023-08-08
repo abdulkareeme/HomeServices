@@ -1,6 +1,8 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import "react-tooltip/dist/react-tooltip.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import ProtectedPath from "./Components/ProtectedPath";
@@ -49,6 +51,9 @@ const NewPassword = lazy(() => import("./Pages/NewPassword/NewPassword"));
 function App() {
   const token = Cookies.get("userToken");
   const { pathname } = useLocation();
+  useEffect(() => {
+    AOS.init();
+  }, []);
   return (
     <Suspense fallback={<Loader />}>
       <Toaster />

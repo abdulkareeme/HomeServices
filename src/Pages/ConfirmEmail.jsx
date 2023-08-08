@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import VerificationCodeInput from "../Components/VerificationCodeInput/VerificationCodeInput";
 import { Container, Spinner } from "react-bootstrap";
 import { postToAPI } from "../api/FetchFromAPI";

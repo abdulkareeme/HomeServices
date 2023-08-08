@@ -107,6 +107,7 @@ const ProviderPage = () => {
             touched,
           }) => (
             <form
+              data-aos="fade-up"
               onSubmit={(e) => e.preventDefault()}
               className="provider-form"
             >

@@ -159,6 +159,7 @@ const AddService = () => {
         {({ values, handleChange, handleBlur, isValid, errors, touched }) => (
           <Container className="d-flex justify-content-center align-items-center">
             <form
+              data-aos="fade-up"
               className={`add-service ${page === 1 ? "hidden" : ""}`}
               onSubmit={(e) => e.preventDefault()}
             >
