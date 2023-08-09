@@ -66,9 +66,9 @@ const Earnings = () => {
                   <td>{item.earnings}</td>
                   <td>{item.beneficiary.beneficiary_name}</td>
                   <td>
-                    {moment(item.created_date).format(
-                      "dddd , MMMM Do  YYYY , h:mm:ss a"
-                    )}
+                    {moment(item.created_date)
+                      .local("en")
+                      .format("dddd , MMMM Do  YYYY , h:mm:ss a")}
                   </td>
                 </tr>
               ))}

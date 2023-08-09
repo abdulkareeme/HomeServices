@@ -22,6 +22,15 @@
 .user .list-group {
   position: absolute;
   left: 10px;
+  top: 95%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.1s, top 0.1s !important;
+}
+
+.user .list-group.show {
+  z-index: 888 !important;
+  opacity: 1;
   top: 105%;
 }
 
@@ -39,4 +48,8 @@
 .user .list-group-item a ion-icon,
 .user .list-group-item ion-icon {
   font-size: 18px;
+}
+.user .list-group-item.loading {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

@@ -56,8 +56,7 @@ const MyRecieveOrders = () => {
           Authorization: `token ${userToken}`,
         },
       });
-      console.log(data);
-      setMyRecieveOrderData(data);
+      setMyRecieveOrderData(data.reverse());
       setPendingRecieveData(data.filter((item) => item.status === "Pending"));
       setunderwayRecieveData(data.filter((item) => item.status === "Underway"));
       setunderReviewRecieveData(
@@ -88,19 +87,31 @@ const MyRecieveOrders = () => {
         }
       });
     } else if (selectedOrder.type.includes("accept")) {
-      swal({
-        title: "هل تريد قبول الطلب؟",
-        text: "سيؤدي قبول الطلب إلى انتقاله الى الحالة التالية. هل أنت متأكد من رغبتك في الاستمرار في عملية القبول ؟",
-        icon: "warning",
-        buttons: ["إلغاء", "تأكيد"],
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-          selectedOrder.type === "accept"
-            ? handleAccept(selectedOrder.order)
-            : handleAcceptAfterReview(selectedOrder.order);
-        }
-      });
+      if (selectedOrder.type === "accept") {
+        swal({
+          title: "هل تريد قبول الطلب؟",
+          text: "سيؤدي قبول الطلب إلى خصم مبلغ 2000 من رصيدك. هل أنت متأكد من رغبتك في الاستمرار في عملية القبول ؟",
+          icon: "warning",
+          buttons: ["إلغاء", "تأكيد"],
+          dangerMode: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            handleAccept(selectedOrder.order);
+          }
+        });
+      } else {
+        swal({
+          title: "هل تريد قبول الطلب؟",
+          text: "سيؤدي قبول الطلب إلى انتقاله الى حالة قيد التنفيذ. هل أنت متأكد من رغبتك في الاستمرار في عملية القبول ؟",
+          icon: "warning",
+          buttons: ["إلغاء", "تأكيد"],
+          dangerMode: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            handleAcceptAfterReview(selectedOrder.order);
+          }
+        });
+      }
     } else if (selectedOrder.type.includes("finish")) {
       swal({
         title: "هل تريد انجاز الطلب؟",

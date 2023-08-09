@@ -109,6 +109,11 @@ input[type="number"]::-webkit-outer-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 7px;
+}
+
+.update-service .delete ion-icon {
+  font-size: 20px;
 }
 
 .update-service form.add-form div.add {
@@ -126,8 +131,12 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .update-service form.add-form div.add ion-icon {
   color: white;
-  font-weight: bold;
-  font-size: 25px;
+  font-size: 27px;
+  transition: 0.2s;
+}
+
+.update-service form.add-form div.add:hover ion-icon {
+  transform: rotate(90deg);
 }
 
 .update-service .delete {
@@ -155,9 +164,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .update-service form.add-form .btn-holder {
   padding: 20px 50px 0;
-
-  /* margin: 30px 50px 0; */
 }
+
 .update-service form.add-form button.submit {
   width: max-content;
   display: flex;
@@ -167,5 +175,8 @@ input[type="number"]::-webkit-outer-spin-button {
 @media (max-width: 400px) {
   .update-service form.add-form .question-body {
     flex-wrap: wrap;
+  }
+  .update-service form.add-form .btn-holder button {
+    margin: 0 auto;
   }
 }

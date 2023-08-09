@@ -13,6 +13,7 @@ import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
 const UserAvatar = () => {
   const [showList, setShowList] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useNavigate();
@@ -52,7 +53,7 @@ const UserAvatar = () => {
       link: `/user/${userTotalInfo?.username}/update_profile`,
     },
   ];
-  const handleLogout = () => {
+  const handleLogout = async () => {
     toast("يتم الآن تسجيل الخروج", {
       duration: 3000,
       position: "top-center",
@@ -61,19 +62,25 @@ const UserAvatar = () => {
         "aria-live": "polite",
       },
     });
-    let bearer = `token ${userToken}`;
-    postToAPI("api/logout/", null, {
-      headers: {
-        Authorization: bearer,
-      },
-    }).then(() => {
+    try {
+      setIsSubmiting(true);
+      let bearer = `token ${userToken}`;
+      await postToAPI("api/logout/", null, {
+        headers: {
+          Authorization: bearer,
+        },
+      });
       Cookies.remove("userTotalInfo");
       Cookies.remove("userToken");
       Cookies.remove("balance");
       dispatch(setUserTotalInfo(null));
       dispatch(setUserToken(null));
       history("/");
-    });
+      setIsSubmiting(false);
+    } catch (err) {
+      console.log(err);
+      setIsSubmiting(false);
+    }
   };
   // handle click out of the element to hide it
   window.onclick = function (event) {
@@ -100,7 +107,7 @@ const UserAvatar = () => {
             <div className="image-skelton"></div>
           )}
         </div>
-        <ListGroup hidden={!showList}>
+        <ListGroup className={showList ? "show" : null}>
           {avatarList.map((item, index) => (
             <ListGroup.Item key={index} action>
               <Link to={item.link}>
@@ -119,9 +126,10 @@ const UserAvatar = () => {
             </ListGroup.Item>
           ) : null}
           <ListGroup.Item
+            className={`logout ${isSubmiting ? "loading" : null}`}
             action
             onClick={() => {
-              handleLogout();
+              !isSubmiting && handleLogout();
             }}
           >
             <ion-icon name="log-out-outline"></ion-icon>

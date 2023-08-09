@@ -55,8 +55,8 @@ const MyServiceOrders = () => {
           Authorization: `token ${userToken}`,
         },
       });
-      setMyOrderData(data);
-      console.log(data);
+
+      setMyOrderData(data.reverse());
     } catch (err) {
       console.log(err);
     }

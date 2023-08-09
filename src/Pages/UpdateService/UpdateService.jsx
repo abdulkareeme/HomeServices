@@ -184,6 +184,7 @@ const UpdateService = () => {
             className="delete"
           >
             حذف الخدمة
+            <ion-icon name="trash-outline"></ion-icon>
           </button>
           <LoaderButton isSubmitting={isSubmitting} color="delete" />
         </div>
