@@ -27,3 +27,32 @@ The Home Service Website was built using the following technologies:
 - React-dom-router: A library for declaratively routing components in React.
 - Axios: A promise-based HTTP client for making API requests.
 - Redux: A state management library for managing the application's global state.
+
+
+## How can you clone and tweak this project?
+
+From your command line, first clone this repo:
+
+```
+# Clone this repository
+$ https://github.com/abdulkareeme/HomeServices.git
+
+# Go into the repository
+$ cd HomeServices
+
+# Remove current origin repository
+$ git remote remove origin
+
+```
+## WARNING
+<strong> make sure that you have npm version 9.8.0 or higher and node version 20.4.0 or higher </strong>
+
+Then you can install the dependencies using NPM:
+
+```
+# Install dependencies
+$ npm install
+
+# Start development server
+$ npm start
+```
