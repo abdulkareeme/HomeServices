@@ -141,14 +141,6 @@ const ServiceDetails = () => {
                       <span>{`( ${serviceDetails?.number_of_served_clients} )`}</span>
                     </Col>
                   </Row>
-                  {/* <Row>
-                <Col>متوسط سرعة الرد</Col>
-                <Col>
-                  {serviceDetails?.average_fast_answer
-                    ? serviceDetails?.average_fast_answer
-                    : "لم يحسب بعد"}
-                </Col>
-              </Row> */}
                   <Row className="align-items-center">
                     <Col>عدد العملاء</Col>
                     <Col>{serviceDetails?.number_of_served_clients}</Col>
@@ -157,9 +149,9 @@ const ServiceDetails = () => {
                     <Col>متوسط سعر الخدمة بالساعة</Col>
                     <Col>{serviceDetails?.average_price_per_hour} ل.س</Col>
                   </Row>
-                  <Row className="align-items-center">
+                  <Row className="align-items-start">
                     <Col>الخدمة متاحة في</Col>
-                    <Col className="areas d-flex gap-2">
+                    <Col className="areas d-flex gap-2 flex-wrap">
                       {serviceDetails?.service_area.map((area) => (
                         <span>{area.name}</span>
                       ))}

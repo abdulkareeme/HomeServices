@@ -96,15 +96,17 @@ const FilterResults = () => {
           <Col lg={4}>
             <SearchBar type="filled" goto="inside" />
           </Col>
-          <Col>
-            <button
-              onClick={() => handleFilter()}
-              className="filter-btn d-flex gap-2 align-items-center"
-            >
-              <ion-icon name="filter"></ion-icon>
-              فلتر حسب مدينتك
-            </button>
-          </Col>
+          {userToken ? (
+            <Col>
+              <button
+                onClick={() => handleFilter()}
+                className="filter-btn d-flex gap-2 align-items-center"
+              >
+                <ion-icon name="filter"></ion-icon>
+                فلتر حسب مدينتك
+              </button>
+            </Col>
+          ) : null}
         </Row>
         {isLoading ? <LoaderContent /> : null}
         <Row className="service-items justify-content-center d-flex gx-3 gy-4">

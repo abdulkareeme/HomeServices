@@ -60,11 +60,6 @@
 .my-recieve-orders ion-icon:last-of-type {
   color: rgb(181, 10, 10);
 }
-.my-recieve-orders ion-icon[name="time-outline"] {
-  font-size: 20px;
-  color: black !important;
-  cursor: auto;
-}
 
 .my-recieve-orders button.done {
   border: none;

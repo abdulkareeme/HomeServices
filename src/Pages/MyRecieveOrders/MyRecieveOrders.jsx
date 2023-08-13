@@ -277,7 +277,7 @@ const MyRecieveOrders = () => {
             {pendingRecieveData?.length > 0 ? (
               <Row className="pending d-flex justify-content-center gap-2">
                 {pendingRecieveData?.map((order) => (
-                  <Col lg={3} md={4} xs={7} key={order.id}>
+                  <Col lg={4} md={5} xs={7} key={order.id}>
                     <div
                       data-aos="fade-up"
                       className="card my-3 bg-white shadow-sm border-0 rounded"
@@ -304,12 +304,9 @@ const MyRecieveOrders = () => {
                           <div className="text-muted">
                             {order.home_service.category.name}
                           </div>
-                          <p className="mb-0 d-flex align-items-center gap-1">
-                            <ion-icon name="time-outline"></ion-icon>
-                            <span>
-                              الوقت المتوقع للانتهاء بعد{" "}
-                              {order.expected_time_by_day_to_finish} يوم
-                            </span>
+                          <p className="mb-0">
+                            الوقت المتوقع للانتهاء بعد{" "}
+                            {order.expected_time_by_day_to_finish} يوم
                           </p>
                         </div>
                         <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
