@@ -146,7 +146,7 @@ class UpdateNormalUser(serializers.ModelSerializer):
     class Meta :
         model = NormalUser
         fields = ['bio','user']
-    
+
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
         if user_data is not None:
@@ -172,6 +172,8 @@ class UpdateUserPhotoSerializer(serializers.ModelSerializer):
         photo = validated_data.get('photo',None)
         if photo is not None :
             instance.photo.save(photo.name , photo , save=False)
+        else :
+            instance.photo= None
         instance.save()
         return instance
 class ForgetPasswordResetSerializer(serializers.Serializer):
@@ -205,7 +207,7 @@ class ForgetPasswordResetSerializer(serializers.Serializer):
                 user.save()
                 raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
             raise serializers.ValidationError("Wrong code please try again 🙃")
-        
+
     def validate(self, attrs):
         if 'new_password' not in attrs or 'new_password2' not in attrs or attrs['new_password'] != attrs['new_password2'] :
             raise serializers.ValidationError({"password": "New password fields didn't match."})
@@ -234,13 +236,13 @@ class CheckForgetPasswordSerializer(serializers.Serializer):
                 user.save()
                 raise serializers.ValidationError(f"Try again after {user.forget_next_confirm_try - timezone.now()}")
             raise serializers.ValidationError("Wrong code please try again 🙃")
-        
+
 
 class ChargeBalanceSerializer(serializers.Serializer):
     charged_balance = serializers.IntegerField()
     username = serializers.CharField()
-    
-    
+
+
     def validate_charged_balance(self , value):
         if value <=0 :
             raise serializers.ValidationError("This field must be positive")

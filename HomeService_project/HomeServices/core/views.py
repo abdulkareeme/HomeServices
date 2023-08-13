@@ -24,7 +24,6 @@ def get_user_info(user, host):
         photo = None
     else:
         photo = host+user.photo.url
-
     if user.normal_user.average_fast_answer:
         average_fast_answer = user.normal_user.average_fast_answer
     else:
@@ -61,7 +60,7 @@ def get_user_info(user, host):
         'mode': user.mode,
         'photo': photo,
         'birth_date': user.birth_date,
-        'date_joined': user.date_joined,  # TODO change the format
+        'date_joined': user.date_joined,
         'gender': user.gender,
         'bio': user.normal_user.bio,
         'clients_number': clients_number,
@@ -174,7 +173,7 @@ class RegisterUser(APIView):
 
     )
     def get(self, request):
-        serializer = AreaSerializer(Area.objects.all(), many=True)
+        serializer = AreaSerializer(Area.objects.all().order_by('name'), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -320,7 +319,6 @@ class ResendEmailMessage(APIView):
 class UpdateUser(APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [parsers.JSONParser, parsers.MultiPartParser]
-
     @extend_schema(
         responses={200: UpdateProfileSpectacular, 401: None},
         description="Note : The area is all area in the database "
@@ -514,12 +512,12 @@ def login_provider(request):
         return Response({"detail": 'Your account does not support this feature'}, status=status.HTTP_400_BAD_REQUEST)
 
     _, token = AuthToken.objects.create(user)
-    if user.is_superuser:
+    if user.is_staff:
         balance = -1
     else:
         balance = user.normal_user.balance.total_balance
     response = {
-        'is_admin': user.is_superuser,
+        'is_admin': user.is_staff,
         'balance': balance,
         'token': {token}
     }
@@ -536,12 +534,12 @@ class ChargeBalance(APIView):
             return Response({'detail' : "User dose not exist"} , status=status.HTTP_404_NOT_FOUND)
         if not user.normal_user :
             return Response({'detail' : "User dose not exist"} , status=status.HTTP_404_NOT_FOUND)
-        # if not user.is_superuser :
-        if request.user.normal_user.balance.total_balance < serializer.validated_data['charged_balance'] :
-            return Response({'detail':"You don't have enough balance"} , status=status.HTTP_400_BAD_REQUEST)
-        request.user.normal_user.balance.total_balance -= serializer.validated_data['charged_balance']
+        if not request.user.is_staff :
+            if request.user.normal_user.balance.total_balance < serializer.validated_data['charged_balance'] :
+                return Response({'detail':"You don't have enough balance"} , status=status.HTTP_400_BAD_REQUEST)
+            request.user.normal_user.balance.total_balance -= serializer.validated_data['charged_balance']
         user.normal_user.balance.total_balance += serializer.validated_data['charged_balance']
-        request.user.normal_user.balance.save()
+        if not request.user.is_staff :
+            request.user.normal_user.balance.save()
         user.normal_user.balance.save()
-        return Response('Success')  
-        
+        return Response('Success')
