@@ -11,7 +11,6 @@ import Cookies from "js-cookie";
 const SearchResults = () => {
   const { clearResults } = useSelector((state) => state.homeService);
   const searchWord = Cookies.get("searchWord");
-  console.log(searchWord);
   const [servicesList, setServiceList] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -49,7 +48,7 @@ const SearchResults = () => {
           <SearchBar type="filled" goto="inside" />
         </div>
         {isLoading ? <LoaderContent /> : null}
-        <Row className="service-items justify-content-center d-flex gap-2">
+        <Row className="service-items justify-content-center d-flex gx-3 gy-4">
           {servicesList?.map((item) => (
             <Col lg={4} md={5} xs={9} key={item.id}>
               <ServiceCard serviceData={item} id={item.id} />

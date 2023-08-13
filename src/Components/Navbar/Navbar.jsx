@@ -15,13 +15,14 @@ import {
   sellerUserLinks,
 } from "../../utils/constants";
 import "./navbar.css";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import SearchBar from "../SeachBar/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import {
   setCategories,
   setSelectedCategory,
+  setShowList,
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
@@ -30,7 +31,7 @@ import Logo from "../../Images/logo.png";
 import LogoBlack from "../../Images/logo-black.png";
 
 const NavBar = () => {
-  const { userTotalInfo, categories, flagToClose } = useSelector(
+  const { userTotalInfo, categories } = useSelector(
     (state) => state.homeService
   );
   const [show, setShow] = useState(false);
@@ -48,18 +49,33 @@ const NavBar = () => {
       });
     }
   }, [dispatch]);
-  useEffect(() => {
-    if (flagToClose) setShow(false);
-  }, [flagToClose]);
   const handleCategClick = (name) => {
     dispatch(setSelectedCategory(name));
     Cookies.set("selectedCategory", name, { expires: 30 });
+  };
+  // handle click out of the element to hide for offcanvas
+  window.onclick = function (event) {
+    var offcanvas = document.getElementById("offcanvas");
+    var offcanvasBody = document.getElementById("offcanvas-body");
+    var inputSearch = document.getElementById("input-search");
+    var hambMenu = document.getElementById("hamb-menu");
+    var accordHeader = document.getElementById("accordion-header");
+    if (
+      event.target !== offcanvas &&
+      event.target !== hambMenu &&
+      event.target !== offcanvasBody &&
+      event.target !== accordHeader &&
+      event.target !== inputSearch
+    ) {
+      setShow(false);
+    }
   };
   return (
     <Navbar fixed="top" expand="md" className="fixed left-0 top-0 w-screen">
       <Container className="d-flex justify-content-between">
         <Navbar.Brand className="d-flex gap-3" to="/">
           <ion-icon
+            id="hamb-menu"
             onClick={() => setShow(true)}
             className="menu-icon"
             name="menu"
@@ -105,8 +121,8 @@ const NavBar = () => {
           </Link>
         </div>
         <hr />
-        <Offcanvas.Body>
-          <SearchBar type="outlined" goto="page" />
+        <Offcanvas.Body id="offcanvas-body">
+          <SearchBar setShow={setShow} type="outlined" goto="page" />
           <hr />
           <ul className="mt-2 px-4 d-flex flex-column gap-3">
             {userTotalInfo
@@ -148,7 +164,10 @@ const NavBar = () => {
               {offcanvasAccordion.map((canvasItem, index) => (
                 <Accordion.Item key={index} eventKey="0">
                   <Accordion.Header>
-                    <div className="d-flex align-items-center gap-2">
+                    <div
+                      id="accordion-header"
+                      className="d-flex align-items-center gap-2"
+                    >
                       {canvasItem.icon}
                       {canvasItem.label}
                     </div>
@@ -190,4 +209,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default memo(NavBar);

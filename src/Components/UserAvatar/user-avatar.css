@@ -23,13 +23,15 @@
   position: absolute;
   left: 10px;
   top: 95%;
-  z-index: -1;
+  z-index: -1 !important;
+  visibility: hidden;
   opacity: 0;
   transition: opacity 0.1s, top 0.1s !important;
 }
 
 .user .list-group.show {
-  z-index: 888 !important;
+  visibility: visible;
+  z-index: 222 !important;
   opacity: 1;
   top: 105%;
 }

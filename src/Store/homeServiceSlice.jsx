@@ -16,6 +16,7 @@ const initialState = {
   selectedCategory: null,
   clearResults: false,
   flagToClose: false,
+  showList: 0,
 };
 
 export const getNewRelease = createAsyncThunk(
@@ -75,6 +76,9 @@ const homeServiceSlice = createSlice({
     setFlagToClose: (state, action) => {
       state.flagToClose = action.payload;
     },
+    setShowList: (state, action) => {
+      state.showList = action.payload;
+    },
   },
 });
 
@@ -92,5 +96,6 @@ export const {
   setSelectedCategory,
   setClearResults,
   setFlagToClose,
+  setShowList,
 } = homeServiceSlice.actions;
 export default homeServiceSlice.reducer;

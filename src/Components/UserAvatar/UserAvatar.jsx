@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import "./user-avatar.css";
 import { ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -82,11 +82,11 @@ const UserAvatar = () => {
       setIsSubmiting(false);
     }
   };
-  // handle click out of the element to hide it
-  window.onclick = function (event) {
+  window.addEventListener("click", (event) => {
     var userMenu = document.getElementById("user-menu");
-    event.target !== userMenu && setShowList(false);
-  };
+    if (event.target !== userMenu) setShowList(false);
+  });
+
   useEffect(() => {
     const storedUser = Cookies.get("userTotalInfo");
     storedUser && handleWatchChange(JSON.parse(storedUser));
@@ -141,4 +141,4 @@ const UserAvatar = () => {
   }
 };
 
-export default UserAvatar;
+export default memo(UserAvatar);
