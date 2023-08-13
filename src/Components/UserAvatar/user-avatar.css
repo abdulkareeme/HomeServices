@@ -22,7 +22,7 @@
 .user .list-group {
   position: absolute;
   left: 10px;
-  top: 95%;
+  top: 90%;
   z-index: -1 !important;
   visibility: hidden;
   opacity: 0;

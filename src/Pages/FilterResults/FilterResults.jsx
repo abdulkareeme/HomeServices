@@ -13,7 +13,7 @@ import SearchBar from "../../Components/SeachBar/SearchBar";
 import LoaderContent from "../../Components/LoaderContent/LoaderContent";
 import Cookies from "js-cookie";
 const FilterResults = () => {
-  const { selectedCategory, clearResults } = useSelector(
+  const { selectedCategory, clearResults, userToken } = useSelector(
     (state) => state.homeService
   );
   const searchWord = Cookies.get("searchWord");
@@ -54,6 +54,27 @@ const FilterResults = () => {
       setIsLoading(false);
     }
   };
+  const handleFilter = async () => {
+    setServiceList(null);
+    let bearer = `token ${userToken}`;
+    try {
+      setIsLoading(true);
+      const res = await fetchFromAPI(
+        `services/list_home_services?category=${selectedCategory}`,
+        {
+          headers: {
+            Authorization: bearer,
+          },
+        }
+      );
+      setIsLoading(false);
+      setServiceList(res);
+      console.log(res);
+    } catch (err) {
+      setIsLoading(false);
+      console.log(err);
+    }
+  };
   useEffect(() => {
     setServiceList(null);
     getServicesByCategories();
@@ -67,13 +88,24 @@ const FilterResults = () => {
   return (
     <section className="filter-results">
       <Container>
-        <div className="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-5">
-          <div>
+        <Row className="d-flex align-items-center gap-2 mb-5">
+          <Col lg={7}>
             <h1>{selectedCategory}</h1>
             <p>{shortInfo[selectedCategory]}</p>
-          </div>
-          <SearchBar type="filled" goto="inside" />
-        </div>
+          </Col>
+          <Col lg={4}>
+            <SearchBar type="filled" goto="inside" />
+          </Col>
+          <Col>
+            <button
+              onClick={() => handleFilter()}
+              className="filter-btn d-flex gap-2 align-items-center"
+            >
+              <ion-icon name="filter"></ion-icon>
+              فلتر حسب مدينتك
+            </button>
+          </Col>
+        </Row>
         {isLoading ? <LoaderContent /> : null}
         <Row className="service-items justify-content-center d-flex gx-3 gy-4">
           {servicesList?.map((item) => (

@@ -57,6 +57,7 @@ const MyRecieveOrders = () => {
         },
       });
       setMyRecieveOrderData(data.reverse());
+      console.log(data);
       setPendingRecieveData(data.filter((item) => item.status === "Pending"));
       setunderwayRecieveData(data.filter((item) => item.status === "Underway"));
       setunderReviewRecieveData(
@@ -303,6 +304,13 @@ const MyRecieveOrders = () => {
                           <div className="text-muted">
                             {order.home_service.category.name}
                           </div>
+                          <p className="mb-0 d-flex align-items-center gap-1">
+                            <ion-icon name="time-outline"></ion-icon>
+                            <span>
+                              الوقت المتوقع للانتهاء بعد{" "}
+                              {order.expected_time_by_day_to_finish} يوم
+                            </span>
+                          </p>
                         </div>
                         <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
                           <ion-icon
