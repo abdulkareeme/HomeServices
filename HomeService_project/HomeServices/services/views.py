@@ -561,11 +561,20 @@ class GetEarnings(APIView):
         serializer = GetEarningsSerializer(data = queryset , many=True)
         serializer.is_valid(raise_exception=False)
         index =0
-        for earning in queryset :
-            serializer.data [index]['home_service'] = dict()
-            serializer.data [index]['home_service']['title'] = earning.order.home_service.title
-            serializer.data [index]['home_service']['seller'] = earning.order.home_service.seller.user.username
-            serializer.data [index]['home_service']['service_id'] = earning.order.home_service.id
-            serializer.data [index]['home_service']['seller_full_name'] = str(earning.order.home_service.seller.user.first_name) +' '+str(earning.order.home_service.seller.user.last_name )
+        if queryset.count() >0:
+            for earning in queryset :
+                serializer.data [index]['home_service'] = dict()
+                if earning.order :
+                    title = earning.order.home_service.title
+                    seller = earning.order.home_service.seller.user.username
+                    service_id = earning.order.home_service.id
+                    seller_full_name = str(earning.order.home_service.seller.user.first_name) +' '+str(earning.order.home_service.seller.user.last_name )
+                else :
+                    title = seller = service_id = seller_full_name = None
+                serializer.data [index]['home_service']['title'] = title
+                serializer.data [index]['home_service']['seller'] = seller
+                serializer.data [index]['home_service']['service_id'] = service_id
+                serializer.data [index]['home_service']['seller_full_name'] = seller_full_name
+                index+=1
 
         return Response(serializer.data)

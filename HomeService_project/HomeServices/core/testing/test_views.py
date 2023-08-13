@@ -19,6 +19,7 @@ class TestCoreAPIViews(TestCase):
         self.user_password = 'q111w222'
         self.global_user = mixer.blend(NormalUser ,user__mode = 'seller'  , user__gender = 'Male')
         self.global_user.user.set_password(self.user_password)
+        Balance.objects.create(total_balance = 1000 , user = self.global_user)
         self.global_user.user.save()
         _, self.token = AuthToken.objects.create(self.global_user.user )
         self.client.credentials(HTTP_AUTHORIZATION="token " + self.token)
@@ -214,11 +215,11 @@ class TestCoreAPIViews(TestCase):
         response4 = self.client.post(url , data = {'email': self.global_user.user.email})
         response5 = self.client.post(url , data = {'email': 'blablabla@bla.bla' , 'confirmation_code':123456})
 
-        assert response1 == 400
-        assert response2 == 400
-        assert response3 == 400 
-        assert response4 == 400 
-        assert response5 == 400
+        assert response1.status_code == 400
+        assert response2.status_code == 400
+        assert response3.status_code == 400 
+        assert response4.status_code == 400 
+        assert response5.status_code == 400
 
     def test_confirm_email_errors_in_process(self):
         url = reverse('confirm_email')
@@ -232,6 +233,21 @@ class TestCoreAPIViews(TestCase):
         user.save()
 
         response2 = self.client.post(url , data = {'email': user.email , 'confirmation_code':123456})
-        #TODO the function does not finished yet
+
         assert response1.status_code == 400
         assert response1.json() == {'detail':"Email already verified"}
+        assert response2.status_code == 400
+
+    def test_my_balance_success(self):
+        url = reverse('my_balance')
+        response = self.client.get(url)
+
+        assert response.status_code == 200
+        assert response.json()['total_balance'] >= 0  
+    
+    def test_my_balance_error(self):
+        url = reverse('my_balance')
+        client = APIClient()
+        response = client.get(url)
+
+        assert response.status_code == 401
