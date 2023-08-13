@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HomeService , Area , Category ,OrderService , Rating , InputField , input_choices , InputData
+from .models import HomeService , Area , Category ,OrderService , Rating , InputField , input_choices , InputData , Earnings
 from rest_framework.validators import ValidationError
 from core.models import NormalUser , User
 
@@ -136,3 +136,10 @@ class RatingDetailSerializer(serializers.ModelSerializer):
     class Meta :
         model = Rating
         fields = ['id','quality_of_service','commitment_to_deadline','work_ethics','client_comment','seller_comment','rating_time']
+
+class GetEarningsSerializer(serializers.ModelSerializer):
+    # service = RetrieveHomeServices()
+    class Meta :
+        model  = Earnings
+        fields = ['created_date','beneficiary','earnings']
+        depth = 2

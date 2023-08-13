@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category ,Area,HomeService ,Rating  ,GeneralServicesPrice , Beneficiary , Earnings , InputData , InputField , OrderService
-from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer ,RatingDetailSerializer
+from .serializers import AreaSerializer ,CategorySerializer  , RatingSerializer,InputFieldSerializer  , ListOrdersSerializer  ,ListHomeServicesSerializer , RetrieveHomeServices , CreateHomeServiceSerializer ,RetrieveUpdateHomeServiceSerializer,InputFieldSerializerAll ,InputDataSerializer,RetrieveInputDataSerializer ,RatingDetailSerializer ,GetEarningsSerializer
 from rest_framework.response import Response
 from rest_framework import status , generics
 from rest_framework import permissions
@@ -140,20 +140,33 @@ class ListHomeServices(generics.ListAPIView):
     queryset = HomeService.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = ListHomeServicesSerializer
+
     def get_queryset(self):
-        if not self.request.user.is_authenticated :
+        area = []
+        if not self.request.user.is_authenticated:
             area = Area.objects.all()
         else:
             area = [self.request.user.area]
-        if 'username' in self.request.GET:
-            return HomeService.objects.filter(seller__user__username = self.request.GET.get('username')).order_by('-average_ratings')
-        if 'category' in self.request.GET and 'title' in self.request.GET:
-            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),category__name = self.request.GET.get('category'),service_area__in =area ).order_by('-average_ratings')
-        if 'title' in self.request.GET :
-            return HomeService.objects.filter(title__contains = self.request.GET.get('title'),service_area__in =area).order_by('-average_ratings')
-        if 'category' in self.request.GET:
-            return HomeService.objects.filter(category__name = self.request.GET.get('category'),service_area__in =area).order_by('-average_ratings')
-        return HomeService.objects.filter(service_area__in =area).order_by('-average_ratings')
+
+        queryset = HomeService.objects.filter(service_area__in=area)
+
+        username = self.request.GET.get('username')
+        category = self.request.GET.get('category')
+        title = self.request.GET.get('title')
+
+        if username:
+            queryset = queryset.filter(seller__user__username=username)
+
+        if category and title:
+            queryset = queryset.filter(category__name=category, title__contains=title)
+        elif title:
+            queryset = queryset.filter(title__contains=title)
+        elif category:
+            queryset = queryset.filter(category__name=category)
+
+        queryset = queryset.order_by('-average_ratings').distinct()
+
+        return queryset
 
 @extend_schema(
     responses={200:RetrieveHomeServices}
@@ -550,3 +563,31 @@ class ListRatingsByUsername(APIView):
             index+=1
 
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+class GetEarnings(APIView):
+    permission_classes = [permissions.IsAdminUser]
+    @extend_schema(
+            responses={200 : GetEarningsSerializer(many=True) , 403:None}
+    )
+    def get(self , request ):
+        queryset = Earnings.objects.all()
+        serializer = GetEarningsSerializer(data = queryset , many=True)
+        serializer.is_valid(raise_exception=False)
+        index =0
+        if queryset.count() > 0 :
+            for earning in queryset :
+                serializer.data [index]['home_service'] = dict()
+                if earning.order :
+                    title = earning.order.home_service.title
+                    seller = earning.order.home_service.seller.user.username
+                    service_id = earning.order.home_service.id
+                    seller_full_name = str(earning.order.home_service.seller.user.first_name) +' '+str(earning.order.home_service.seller.user.last_name )
+                else :
+                    title = seller = service_id = seller_full_name = None
+                serializer.data [index]['home_service']['title'] = title
+                serializer.data [index]['home_service']['seller'] = seller
+                serializer.data [index]['home_service']['service_id'] = service_id
+                serializer.data [index]['home_service']['seller_full_name'] = seller_full_name
+                index+=1
+
+        return Response(serializer.data)
