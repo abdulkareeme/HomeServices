@@ -47,7 +47,10 @@ const SearchBar = ({
         onKeyDown={(e) => handleKeyDown(e)}
       />
       <ion-icon
-        onClick={() => inputValue.length > 0 && handelSubmit()}
+        onClick={() => {
+          inputValue.length > 0 && handelSubmit();
+          type !== "filled" && setShow(false);
+        }}
         name="search-outline"
         className="search-icon"
       ></ion-icon>

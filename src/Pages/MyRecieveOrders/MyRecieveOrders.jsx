@@ -57,13 +57,18 @@ const MyRecieveOrders = () => {
         },
       });
       setMyRecieveOrderData(data.reverse());
-      console.log(data);
-      setPendingRecieveData(data.filter((item) => item.status === "Pending"));
-      setunderwayRecieveData(data.filter((item) => item.status === "Underway"));
-      setunderReviewRecieveData(
-        data.filter((item) => item.status === "Under review")
+      setPendingRecieveData(
+        data.reverse().filter((item) => item.status === "Pending")
       );
-      setexpireRecieveData(data.filter((item) => item.status === "Expire"));
+      setunderwayRecieveData(
+        data.reverse().filter((item) => item.status === "Underway")
+      );
+      setunderReviewRecieveData(
+        data.reverse().filter((item) => item.status === "Under review")
+      );
+      setexpireRecieveData(
+        data.reverse().filter((item) => item.status === "Expire")
+      );
     } catch (err) {
       console.log(err);
     }
@@ -199,22 +204,17 @@ const MyRecieveOrders = () => {
       title: "الرجاء الانتظار بينما يتم قبول الطلب",
     });
     try {
-      const res = await putToAPI(
-        `services/accept_after_review/${order.id}`,
-        null,
-        {
-          headers: {
-            Authorization: `token ${userToken}`,
-          },
-        }
-      );
+      await putToAPI(`services/accept_after_review/${order.id}`, null, {
+        headers: {
+          Authorization: `token ${userToken}`,
+        },
+      });
       swal("تم القبول بنجاح", {
         icon: "success",
       });
       setunderReviewRecieveData(
         underReviewRecieveData.filter((item) => item.id !== order.id)
       );
-      // order.form = res;
       setunderwayRecieveData([...underwayRecieveData, order]);
     } catch (err) {
       console.log(err);
@@ -277,7 +277,7 @@ const MyRecieveOrders = () => {
             {pendingRecieveData?.length > 0 ? (
               <Row className="pending d-flex justify-content-center gap-2">
                 {pendingRecieveData?.map((order) => (
-                  <Col lg={4} md={5} xs={7} key={order.id}>
+                  <Col lg={3} md={5} xs={7} key={order.id}>
                     <div
                       data-aos="fade-up"
                       className="card my-3 bg-white shadow-sm border-0 rounded"
@@ -305,8 +305,10 @@ const MyRecieveOrders = () => {
                             {order.home_service.category.name}
                           </div>
                           <p className="mb-0">
-                            الوقت المتوقع للانتهاء بعد{" "}
-                            {order.expected_time_by_day_to_finish} يوم
+                            <span>الوقت المتوقع للانتهاء</span>{" "}
+                            <span>
+                              بعد {order.expected_time_by_day_to_finish} يوم
+                            </span>
                           </p>
                         </div>
                         <div className="d-flex justify-content-end align-items-center gap-3 mt-3">

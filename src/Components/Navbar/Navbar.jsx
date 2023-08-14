@@ -22,7 +22,6 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 import {
   setCategories,
   setSelectedCategory,
-  setShowList,
   setUserTotalInfo,
 } from "../../Store/homeServiceSlice";
 import { fetchFromAPI } from "../../api/FetchFromAPI";
@@ -53,23 +52,7 @@ const NavBar = () => {
     dispatch(setSelectedCategory(name));
     Cookies.set("selectedCategory", name, { expires: 30 });
   };
-  // handle click out of the element to hide for offcanvas
-  window.onclick = function (event) {
-    var offcanvas = document.getElementById("offcanvas");
-    var offcanvasBody = document.getElementById("offcanvas-body");
-    var inputSearch = document.getElementById("input-search");
-    var hambMenu = document.getElementById("hamb-menu");
-    var accordHeader = document.getElementById("accordion-header");
-    if (
-      event.target !== offcanvas &&
-      event.target !== hambMenu &&
-      event.target !== offcanvasBody &&
-      event.target !== accordHeader &&
-      event.target !== inputSearch
-    ) {
-      setShow(false);
-    }
-  };
+
   return (
     <Navbar fixed="top" expand="md" className="fixed left-0 top-0 w-screen">
       <Container className="d-flex justify-content-between">
@@ -105,7 +88,7 @@ const NavBar = () => {
           )}
         </ul>
       </Container>
-      <Offcanvas placement="end" show={show}>
+      <Offcanvas placement="end" show={show} onHide={() => setShow(false)}>
         <div className="head d-flex align-items-center gap-3 px-3 pt-4 pb-3">
           <ion-icon
             onClick={() => setShow(false)}
