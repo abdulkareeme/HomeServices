@@ -105,7 +105,7 @@ const ForgetPassword = () => {
     <section className="d-flex justify-content-center align-items-center">
       <Toaster />
       <Formik initialValues={initialValues} validationSchema={EmailSchema}>
-        {({ values, handleChange, handleBlur, errors, touched }) => (
+        {({ values, isValid, handleChange, handleBlur, errors, touched }) => (
           <form
             data-aos="fade-up"
             onSubmit={(e) => e.preventDefault()}
@@ -134,7 +134,8 @@ const ForgetPassword = () => {
               </p>
             </div>
             <button
-              className="my-btn"
+              className={!isValid ? "my-btn disable" : "my-btn"}
+              disabled={!isValid}
               type="submit"
               hidden={isSubmitting}
               onClick={() => submitHandler(values)}

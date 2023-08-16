@@ -82,6 +82,10 @@ const UserAvatar = () => {
       setIsSubmiting(false);
     }
   };
+  window.addEventListener("click", (event) => {
+    var userMenu = document.getElementById("user-menu");
+    if (event.target !== userMenu) setShowList(false);
+  });
   useEffect(() => {
     const storedUser = Cookies.get("userTotalInfo");
     storedUser && handleWatchChange(JSON.parse(storedUser));
@@ -102,10 +106,7 @@ const UserAvatar = () => {
             <div className="image-skelton"></div>
           )}
         </div>
-        <ListGroup
-          className={showList ? "show" : null}
-          onHide={() => setShowList(false)}
-        >
+        <ListGroup className={showList ? "show" : null}>
           {avatarList.map((item, index) => (
             <ListGroup.Item key={index} action>
               <Link to={item.link}>

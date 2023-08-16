@@ -156,8 +156,10 @@ const VerificationCodeInput = () => {
           "aria-live": "polite",
         },
       });
+      setIsSubmitting(true);
       postToAPI("api/check_forget_password_code", confirmData)
         .then((res) => {
+          setIsSubmitting(false);
           toast.success(
             "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى صفحة تعيين كلمة المرور",
             {
