@@ -209,7 +209,7 @@ class ProfileApi {
               utf8.decode(info[i]["category"]['name'].toString().codeUnits));
           for (int j = 0; j < info[i]["service_area"].length; j++) {
             Area o = Area(info[i]["service_area"][j]['id'],
-                info[i]["service_area"][j]['name']);
+                utf8.decode(info[i]["service_area"][j]['name'].toString().codeUnits));
             area.add(o);
           }
           Service service = Service(
@@ -248,7 +248,8 @@ class ProfileApi {
             utf8.decode(info["category"]['name'].toString().codeUnits));
         for (int j = 0; j < info["service_area"].length; j++) {
           Area o = Area(
-              info["service_area"][j]['id'], info["service_area"][j]['name']);
+              info["service_area"][j]['id'],
+              utf8.decode(info["service_area"][j]['name'].toString().codeUnits));
           area.add(o);
         }
         ServiceDetails service = ServiceDetails(

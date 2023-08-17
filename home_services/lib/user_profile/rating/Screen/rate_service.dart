@@ -28,6 +28,10 @@ class _RateThisServiceState extends State<RateThisService> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.grey[700],
+            title: const Text("تقييم الخدمة"),
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: [

@@ -23,6 +23,9 @@ class FirstAcceptAndRejectButtons extends StatelessWidget {
               showDialog(context: context, builder: (context){
                 return AlertDialog(
                   title: const Text("قبول الطلب ؟"),
+                  content: Text.rich(TextSpan(
+                    text: "في حال قبول الطلب ستتمكن من الاطلاع على الفورم المقدم من قبل الزبون وسيتم خصم 2000 ل.س من رصيدك"
+                  )),
                   actions: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(

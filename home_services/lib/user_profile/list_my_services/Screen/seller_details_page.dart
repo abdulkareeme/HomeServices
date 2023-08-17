@@ -13,9 +13,14 @@ class SellerServiceDetails extends StatelessWidget {
   var user;
   ServiceDetails service;
   SellerServiceDetails({this.user,required this.service,super.key});
-
   @override
   Widget build(BuildContext context) {
+    final difference = user.averageFastAnswer;
+    final op = double.parse(difference);
+    final os = op.toInt();
+    print(os);
+    final hours =(os>24)? os/1440 : os/60;
+    String word = (os>24)? "يوم":"ساعة";
     return (
         SafeArea(
           child: Directionality(
@@ -101,7 +106,7 @@ class SellerServiceDetails extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("متوسط سرعة الرد : ",style: ServiceDetailsStyle.detailsStyle(),),
-                          Text("${(user.averageFastAnswer== "")?0:user.averageFastAnswer}",style: ServiceDetailsStyle.detailsStyle(),),
+                          Text("${(user.averageFastAnswer== "")?0:hours.toInt()} $word ",style: ServiceDetailsStyle.detailsStyle(),),
                         ],
                       ),
                     ),

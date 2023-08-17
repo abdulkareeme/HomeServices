@@ -94,16 +94,6 @@ class UserOptionForService extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 25,),
-                (user.mode == "seller")?Padding(
-                  padding: const EdgeInsets.only(left: 25,right: 25,bottom: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("متوسط سرعة الرد : ",style: ServiceDetailsStyle.detailsStyle(),),
-                      Text("${(user.averageFastAnswer== "")?0:user.averageFastAnswer}",style: ServiceDetailsStyle.detailsStyle(),),
-                    ],
-                  ),
-                ):Visibility(visible: false,child: Container()),
                 Padding(
                   padding: const EdgeInsets.only(left: 25,right: 25),
                   child: Row(

@@ -33,7 +33,7 @@ class HomePageApi{
           for(int j=0 ;j<info[i]["service_area"].length;j++){
             Area o = Area(
                 info[i]["service_area"][j]['id'],
-                info[i]["service_area"][j]['name']
+                utf8.decode(info[i]["service_area"][j]['name'].toString().codeUnits)
             );
             area.add(o);
           }
@@ -264,7 +264,7 @@ class HomePageApi{
       return op;
     }
   }
-  Future<List?> postOrder(int serviceId,var user,List formAnswer) async{
+  Future<Tuple2<bool,List?>> postOrder(int serviceId,var user,List formAnswer) async{
     try{
       var days ;
       List<Map<String,dynamic>> toJson(List op){
@@ -301,17 +301,19 @@ class HomePageApi{
         print(200);
         print(jsonDecode(response.body));
         List op = ['done'];
-        return op;
+        return Tuple2(true, op);
+      } else if(response.statusCode == 400 && jsonDecode(response.body)["detail"] == "You have unrated services please rate it and order again"){
+        return Tuple2(false, ["لايمكن طلب خدمة من هذا البائع حاليا لانه لديك خدمة سابقة بحاجة الى تقييم"]);
       } else {
         print(response.statusCode);
         print(jsonDecode(response.body));
         List op = [];
-        return op;
+        return Tuple2(false,op);
       }
     } catch (e){
       print(e);
       List op = [];
-      return op;
+      return Tuple2(false, op);
     }
   }
 

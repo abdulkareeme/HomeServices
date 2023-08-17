@@ -17,8 +17,41 @@ class UnderwayOrderItem extends StatefulWidget {
 }
 
 class _UnderwayOrderItemState extends State<UnderwayOrderItem> {
+  String orderStatus = "";
+  Color statusColor = Colors.black;
   @override
   Widget build(BuildContext context) {
+    switch (widget.order!.status) {
+      case "Rejected":
+        setState(() {
+          orderStatus = "تم رفض الطلب";
+          statusColor = Colors.red;
+        });
+        break;
+      case "Under review":
+        setState(() {
+          orderStatus = "قيد مراجعة البائع";
+          statusColor = Colors.grey;
+        });
+        break;
+      case "Pending":
+        setState(() {
+          orderStatus = "قيد الانتظار...";
+          statusColor = Colors.black;
+        });
+        break;
+      case "Expire":
+        setState(() {
+          orderStatus = "تم الانتهاء";
+          statusColor = Colors.green;
+        });
+        break;
+      case "Underway":
+        setState(() {
+          orderStatus = "قيد التنفيذ";
+          statusColor = Colors.orange;
+        });
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -37,7 +70,7 @@ class _UnderwayOrderItemState extends State<UnderwayOrderItem> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 0,top: 6),
-                  child:Text(widget.order!.clientName,style: const TextStyle(
+                  child:Text(widget.order!.firstName+" "+widget.order!.lastName,style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500
                   ),),
@@ -52,10 +85,10 @@ class _UnderwayOrderItemState extends State<UnderwayOrderItem> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 0,top: 4,bottom: 10),
-                  child:Text(widget.order!.status,style: TextStyle(
+                  child:Text(orderStatus,style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
-                    color: (widget.order!.status == "Rejected")?Colors.red : Colors.grey,
+                    color: statusColor,
                   ),),
                 ),
                 const SizedBox(height: 10,),
@@ -66,10 +99,35 @@ class _UnderwayOrderItemState extends State<UnderwayOrderItem> {
                         primary: Colors.green
                       ),
                       onPressed: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendFinishAnswer(
-                          user:widget.user ,
-                          id: widget.order!.id,
-                        )));
+                        showDialog(context: context, builder: (context){
+                          return AlertDialog(
+                            title: const Text("انهاء الخدمة ؟"),
+                            content: Text.rich(TextSpan(
+                                text: "سيتم اعلام الزبون بانتهائك من الخدمة وسيتيح له امكانة تقييم الخدمة واضافة تعليق"
+                            )),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('إلغاء'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendFinishAnswer(
+                                    user:widget.user ,
+                                    id: widget.order!.id,
+                                  )));
+                                },
+                                child: const Text('انهاء'),
+                              ),
+                            ],
+                          );
+                        });
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
