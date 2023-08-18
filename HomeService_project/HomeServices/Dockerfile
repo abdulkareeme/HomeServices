@@ -12,5 +12,4 @@ EXPOSE 8000
 
 ENV DJANGO_SETTINGS_MODULE=HomeServices.settings
 
-CMD ["sh", "-c", "trap 'killall' SIGINT; python manage.py runserver 0.0.0.0:8000 & python manage.py qcluster; wait"]
-
+CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 & python manage.py qcluster"]

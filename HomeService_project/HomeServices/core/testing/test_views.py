@@ -9,7 +9,6 @@ from knox.auth import AuthToken
 from hypothesis import strategies , given
 from datetime import timedelta
 from django.utils import timezone
-
 pytest_mark = pytest.mark.django_db
 
 class TestCoreAPIViews(TestCase):
@@ -251,3 +250,94 @@ class TestCoreAPIViews(TestCase):
         response = client.get(url)
 
         assert response.status_code == 401
+    
+    def test_forget_password_reset_success(self):
+        url = reverse('forget_password_reset')
+        self.global_user.user.forget_password_code = 123456
+        self.global_user.user.save()
+
+        response = self.client.post(url ,
+            {  
+                'email':self.global_user.user.email,
+                'forget_password_code': 123456,
+                'new_password': 'q1111w2222',
+                'new_password2' : 'q1111w2222',
+            }
+        )
+
+        user = User.objects.get(pk= self.global_user.user.id)
+        assert response.status_code == 200
+        assert user.check_password('q1111w2222')
+
+    def test_forget_password_reset_wrong_code(self):
+        url = reverse('forget_password_reset')
+        self.global_user.user.forget_password_code = 123456
+        self.global_user.user.save()
+
+        response = self.client.post(url ,
+            {  
+                'email':self.global_user.user.email,
+                'forget_password_code': 654321,
+                'new_password': 'q1111w2222',
+                'new_password2' : 'q1111w2222',
+            }
+        )
+
+        assert response.status_code == 400
+
+    def test_login_provider_error_not_a_provider(self):
+        url = reverse('login_provider')
+        response = self.client.post(
+            url ,
+            {
+                'username' : self.global_user.user.username,
+                'password' : self.user_password
+            }
+        )
+
+        assert response.status_code == 400
+    
+    def test_login_provider_success(self):
+        url = reverse('login_provider')
+        self.global_user.user.is_provider = True
+        self.global_user.user.save()
+        response = self.client.post(
+            url ,
+            {
+                'username' : self.global_user.user.username,
+                'password' : self.user_password
+            }
+        )
+        assert response.status_code == 200
+        assert response.json() != None
+
+    def test_charge_balance_error_no_enough_money(self):
+        url = reverse('charge_balance')
+        self.global_user.balance.total_balance = 0
+        self.global_user.balance.save()
+        user = mixer.blend(Balance )
+        response = self.client.post(
+            url ,
+            {
+                'username': user.user.user.username,
+                'charged_balance' : 100
+            }
+        )
+
+        assert response.status_code == 400
+    
+    def test_charge_balance_success(self):
+        url = reverse('charge_balance')
+        self.global_user.balance.total_balance = 100
+        self.global_user.balance.save()
+        user = mixer.blend(Balance , total_balance = 0)
+        response = self.client.post(
+            url ,
+            {
+                'username': user.user.user.username,
+                'charged_balance' : 100
+            }
+        )
+        balance = Balance.objects.get(pk = user.id)
+        assert response.status_code == 200
+        assert balance.total_balance == 100 

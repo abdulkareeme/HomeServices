@@ -17,6 +17,8 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 import random
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 def get_user_info(user, host):
@@ -115,11 +117,23 @@ def send_process_verify_email(user):
     user.confirmation_code = str(random.randint(100000, 999999))
     user.next_confirmation_code_sent = timezone.now() + timedelta(hours=24)
     user.save()
+
+
+    # subject = 'Confirm your email'
+    # message = f'Please use the following 6-digit code to confirm your email address: {user.confirmation_code}'
+    # email_from = settings.EMAIL_HOST_USER
+    # recipient_list = [user.email,]
+    # send_mail(subject, message, email_from, recipient_list)
+
+
     subject = 'Confirm your email'
-    message = f'Please use the following 6-digit code to confirm your email address: {user.confirmation_code}'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [user.email,]
-    send_mail(subject, message, email_from, recipient_list)
+    html_message = render_to_string('core/email_confirmation.html', {'code': user.confirmation_code})
+    plain_message = strip_tags(html_message)
+    from_email = settings.EMAIL_HOST_USER
+    to = user.email
+
+    send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
     return Response({"detail": "Code sent successfully , Please check your email inbox"}, status=status.HTTP_200_OK)
 
 

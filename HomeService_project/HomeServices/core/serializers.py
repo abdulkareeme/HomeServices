@@ -14,6 +14,9 @@ from services.serializers import CategorySerializer
 import random
 from datetime import timedelta
 from services.serializers import AreaSerializer
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 gender_choices = [('Male', 'Male'), ('Female', 'Female')]
 mode_choices = [('client', 'buyer'), ('seller', 'seller_buyer')]
 
@@ -128,11 +131,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.confirmation_code = str(random.randint(100000, 999999))
         user.save()
 
+        # subject = 'Confirm your email'
+        # message = f'Please use the following 6-digit code to confirm your email address: {user.confirmation_code}'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = [user.email,]
+        # send_mail(subject, message, email_from, recipient_list)
+        
         subject = 'Confirm your email'
-        message = f'Please use the following 6-digit code to confirm your email address: {user.confirmation_code}'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [user.email,]
-        send_mail(subject, message, email_from, recipient_list)
+        html_message = render_to_string('core/email_confirmation.html', {'code': user.confirmation_code})
+        plain_message = strip_tags(html_message)
+        from_email = settings.EMAIL_HOST_USER
+        to = user.email
+
+        send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
         return user
 
 class UpdateUserSerializer(serializers.ModelSerializer):
