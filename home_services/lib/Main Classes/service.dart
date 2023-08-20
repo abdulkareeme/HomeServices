@@ -4,7 +4,7 @@ import 'category.dart';
 class Service{
   late int id,hourPrice;
   late double rating;
-  late String title,creatorUserName,creatorFirstName,creatorLastName;
+  late String title,creatorUserName,creatorFirstName,creatorLastName,photo;
   late Category category;
   late List<Area> areaList;
   Service(
@@ -17,6 +17,7 @@ class Service{
       this.hourPrice,
       this.category,
       this.areaList,
+      this.photo
       );
   factory Service.orderService(
       String title,seller,
@@ -24,7 +25,7 @@ class Service{
       int hourPrice,
       List<Area>areaList,
       ){
-    return Service(0, title, 0.0, "", "", seller, hourPrice, category, areaList);
+    return Service(0, title, 0.0, "", "", seller, hourPrice, category, areaList,"");
   }
 }
 class ServiceDetails extends Service{
@@ -40,6 +41,7 @@ class ServiceDetails extends Service{
       super.hourPrice,
       super.category,
       super.areaList,
+      super.photo,
       this.numberOfClients,
       this.description);
 

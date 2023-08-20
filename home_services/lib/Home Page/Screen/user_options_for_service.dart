@@ -28,9 +28,7 @@ class UserOptionForService extends StatelessWidget {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>GetUserDetails(username: service.creatorUserName)));
                       },
                       child: CircleAvatar(
-                        backgroundImage: (user.gender == "Male")
-                            ? const AssetImage('images/male.jpeg')
-                            : const AssetImage('images/female.jpeg'),
+                        backgroundImage:NetworkImage(service.photo),
                         radius: 60,
                       ),
                     ),

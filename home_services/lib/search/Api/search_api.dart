@@ -30,18 +30,18 @@ class SearchApi{
             area.add(o);
           }
           Service service = Service(
-            info[i]['id'],
-            utf8.decode(info[i]["title"].toString().codeUnits),
-            info[i]["average_ratings"],
-            utf8.decode(
-                info[i]["seller"]["user"]["first_name"].toString().codeUnits),
-            utf8.decode(
-                info[i]["seller"]["user"]["last_name"].toString().codeUnits),
-            info[i]["seller"]["user"]["username"],
-            info[i]["average_price_per_hour"],
-            ob,
-            area,
-          );
+              info[i]['id'],
+              utf8.decode(info[i]["title"].toString().codeUnits),
+              info[i]["average_ratings"],
+              utf8.decode(
+                  info[i]["seller"]["user"]["first_name"].toString().codeUnits),
+              utf8.decode(
+                  info[i]["seller"]["user"]["last_name"].toString().codeUnits),
+              info[i]["seller"]["user"]["username"],
+              info[i]["average_price_per_hour"],
+              ob,
+              area,
+              info[i]["seller"]["user"]["photo"]);
           services.add(service);
         }
         return Tuple2(status, services);
@@ -83,6 +83,19 @@ class SearchApi{
             area.add(o);
           }
           Service service = Service(
+              info[i]['id'],
+              utf8.decode(info[i]["title"].toString().codeUnits),
+              info[i]["average_ratings"],
+              utf8.decode(
+                  info[i]["seller"]["user"]["first_name"].toString().codeUnits),
+              utf8.decode(
+                  info[i]["seller"]["user"]["last_name"].toString().codeUnits),
+              info[i]["seller"]["user"]["username"],
+              info[i]["average_price_per_hour"],
+              ob,
+              area,
+              info[i]["seller"]["user"]["photo"]);
+          /*Service service = Service(
             info[i]['id'],
             utf8.decode(info[i]["title"].toString().codeUnits),
             info[i]["average_ratings"],
@@ -94,7 +107,7 @@ class SearchApi{
             info[i]["average_price_per_hour"],
             ob,
             area,
-          );
+          );*/
           services.add(service);
         }
         return Tuple2(status, services);

@@ -29,7 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List carouselComponents = [
-    CarouselSliderComponent(text: "", imageUrl: "images/logo.png"),
+    CarouselSliderComponent(text: "", imageUrl: "images/logo-black.png"),
     CarouselSliderComponent(text: "توفير جميع الخدمات المنزلية       ", imageUrl:"images/services.jpeg"),
     CarouselSliderComponent(text: "اختيار افضل مقدمي الخدمات بناء على تقييمات اعمالهم", imageUrl: "images/rating.jpeg")
   ];
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: Colors.grey[350],
+            
             appBar: AppBar(
               backgroundColor: Colors.grey[700],
               title: const Text("الصفحة الرئيسية"),

@@ -9,6 +9,7 @@ import '../../Main Classes/user.dart';
 class LogInApis {
   Future setData(var info) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('photo', info['user_info']['photo']);
     await pref.setString('username', info['user_info']['username']);
     await pref.setString('email', info['user_info']['email']);
     await pref.setString('token', info['token'][0]);
@@ -93,27 +94,29 @@ class LogInApis {
               (info['user_info']['bio'] != null)
                   ? utf8.decode(info['user_info']['bio'].toString().codeUnits)
                   :  "",
+              info['user_info']['photo'],
               (info['user_info']['average_rating'] != null)
                   ? info['user_info']['average_rating'].toDouble()
                   : 0.0);
           list.add(seller);
         } else {
           User user = User.noPhoto(
-            utf8.decode(info['user_info']['first_name'].toString().codeUnits),
-            utf8.decode(info['user_info']['last_name'].toString().codeUnits),
-            info['user_info']["username"],
-            info['user_info']["email"],
-            info["token"][0],
-            info['user_info']["mode"],
-            info['user_info']["gender"],
-            info['user_info']["birth_date"],
-            info['user_info']["date_joined"],
-            utf8.decode(info['user_info']["area_name"].toString().codeUnits),
-            (info['user_info']['bio'] != null)
-                ? utf8.decode(info['user_info']['bio'].toString().codeUnits)
-                :  "",
-            info['user_info']["area_id"],
-            info['user_info']["id"]);
+              utf8.decode(info['user_info']['first_name'].toString().codeUnits),
+              utf8.decode(info['user_info']['last_name'].toString().codeUnits),
+              info['user_info']["username"],
+              info['user_info']["email"],
+              info["token"][0],
+              info['user_info']["mode"],
+              info['user_info']["gender"],
+              info['user_info']["birth_date"],
+              info['user_info']["date_joined"],
+              utf8.decode(info['user_info']["area_name"].toString().codeUnits),
+              (info['user_info']['bio'] != null)
+                  ? utf8.decode(info['user_info']['bio'].toString().codeUnits)
+                  :  "",
+              info['user_info']["photo"],
+              info['user_info']["area_id"],
+              info['user_info']["id"]);
           list.add(user);
         }
         setData(info);
@@ -133,7 +136,8 @@ class LogInApis {
     List? info = [];
     int ? id ,serviceNumber,clientsNumber,areaId;
     double? rating;
-    String? firstName,lastName,userName,answerSpeed,email,token,gender,birthDate,joinedDate,areaName,bio,mode;
+    String? firstName,lastName,userName,answerSpeed,email,token,gender,birthDate,joinedDate,areaName,bio,mode,photo;
+    photo = await pref.getString("photo");
     firstName =  await pref.getString("first_name");
     lastName = await pref.getString('last_name');
     userName = await pref.getString('username');
@@ -153,7 +157,7 @@ class LogInApis {
         answerSpeed = await pref.getString('answer_speed');
         rating = await pref.getDouble('rating')!;
         clientsNumber = await pref.getInt('clients_number');
-        Seller? seller = Seller.noPhoto(
+        Seller seller = Seller.noPhoto(
             serviceNumber!,
             id,
             clientsNumber,
@@ -170,11 +174,12 @@ class LogInApis {
             joinedDate,
             areaName,
             bio,
+            photo,
             rating);
         info.add(seller);
         return info;
       }else{
-        User? user = User.noPhoto(
+        User user = User.noPhoto(
             firstName,
             lastName,
             userName,
@@ -186,9 +191,9 @@ class LogInApis {
             joinedDate,
             areaName,
             bio,
+            photo,
             areaId,
-            id
-        );
+            id);
         info.add(user);
         return info;
       }

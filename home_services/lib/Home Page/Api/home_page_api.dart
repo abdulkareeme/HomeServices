@@ -47,7 +47,9 @@ class HomePageApi{
               info[i]["average_price_per_hour"],
               ob,
               area,
+              info[i]["seller"]["user"]["photo"]
           );
+
           services.add(service);
         }
           return services;
@@ -102,10 +104,10 @@ class HomePageApi{
               info["date_joined"],
               utf8.decode(info["area_name"].toString().codeUnits),
               utf8.decode(info["bio"].toString().codeUnits),
+              info["photo"],
               (info['average_rating'] != null)
                   ? info['average_rating']
                   : 0);
-
           op.add(seller);
         } else {
           User user = User.noPhoto(
@@ -122,9 +124,9 @@ class HomePageApi{
               (info['bio'] != null)
                   ? utf8.decode(info["bio"].toString().codeUnits)
                   :  "",
+              info["photo"],
               info["area_id"],
-              info["id"]
-          );
+              info["id"]);
           op.add(user);
         }
       } else {
@@ -165,8 +167,8 @@ class HomePageApi{
               info[i]["seller"]["user"]["username"],
               info[i]["average_price_per_hour"],
               ob,
-              area
-          );
+              area,
+              info[i]["seller"]["user"]["photo"]);
           services.add(service);
         }
        op.add(services);
@@ -334,7 +336,7 @@ class HomePageApi{
                 utf8.decode(info[i]["service_area"][j]['name'].toString().codeUnits));
             area.add(o);
           }
-          Service service = Service(
+          Service service =Service(
               info[i]['id'],
               utf8.decode(info[i]["title"].toString().codeUnits),
               info[i]["average_ratings"],
@@ -345,7 +347,8 @@ class HomePageApi{
               info[i]["seller"]["user"]["username"],
               info[i]["average_price_per_hour"],
               ob,
-              area);
+              area,
+              info[i]["seller"]["user"]["photo"]);
           services.add(service);
         }
         return Tuple2(ok, services);

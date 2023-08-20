@@ -38,9 +38,7 @@ class SellerServiceDetails extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          backgroundImage: (user.gender == "Male")
-                              ? const AssetImage('images/male.jpeg')
-                              : const AssetImage('images/female.jpeg'),
+                          backgroundImage:NetworkImage(service.photo),
                           radius: 60,
                         ),
                       ],

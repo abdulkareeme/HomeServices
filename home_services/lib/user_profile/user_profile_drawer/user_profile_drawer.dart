@@ -40,7 +40,7 @@ class _UserProfileDrawerState extends State<UserProfileDrawer>{
               radius: 90,
               backgroundImage: MemoryImage(widget.myImage!),
             ): CircleAvatar(
-                backgroundImage:(widget.user.gender == "Male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg') ),
+                backgroundImage:NetworkImage(widget.user.photo) ),
             accountName: Text(widget.user.firstName +" "+ widget.user.lastName),
             accountEmail:Text(widget.user.email),
         ),

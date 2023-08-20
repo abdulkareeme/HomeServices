@@ -39,7 +39,7 @@ class _UserProfileBodyState extends State<UserProfileBody>{
                   radius: 90,
                   backgroundImage: MemoryImage(widget.myImage!),
                 ): CircleAvatar(
-                  backgroundImage:(widget.user.gender == "Male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg'),
+                  backgroundImage:NetworkImage(widget.user.photo),
                   radius: 90,
                 ),
                 ),

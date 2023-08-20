@@ -33,7 +33,7 @@ class ServiceItem extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CircleAvatar(
-                          backgroundImage:(user.gender == "Male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg'),
+                          backgroundImage:NetworkImage(service.photo),
                           radius: 60,
                         ),
                         Text(service.title,style: ListMyServicesStyle.titleStyle(),),

@@ -36,7 +36,7 @@ class UserDetails extends StatelessWidget {
                     Center(
                       child: InkWell(
                         child: CircleAvatar(
-                        backgroundImage:(user.gender == "Male")? const AssetImage('images/male.jpeg'):const AssetImage('images/female.jpeg'),
+                        backgroundImage:NetworkImage(user.photo),
                         radius: 90,
                       ),
                       ),
@@ -111,7 +111,7 @@ class UserDetails extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            "نبذة عني :",
+                            "النبذة :",
                             style: UserProfileStyle.bioTitleStyle(),
                           )
                         ],

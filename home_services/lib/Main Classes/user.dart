@@ -32,9 +32,9 @@ class User {
       this.photo);
 
   factory User.noPhoto(String firstName, lastName, userName, email, token,
-      mode, gender, birthDate, joinDate, areaName, bio, int areaId,id) {
+      mode, gender, birthDate, joinDate, areaName, bio,photo, int areaId,id) {
     return User(id, firstName, lastName, userName, email, token, mode, gender,
-        birthDate, joinDate, areaName, bio, areaId,"");
+        birthDate, joinDate, areaName, bio, areaId,photo);
   }
 }
 
@@ -56,7 +56,9 @@ class Seller extends User{
       joinDate,
       areaName,
       bio,
+      photo
+      ,
       double averageRating){
-    return Seller(id, firstName, lastName, userName, email, token, mode, gender, birthDate, joinDate, areaName, bio, areaId, "", averageFastAnswer, averageRating, clientsNumber, servicesNumber);
+    return Seller(id, firstName, lastName, userName, email, token, mode, gender, birthDate, joinDate, areaName, bio, areaId, photo, averageFastAnswer, averageRating, clientsNumber, servicesNumber);
   }
 }
