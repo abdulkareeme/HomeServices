@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-            
+
             appBar: AppBar(
               backgroundColor: Colors.grey[700],
               title: const Text("الصفحة الرئيسية"),

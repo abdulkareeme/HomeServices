@@ -77,10 +77,11 @@ class HomePageApi{
     try{
       Response response = await get(Uri.parse(Server.host+Server.getUserDetails+username));
       if(response.statusCode == 200){
+        print("object");
         firstFunction = true;
         var info = jsonDecode(response.body);
+        print(info);
         if(info['mode'] != "client"){
-
           Seller seller = Seller.noPhoto(
               (info['services_number'] != null)
                   ? info['services_number']
@@ -105,9 +106,9 @@ class HomePageApi{
               utf8.decode(info["area_name"].toString().codeUnits),
               utf8.decode(info["bio"].toString().codeUnits),
               info["photo"],
-              (info['average_rating'] != null)
+              (info['average_rating'] != 0)
                   ? info['average_rating']
-                  : 0);
+                  : 0.0);
           op.add(seller);
         } else {
           User user = User.noPhoto(
@@ -154,7 +155,7 @@ class HomePageApi{
           for(int j=0 ;j<info[i]["service_area"].length;j++){
             Area o = Area(
                 info[i]["service_area"][j]['id'],
-                info[i]["service_area"][j]['name']
+                utf8.decode(info[i]["service_area"][j]['name'].toString().codeUnits)
             );
             area.add(o);
           }

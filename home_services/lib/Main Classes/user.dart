@@ -56,8 +56,7 @@ class Seller extends User{
       joinDate,
       areaName,
       bio,
-      photo
-      ,
+      photo,
       double averageRating){
     return Seller(id, firstName, lastName, userName, email, token, mode, gender, birthDate, joinDate, areaName, bio, areaId, photo, averageFastAnswer, averageRating, clientsNumber, servicesNumber);
   }
