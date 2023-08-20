@@ -42,6 +42,8 @@ const MyRecieveOrders = () => {
   const [underReviewRecieveData, setunderReviewRecieveData] = useState([]);
   const [underwayRecieveData, setunderwayRecieveData] = useState([]);
   const [expireRecieveData, setexpireRecieveData] = useState([]);
+  const [acceptOrderPrice, setAcceptOrderPrice] = useState("X");
+
   const formDetails = selectedform?.map((item, index) => (
     <div key={index} className="question">
       <label htmlFor="">{item.field.title}</label>
@@ -73,6 +75,14 @@ const MyRecieveOrders = () => {
       console.log(err);
     }
   };
+  const getAcceptOrderPrice = async () => {
+    try {
+      const data = await fetchFromAPI("services/service_price");
+      setAcceptOrderPrice(data.price);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // fucntion for all type of alerts using if condition
   const handleShowAlert = () => {
     if (selectedOrder.type.includes("reject")) {
@@ -96,7 +106,7 @@ const MyRecieveOrders = () => {
       if (selectedOrder.type === "accept") {
         swal({
           title: "هل تريد قبول الطلب؟",
-          text: "سيؤدي قبول الطلب إلى خصم مبلغ 2000 من رصيدك. هل أنت متأكد من رغبتك في الاستمرار في عملية القبول ؟",
+          text: `سيؤدي قبول الطلب إلى خصم مبلغ ${acceptOrderPrice} من رصيدك. هل أنت متأكد من رغبتك في الاستمرار في عملية القبول ؟`,
           icon: "warning",
           buttons: ["إلغاء", "تأكيد"],
           dangerMode: true,
@@ -250,6 +260,7 @@ const MyRecieveOrders = () => {
   useEffect(() => {
     setSelectedOrder(null);
     getMyRecieveOrderData();
+    getAcceptOrderPrice();
   }, []);
   // protect path from client
   useEffect(() => {

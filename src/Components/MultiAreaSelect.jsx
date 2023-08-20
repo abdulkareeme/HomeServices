@@ -14,7 +14,7 @@ const customStyles = {
     border: "none",
     boxShadow: "none",
     width: "100%",
-    height: "40px",
+    minHeight: "40px",
   }),
   option: (provided, state) => ({
     ...provided,
@@ -35,11 +35,13 @@ const MultiAreaSelect = ({ value = null, setAreasServiceList }) => {
   const { areasList } = useSelector((state) => state.homeService);
   const [defaultValue, setDefaultValue] = useState(null);
   const dispatch = useDispatch();
-  
-  useEffect(()=> {
-    setDefaultValue(value?.map((item) => {
-      return { value: item.id, label: item.name };
-    }))
+
+  useEffect(() => {
+    setDefaultValue(
+      value?.map((item) => {
+        return { value: item.id, label: item.name };
+      })
+    );
     if (!areasList) {
       const storedAreas = Cookies.get("areasList");
       if (!storedAreas) {
@@ -49,15 +51,12 @@ const MultiAreaSelect = ({ value = null, setAreasServiceList }) => {
         });
       } else dispatch(setAreasList(JSON.parse(storedAreas)));
     }
-  },[])
+  }, []);
   const handleChange = (selectedOption) => {
     let list = [];
     setDefaultValue(selectedOption);
     for (let i = 0; i < selectedOption.length; ++i) {
-      list = [
-        ...list,
-        selectedOption[i].value,
-      ];
+      list = [...list, selectedOption[i].value];
     }
     setAreasServiceList(list);
   };

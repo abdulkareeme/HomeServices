@@ -92,7 +92,7 @@ const VerificationCodeInput = () => {
           toast.success(
             "رمز التحقق صحيح الرجاء الانتظار بينما يتم تحويلك الى صفحة تسجيل الدخول",
             {
-              duration: 3000,
+              duration: 2000,
               position: "top-center",
               ariaProps: {
                 role: "status",
@@ -100,9 +100,10 @@ const VerificationCodeInput = () => {
               },
             }
           );
+          Cookies.remove("userInputValue");
           setTimeout(() => {
             history("/login");
-          }, 3000);
+          }, 2000);
         })
         .catch((err) => {
           console.log(err);

@@ -50,6 +50,8 @@ const NewPassword = lazy(() => import("./Pages/NewPassword/NewPassword"));
 
 function App() {
   const token = Cookies.get("userToken");
+  const userInputValue= Cookies.get("userInputValue");
+  const providerToken= Cookies.get("providerToken");
   const { pathname } = useLocation();
   useEffect(() => {
     AOS.init();
@@ -60,8 +62,8 @@ function App() {
       {pathname !== "/provider" && pathname !== "/website_earnings" ? <NavBar /> : <ProviderNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/provider" element={<ProviderPage />} />
-        <Route path="/website_earnings" element={<Earnings />} />
+        <Route path="/provider" element={<ProtectedPath comp={<ProviderPage /> } cond={providerToken} />} />
+        <Route path="/website_earnings" element={<ProtectedPath comp={<Earnings /> } cond={providerToken} /> } />
         <Route path="/login" element={<Login />} />
         <Route path="/provider_login" element={<ProviderLogin />} />
         <Route path="/forget_password" element={<ForgetPassword />} />
@@ -71,7 +73,7 @@ function App() {
         />
         <Route path="/forget_password/reset" element={<NewPassword />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/confirm_email" element={<ConfirmEmail />} />
+        <Route path="/confirm_email" element={<ProtectedPath comp={<ConfirmEmail /> } cond={userInputValue} />} />
         <Route path="/user/:username" element={<UserProfile />} />
         <Route path="/user/:username/services" element={<SellerServices />} />
         <Route path="/user/:username/rates" element={<SellerRates />} />

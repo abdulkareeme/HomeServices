@@ -99,7 +99,8 @@ section.confirm-email .container {
   font-size: 15px;
 }
 
-.resend-code span {
+.resend-code a {
+  text-decoration: none;
   cursor: pointer;
   color: #2caae2;
 }

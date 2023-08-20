@@ -16,6 +16,7 @@ import {
 } from "../../Store/homeServiceSlice";
 import LoaderButton from "../LoaderButton";
 import LogoBlack from "../../Images/logo-black.png";
+import Cookies from "js-cookie";
 
 const SignInSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -74,11 +75,17 @@ const Register = () => {
     setIsSubmitting(1);
     postToAPI("api/register/", userInfo)
       .then((res) => {
-        console.log(res);
         setIsSubmitting(0);
         dispatch(setIsRegistered(true));
         dispatch(
           setUserInputValue({ email: values.email, password: values.password })
+        );
+        Cookies.set(
+          "userInputValue",
+          JSON.stringify({ email: values.email, password: values.password }),
+          {
+            expires: 1,
+          }
         );
         history("/confirm_email");
       })
@@ -123,7 +130,6 @@ const Register = () => {
         }
         setIsSubmitting(0);
       });
-    console.log(userInfo);
   };
   return (
     <section className="d-flex justify-content-center align-items-center">

@@ -5,7 +5,7 @@ import UserProfileLayout from "../../Components/UserProfileLayout";
 import ServicesList from "../../Components/ServicesList/ServicesList";
 import { getTimeofSeconds, handleRateStars } from "../../utils/constants";
 const UserProfile = () => {
-  const { selectedUser } = useSelector((state) => state.homeService);
+  const { selectedUser,userTotalInfo } = useSelector((state) => state.homeService);
   return (
     <UserProfileLayout>
       {selectedUser?.mode === "seller" ? (
@@ -13,7 +13,7 @@ const UserProfile = () => {
           <Container>
             <Row>
               <Col lg={7} md={12}>
-                <h2>نبذة عني</h2>
+                <h2> {selectedUser?.username === userTotalInfo?.username ?"نبذة عني":"النبذة"} </h2>
                 <hr />
                 <p>
                   {selectedUser?.bio?.length > 0
@@ -53,7 +53,7 @@ const UserProfile = () => {
                 </ul>
               </Col>
               <Col lg={7} md={12}>
-                <h2>خدماتي</h2>
+                <h2>{selectedUser?.username === userTotalInfo?.username ?"خدماتي":"الخدمات"}</h2>
                 <hr />
                 <ServicesList type="comp" />
               </Col>

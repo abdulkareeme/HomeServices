@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import VerificationCodeInput from "../Components/VerificationCodeInput/VerificationCodeInput";
 import { Container, Spinner } from "react-bootstrap";
 import { postToAPI } from "../api/FetchFromAPI";
 import { Toaster, toast } from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const ConfirmEmail = () => {
-  const { userInputValue } = useSelector((state) => state.homeService);
+  const storedUser = Cookies.get("userInputValue");
+  const userInputValue = storedUser ? JSON.parse(storedUser) : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const resendCode = () => {
     setIsSubmitting(true);
@@ -49,14 +50,14 @@ const ConfirmEmail = () => {
         </p>
         <VerificationCodeInput />
         <div className="resend-code d-flex gap-1">
-          <p>لم يصلك رمز التحقق بعد؟</p>
+          <span>لم يصلك رمز التحقق بعد؟</span>
           <div className="d-flex gap-4 align-items-center">
-            <span
+            <a
               className={`${isSubmitting ? "loading-text" : ""}`}
               onClick={() => (!isSubmitting ? resendCode() : null)}
             >
               اعادة الارسال
-            </span>
+            </a>
             <Spinner
               hidden={!isSubmitting}
               size="sm"

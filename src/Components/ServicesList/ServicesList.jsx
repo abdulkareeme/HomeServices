@@ -24,7 +24,7 @@ const ServicesList = ({ type }) => {
   useEffect(() => {
     getServiceList();
   }, [selectedUser]);
-  if (selectedUser.services_number > 0) {
+  if (selectedUser?.services_number > 0) {
     if (type === "page") {
       return (
         <section className="services page ">
