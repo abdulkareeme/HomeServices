@@ -47,7 +47,7 @@ This project is containerized with Docker, which facilitates easy deployment and
    docker run -p 8000:8000 django-project
    ```
    This command maps port 8000 from the container to your local machine.
-1. Access the application by visiting `http://localhost:8000` in your web browser.
+2. Access the application by visiting `http://localhost:8000` in your web browser.
 
 Make sure to configure any necessary environment variables or database settings before running the Docker image.
 
@@ -56,12 +56,13 @@ Make sure to configure any necessary environment variables or database settings 
 To run the automated tests using pytest, follow these steps:
 
 1. Ensure that the Docker container is running.
-1. Open a terminal and navigate to the project directory.
-1. Run the following command to execute the tests:
+2. Open a terminal and navigate to the project directory.
+3. Run the following command to execute the tests:
    ````
    docker exec -it <container_id> pytest
    ```
    Replace `<container_id>` with the ID of the running Docker container.
+   Run this command to show the container_id : docker ps
 1. The test results will be displayed in the terminal, showing any failures or errors encountered.
 
 ## Contributing
