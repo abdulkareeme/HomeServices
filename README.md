@@ -35,8 +35,10 @@ This is a Django project that provides a web application with various features. 
 
 ![example3](https://github.com/abdulkareeme/HomeServices/blob/Backend/images/chatuml-diagram(28).svg)
 
+## APIs 
+[View the APIs](https://abdulkareemedres.pythonanywhere.com/api/docs/)
 
-
+![emxample4](https://github.com/abdulkareeme/HomeServices/blob/Backend/images/Screenshot%202023-08-21%20at%2016-00-57%20Swagger.png)
 
 ## Deployment with Docker
 
