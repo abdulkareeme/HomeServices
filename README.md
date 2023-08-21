@@ -25,9 +25,15 @@ This is a Django project that provides a web application with various features. 
 
 ## Class Djagram
 
+![example1](https://github.com/abdulkareeme/HomeServices/blob/Backend/images/Main.jpg)
+
 ## ER Diagram 
 
-## Sequence Diagram
+![example2](https://github.com/abdulkareeme/HomeServices/blob/Backend/images/ER%20Diagram%20Home%20Servoce.jpg)
+
+## Sequence Diagram (for order service preccess)
+
+![example3](https://github.com/abdulkareeme/HomeServices/blob/Backend/images/chatuml-diagram(28).svg)
 
 
 
