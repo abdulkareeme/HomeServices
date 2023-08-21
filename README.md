@@ -62,7 +62,10 @@ To run the automated tests using pytest, follow these steps:
    docker exec -it <container_id> pytest
    ```
    Replace `<container_id>` with the ID of the running Docker container.
-   Run this command to show the container_id : docker ps
+Run this command to show the container_id :
+   ```
+   docker ps
+   ```
 1. The test results will be displayed in the terminal, showing any failures or errors encountered.
 
 ## Contributing
