@@ -16,6 +16,3 @@
 - Order Service: Users can place orders for services they wish to avail.
 - Sent Orders: Users can view the services they have ordered and track their status.
 - Received Orders: Sellers can view and manage the orders they have received.
-
-# IMAGES
-
