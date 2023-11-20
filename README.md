@@ -1,5 +1,5 @@
 # HomeServices
-  - a flutter app that allow the user to serach for a sutable Service provider and see all his services, his rates and all user opinions that asked for his services and rate him after the work done
+  - a flutter app that allow the user to serach for a sutable Service provider and see all his services, his rates and all user opinions that asked for his services and rate him after the work done in easy way 
 # Features
 - Register: Users can create new accounts by providing their email and password and more .
 - Confirm Email: An email confirmation link is sent to the user's email address for account activation.
